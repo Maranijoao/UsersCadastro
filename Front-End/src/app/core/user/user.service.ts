@@ -7,7 +7,7 @@ import { User } from './user.types';
 @Injectable({ providedIn: 'root' })
 export class UserService {
     private readonly _httpClient = inject(HttpClient);
-    private readonly _baseUrl = 'http://localhost:5263/api/Clientes';
+    private readonly _baseUrl = 'http://localhost:5263/api/Users';
 
     private readonly _user = new ReplaySubject<User>(1);
     private readonly _Users: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
@@ -70,7 +70,7 @@ export class UserService {
         if (termo.trim()) {
             params = params.set('termo', termo);
         }
-        return this._httpClient.get<User[]>(`${this._baseUrl}/inativos`, { params }).pipe(
+        return this._httpClient.get<User[]>(`${this._baseUrl}/inactive`, { params }).pipe(
             tap((Users) => this._UsersInativos.next(Users))
         );
     }
@@ -84,7 +84,7 @@ export class UserService {
                 const todosOsUsuarios = [...ativos, ...inativos];
                 return todosOsUsuarios.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
             }),
-            
+
             tap(usuariosOrdenados => {
                 this._allUsers.next(usuariosOrdenados);
             })

@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
 namespace CadastroCliente.Models;
-//Com validações
 
-public class ClienteParams
+public class User
 {
     public int Id { get; set; }
 
@@ -17,15 +16,20 @@ public class ClienteParams
     [Required]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
-
-    public string Telefone { get; set; } = string.Empty;
-
-    public string? Senha { get; set; }
-
+    public string PhoneNumber { get; set; } = string.Empty;
+    public string? Password { get; set; }
     public bool RecordStatus { get; set; }
-
     [Required(ErrorMessage = "O campo Role é obrigatório")]
     public string Role { get; set; }
 
-    public List<EnderecoParams> Enderecos { get; set; } = new List<EnderecoParams>();
+    public List<Address> Address { get; set; } = new List<Address>();
+
+    public DateTime? CreatedAt { get; set; }
+    public string? CreatedBy { get; set; }
+    public DateTime? UpdatedAt { get; set; }
+    public string? UpdatedBy { get; set; }
+    public DateTime? InactivatedAt { get; set; }
+    public string? InactivatedBy { get; set; }
+
+    public List<UserLog> Logs { get; set; } = new List<UserLog>();
 }

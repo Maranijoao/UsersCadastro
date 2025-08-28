@@ -16,7 +16,7 @@ namespace CadastroCliente.Data
             _configuration = configuration;
         }
 
-        public string GenerateToken(Cliente cliente)
+        public string GenerateToken(User cliente)
         {
             var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!);
 

@@ -37,7 +37,7 @@ export class AuthService {
             return throwError(() => 'O usuário já está logado.');
         }
 
-        return this._httpClient.post('http://localhost:5263/api/Clientes/login', credentials).pipe(
+        return this._httpClient.post('http://localhost:5263/api/Users/login', credentials).pipe(
             tap((response: any) => {
                 this.accessToken = response.token;
                 this._authenticated = true;

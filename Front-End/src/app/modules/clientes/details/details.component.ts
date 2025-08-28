@@ -33,7 +33,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class ClientesDetailsComponent implements OnInit, OnDestroy {
   rota: string;
-  cliente: User | null = null;
+  user: User | null = null;
   loading = false;
   isEditMode = false;
   isAdmin = false;
@@ -73,18 +73,18 @@ export class ClientesDetailsComponent implements OnInit, OnDestroy {
             }))
             .subscribe((user) => {
               if (user) {
-                this.cliente = user;
-                if (!this.cliente.enderecos) this.cliente.enderecos = [];
-                if (!this.cliente.logs) this.cliente.logs = [];
+                this.user = user;
+                if (!this.user.enderecos) this.user.enderecos = [];
+                if (!this.user.logs) this.user.logs = [];
               } else {
-                this.cliente = null;
+                this.user = null;
               }
             });
         }
         
         else {
           this.isEditMode = false;
-          this.cliente = {
+          this.user = {
             id: 0, name: '', email: '', cpf: '', telefone: '', password: '',
             recordStatus: true, role: 'user', enderecos: [], logs: []
           };
@@ -139,16 +139,16 @@ export class ClientesDetailsComponent implements OnInit, OnDestroy {
   }
 
   salvar(): void {
-    if (!this.cliente) return;
+    if (!this.user) return;
 
     this.loading = true;
     let saveObservable: Observable<any>;
 
     if (this.isEditMode) {
-      saveObservable = this.service.update(this.cliente);
+      saveObservable = this.service.update(this.user);
     }
     else {
-      saveObservable = this.service.add(this.cliente);
+      saveObservable = this.service.add(this.user);
     }
 
     saveObservable
@@ -162,7 +162,7 @@ export class ClientesDetailsComponent implements OnInit, OnDestroy {
           this._snackBar.open(message, 'Fechar', { duration: 3000 });
 
           if (!this.isEditMode) {
-            const newUserId = savedUser?.id || this.cliente.id;
+            const newUserId = savedUser?.id || this.user.id;
             this.router.navigate(['../', newUserId], { relativeTo: this.route });
           }
         },
@@ -179,9 +179,9 @@ export class ClientesDetailsComponent implements OnInit, OnDestroy {
   }
 
   adicionarEndereco(): void {
-    this.cliente.enderecos.push({
+    this.user.enderecos.push({
       id: 0,
-      clienteId: this.cliente.id,
+      clienteId: this.user.id,
       cep: '',
       logradouro: '',
       numero: '',
@@ -195,8 +195,8 @@ export class ClientesDetailsComponent implements OnInit, OnDestroy {
   }
 
   removerEndereco(index: number): void {
-    if (index > -1 && index < this.cliente.enderecos.length) {
-      this.cliente.enderecos.splice(index, 1);
+    if (index > -1 && index < this.user.enderecos.length) {
+      this.user.enderecos.splice(index, 1);
     }
   }
 
@@ -211,11 +211,11 @@ export class ClientesDetailsComponent implements OnInit, OnDestroy {
   }
 
   statusText(): string {
-    return this.cliente?.recordStatus ? 'Ativo' : 'Inativo';
+    return this.user?.recordStatus ? 'Ativo' : 'Inativo';
   }
 
   statusClasses(): string {
-    return this.cliente?.recordStatus
+    return this.user?.recordStatus
       ? 'bg-emerald-100 text-emerald-700'
       : 'bg-rose-100 text-rose-700';
   }

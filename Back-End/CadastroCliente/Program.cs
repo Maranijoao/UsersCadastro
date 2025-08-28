@@ -74,10 +74,10 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddControllers();
 builder.Services.AddSingleton<SqlConnectionProvider>();
-builder.Services.AddScoped<ClienteRepository>();
-builder.Services.AddScoped<AdressRepository>();
+builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<AddressRepository>();
 builder.Services.AddScoped<TokenService>();
-builder.Services.AddScoped<ClienteLogRepository>();
+builder.Services.AddScoped<UserLogRepository>();
 
 builder.Services.AddCors(options =>
 {

@@ -5,14 +5,14 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Clientes": {
+    "/api/Users": {
       "get": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "parameters": [
           {
-            "name": "termo",
+            "name": "term",
             "in": "query",
             "schema": {
               "type": "string",
@@ -28,7 +28,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Cliente"
+                    "$ref": "#/components/schemas/User"
                   }
                 }
               },
@@ -36,7 +36,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Cliente"
+                    "$ref": "#/components/schemas/User"
                   }
                 }
               },
@@ -44,7 +44,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Cliente"
+                    "$ref": "#/components/schemas/User"
                   }
                 }
               }
@@ -54,23 +54,23 @@
       },
       "post": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Cliente"
+                "$ref": "#/components/schemas/User"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Cliente"
+                "$ref": "#/components/schemas/User"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Cliente"
+                "$ref": "#/components/schemas/User"
               }
             }
           }
@@ -81,17 +81,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -99,14 +99,14 @@
         }
       }
     },
-    "/api/Clientes/inativos": {
+    "/api/Users/inactive": {
       "get": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "parameters": [
           {
-            "name": "termo",
+            "name": "term",
             "in": "query",
             "schema": {
               "type": "string",
@@ -122,7 +122,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Cliente"
+                    "$ref": "#/components/schemas/User"
                   }
                 }
               },
@@ -130,7 +130,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Cliente"
+                    "$ref": "#/components/schemas/User"
                   }
                 }
               },
@@ -138,7 +138,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/Cliente"
+                    "$ref": "#/components/schemas/User"
                   }
                 }
               }
@@ -147,10 +147,10 @@
         }
       }
     },
-    "/api/Clientes/{id}": {
+    "/api/Users/{id}": {
       "get": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "parameters": [
           {
@@ -169,17 +169,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -188,7 +188,7 @@
       },
       "put": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "parameters": [
           {
@@ -205,17 +205,17 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Cliente"
+                "$ref": "#/components/schemas/User"
               }
             },
             "text/json": {
               "schema": {
-                "$ref": "#/components/schemas/Cliente"
+                "$ref": "#/components/schemas/User"
               }
             },
             "application/*+json": {
               "schema": {
-                "$ref": "#/components/schemas/Cliente"
+                "$ref": "#/components/schemas/User"
               }
             }
           }
@@ -228,7 +228,7 @@
       },
       "delete": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "parameters": [
           {
@@ -248,10 +248,10 @@
         }
       }
     },
-    "/api/Clientes/me": {
+    "/api/Users/me": {
       "get": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "responses": {
           "200": {
@@ -259,17 +259,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -277,10 +277,10 @@
         }
       }
     },
-    "/api/Clientes/login": {
+    "/api/Users/login": {
       "post": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "requestBody": {
           "content": {
@@ -307,17 +307,17 @@
             "content": {
               "text/plain": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               },
               "text/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Cliente"
+                  "$ref": "#/components/schemas/User"
                 }
               }
             }
@@ -325,10 +325,10 @@
         }
       }
     },
-    "/api/Clientes/reativar/{id}": {
+    "/api/Users/reactivate/{id}": {
       "patch": {
         "tags": [
-          "Clientes"
+          "Users"
         ],
         "parameters": [
           {
@@ -351,7 +351,67 @@
   },
   "components": {
     "schemas": {
-      "Cliente": {
+      "Address": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cep": {
+            "type": "string",
+            "nullable": true
+          },
+          "street": {
+            "type": "string",
+            "nullable": true
+          },
+          "number": {
+            "type": "string",
+            "nullable": true
+          },
+          "complement": {
+            "type": "string",
+            "nullable": true
+          },
+          "neighborhood": {
+            "type": "string",
+            "nullable": true
+          },
+          "city": {
+            "type": "string",
+            "nullable": true
+          },
+          "state": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "LoginRequest": {
+        "required": [
+          "email",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "email": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "password": {
+            "minLength": 1,
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "User": {
         "required": [
           "cpf",
           "email",
@@ -378,11 +438,11 @@
             "type": "string",
             "format": "email"
           },
-          "telefone": {
+          "phoneNumber": {
             "type": "string",
             "nullable": true
           },
-          "senha": {
+          "password": {
             "type": "string",
             "nullable": true
           },
@@ -393,140 +453,80 @@
             "minLength": 1,
             "type": "string"
           },
-          "enderecos": {
+          "address": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Endereco"
+              "$ref": "#/components/schemas/Address"
             },
             "nullable": true
           },
-          "dataCadastro": {
+          "createdAt": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "usuarioCadastro": {
+          "createdBy": {
             "type": "string",
             "nullable": true
           },
-          "dataUltimaAlteracao": {
-            "type": "string",
-            "format": "date-time",
-            "nullable": true
-          },
-          "usuarioUltimaAlteracao": {
-            "type": "string",
-            "nullable": true
-          },
-          "dataInativacao": {
+          "updatedAt": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "usuarioInativacao": {
+          "updatedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "inactivatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "inactivatedBy": {
             "type": "string",
             "nullable": true
           },
           "logs": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ClienteLog"
+              "$ref": "#/components/schemas/UserLog"
             },
             "nullable": true
           }
         },
         "additionalProperties": false
       },
-      "ClienteLog": {
+      "UserLog": {
         "type": "object",
         "properties": {
           "id": {
             "type": "integer",
             "format": "int32"
           },
-          "clienteId": {
+          "userId": {
             "type": "integer",
             "format": "int32"
           },
-          "dataAlteracao": {
+          "changedAt": {
             "type": "string",
             "format": "date-time"
           },
-          "usuarioAlteracao": {
+          "changedBy": {
             "type": "string",
             "nullable": true
           },
-          "acao": {
+          "action": {
             "type": "string",
             "nullable": true
           },
-          "dadosAntigos": {
+          "oldValues": {
             "type": "string",
             "nullable": true
           },
-          "dadosNovos": {
+          "newValues": {
             "type": "string",
             "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "Endereco": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "clienteId": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "cep": {
-            "type": "string",
-            "nullable": true
-          },
-          "logradouro": {
-            "type": "string",
-            "nullable": true
-          },
-          "numero": {
-            "type": "string",
-            "nullable": true
-          },
-          "complemento": {
-            "type": "string",
-            "nullable": true
-          },
-          "bairro": {
-            "type": "string",
-            "nullable": true
-          },
-          "cidade": {
-            "type": "string",
-            "nullable": true
-          },
-          "uf": {
-            "type": "string",
-            "nullable": true
-          }
-        },
-        "additionalProperties": false
-      },
-      "LoginRequest": {
-        "required": [
-          "email",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "email": {
-            "minLength": 1,
-            "type": "string"
-          },
-          "password": {
-            "minLength": 1,
-            "type": "string"
           }
         },
         "additionalProperties": false
