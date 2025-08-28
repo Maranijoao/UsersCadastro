@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="400" height="120" viewBox="0 0 400 120" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <!-- Letra N com circuitos -->
+  <g stroke="#3B82F6" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="30" cy="20" r="5"/>
+    <path d="M30 20 L30 50 L50 70 L70 70 L70 20"/>
+    <circle cx="30" cy="50" r="5"/>
+    <circle cx="50" cy="70" r="5"/>
+    <circle cx="70" cy="70" r="5"/>
+    <circle cx="70" cy="20" r="5"/>
+  </g>
+
+  <!-- Texto NEXURA em azul -->
+  <text x="90" y="70" font-family="Arial, sans-serif" font-size="40" fill="#3B82F6" letter-spacing="4">NEXURA</text>
+
+  <!-- Ponto azul final -->
+  <circle cx="310" cy="60" r="5" fill="#3B82F6"/>
+</svg>

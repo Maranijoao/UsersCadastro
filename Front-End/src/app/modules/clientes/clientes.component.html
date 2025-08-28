@@ -1,0 +1,10 @@
+<div class="flex w-full bg-white overflow-hidden">
+  <!-- Sidebar -->
+   @if(isAdmin) {
+    <app-sidebar class="h-full"></app-sidebar>}
+  
+  <div class="flex w-full h-full overflow-hidden">
+    <router-outlet></router-outlet>
+  </div>
+</div>
+

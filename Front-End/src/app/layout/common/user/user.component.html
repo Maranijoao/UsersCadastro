@@ -1,0 +1,76 @@
+<!-- Button -->
+<button
+    mat-icon-button
+    [matMenuTriggerFor]="userActions">
+    <span class="relative">
+        <img
+            class="w-7 h-7 rounded-full"
+            *ngIf="!showAvatar"
+            src="https://tse3.mm.bing.net/th/id/OIP.ScT2dd7J0fbVxPKYM8xm0QHaHa?r=0&cb=thfc1&rs=1&pid=ImgDetMain&o=7&rm=3">
+        <mat-icon 
+            *ngIf="showAvatar"
+            [svgIcon]="'heroicons_outline:user-circle'" class="min-h-full min-w-full:"></mat-icon>
+    </span> 
+</button>
+
+<mat-menu
+    [xPosition]="'before'"
+    #userActions="matMenu">
+    <button mat-menu-item>
+        <span class="flex flex-col leading-none">
+            <span>Conectado como</span>
+            <span class="mt-1.5 text-md font-medium">{{this.nomeCompleto}}</span> 
+            </span>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button mat-menu-item>
+        <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+        <span>Perfil</span>
+    </button>
+    <button mat-menu-item>
+        <mat-icon [svgIcon]="'heroicons_outline:cog-8-tooth'"></mat-icon>
+        <span>Configurações</span>
+    </button>
+    <button
+        mat-menu-item
+        [matMenuTriggerFor]="userStatus">
+        <mat-icon [svgIcon]="'heroicons_outline:ellipsis-horizontal-circle'"></mat-icon>
+        <span>Status</span>
+    </button>
+    <mat-divider class="my-2"></mat-divider>
+    <button
+        mat-menu-item
+        (click)="signOut()">
+        <mat-icon [svgIcon]="'heroicons_outline:arrow-right-on-rectangle'"></mat-icon>
+        <span>Sair</span>
+    </button>
+</mat-menu>
+
+<mat-menu
+    class="user-status-menu"
+    #userStatus="matMenu">
+    <button
+        mat-menu-item
+        (click)="updateUserStatus('online')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-green-500"></span>
+        <span>Online</span>
+    </button>
+    <button
+        mat-menu-item
+        (click)="updateUserStatus('away')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-amber-500"></span>
+        <span>Afastado</span>
+    </button>
+    <button
+        mat-menu-item
+        (click)="updateUserStatus('busy')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-red-500"></span>
+        <span>Ocupado</span>
+    </button>
+    <button
+        mat-menu-item
+        (click)="updateUserStatus('not-visible')">
+        <span class="w-4 h-4 mr-3 rounded-full bg-gray-400"></span>
+        <span>Invisível</span>
+    </button>
+</mat-menu>

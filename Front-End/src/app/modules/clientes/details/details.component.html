@@ -1,0 +1,221 @@
+<div class="w-full h-full overflow-y-auto bg-white p-9">
+    <div *ngIf="loading" class="text-center text-gray-500">
+        <p>Carregando dados do cliente...</p>
+    </div>
+
+    <div *ngIf="!loading && !cliente" class="text-center text-gray-500">
+        <p>Selecione um cliente na lista para ver os detalhes.</p>
+    </div>
+
+    <ng-container *ngIf="!loading && cliente">
+        <!-- Cabeçalho -->
+        <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow">
+            <div class="flex items-center gap-4">
+                <div class="relative">
+                    <div
+                        class="flex h-20 w-20 items-center justify-center rounded-full bg-slate-200 text-2xl font-semibold">
+                        {{ getInitial(cliente.name) || '?' }}
+                    </div>
+                    <span *ngIf="isEditMode" class="absolute bottom-2 right-2 h-4 w-4 rounded-full ring-2 ring-white"
+                        [class.bg-emerald-500]="cliente.recordStatus" [class.bg-rose-500]="!cliente.recordStatus"
+                        [title]="statusText()">
+                    </span>
+                </div>
+                <div class="min-w-0">
+                    <div class="text-2xl font-bold leading-tight truncate">{{ cliente.name || 'Novo Usuário' }}</div>
+                    <div *ngIf="isEditMode" class="mt-1 flex items-center gap-2">
+                        <span class="rounded-full px-2.5 py-0.5 text-xs font-medium" [class]="statusClasses()">
+                            {{ statusText() }}
+                        </span>
+                        <span class="rounded-full px-2.5 py-0.5 text-xs font-medium"
+                            [class]="roleBadgeClass(cliente.role)">
+                            {{ (cliente.role || 'user') | titlecase }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="isAdmin" class="flex gap-3">
+                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition"
+                    (click)="cancelar()">Cancelar</button>
+                <button class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
+                    (click)="salvar()">Salvar</button>
+            </div>
+        </div>
+
+        <!-- Formulário -->
+        <div class="mt-8 rounded-3xl bg-white shadow p-6">
+            <div class="space-y-6">
+                <!-- Dados Pessoais -->
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <mat-form-field class="w-full">
+                        <mat-label>Nome Completo</mat-label>
+                        <input matInput [(ngModel)]="cliente.name" name="name" required [disabled]="!isAdmin">
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>E-mail</mat-label>
+                        <input matInput [(ngModel)]="cliente.email" name="email" type="email" required
+                            [disabled]="!isAdmin">
+                    </mat-form-field>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-6">
+                    <mat-form-field class="w-full">
+                        <mat-label>CPF</mat-label>
+                        <input matInput [(ngModel)]="cliente.cpf" name="cpf" [disabled]="!isAdmin">
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>Telefone</mat-label>
+                        <input matInput [(ngModel)]="cliente.telefone" name="telefone" [disabled]="!isAdmin">
+                    </mat-form-field>
+                </div>
+
+                <!-- Campos de Senha -->
+                <div *ngIf="!isEditMode" class="grid sm:grid-cols-2 gap-6">
+                    <mat-form-field class="w-full">
+                        <mat-label>Senha</mat-label>
+                        <input matInput [(ngModel)]="cliente.senha" name="senha" type="password" required>
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>Confirmar Senha</mat-label>
+                        <input matInput [(ngModel)]="confirmarsenha" name="confirmarsenha" type="password" required>
+                    </mat-form-field>
+                </div>
+
+
+                <hr class="my-4">
+                <div>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-md font-semibold text-gray-600 uppercase">Endereços</h3>
+                        <button *ngIf="isAdmin" mat-flat-button color="primary" (click)="adicionarEndereco()">
+                            <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
+                            <span>Adicionar Endereço</span>
+                        </button>
+                    </div>
+
+                    <div *ngIf="!cliente.enderecos || cliente.enderecos.length === 0"
+                        class="text-center text-gray-400 p-4 border-2 border-dashed rounded-md">
+                        Nenhum endereço cadastrado.
+                    </div>
+
+                    <div *ngFor="let endereco of cliente.enderecos; let i = index; trackBy: trackEnderecoById"
+                        class="space-y-4 border p-4 rounded-md mb-4 relative pt-8">
+
+                        <div class="absolute top-2 right-2">
+                            <button mat-icon-button [matMenuTriggerFor]="addressMenu" [disabled]="!isAdmin">
+                                <mat-icon svgIcon="heroicons_outline:ellipsis-vertical"></mat-icon>
+                            </button>
+                            <mat-menu #addressMenu="matMenu">
+                                <button mat-menu-item (click)="removerEndereco(i)">
+                                    <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
+                                    <span>Remover</span>
+                                </button>
+                            </mat-menu>
+                        </div>
+
+                        <div class="grid sm:grid-cols-4 gap-4">
+                            <mat-form-field class="sm:col-span-2">
+                                <mat-label>CEP</mat-label>
+                                <input matInput [(ngModel)]="endereco.cep" [name]="'cep-' + i" [disabled]="!isAdmin"
+                                    (blur)="buscarCep(endereco.cep, endereco)"
+                                    (input)="buscarCep(endereco.cep, endereco)">
+                            </mat-form-field>
+                            <mat-form-field class="sm:col-span-2">
+                                <mat-label>Endereço</mat-label>
+                                <input matInput [(ngModel)]="endereco.logradouro" [name]="'logradouro-' + i"
+                                    [disabled]="!isAdmin">
+                            </mat-form-field>
+                        </div>
+                        <div class="grid sm:grid-cols-4 gap-4">
+                            <mat-form-field class="sm:col-span-2">
+                                <mat-label>Número</mat-label>
+                                <input matInput [(ngModel)]="endereco.numero" [name]="'numero-' + i"
+                                    [disabled]="!isAdmin">
+                            </mat-form-field>
+                            <mat-form-field class="sm:col-span-2">
+                                <mat-label>Complemento</mat-label>
+                                <input matInput [(ngModel)]="endereco.complemento" [name]="'complemento-' + i"
+                                    [disabled]="!isAdmin">
+                            </mat-form-field>
+                        </div>
+                        <div class="grid sm:grid-cols-3 gap-4">
+                            <mat-form-field>
+                                <mat-label>Bairro</mat-label>
+                                <input matInput [(ngModel)]="endereco.bairro" [name]="'bairro-' + i"
+                                    [disabled]="!isAdmin">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>Cidade</mat-label>
+                                <input matInput [(ngModel)]="endereco.cidade" [name]="'cidade-' + i"
+                                    [disabled]="!isAdmin">
+                            </mat-form-field>
+                            <mat-form-field>
+                                <mat-label>UF</mat-label>
+                                <input matInput [(ngModel)]="endereco.uf" [name]="'uf-' + i" [disabled]="!isAdmin"
+                                    maxlength="2">
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-2">
+                <div>
+                    <h3 class="text-md font-semibold text-gray-600 uppercase mb-4">Acesso</h3>
+                    <div class="grid sm:grid-cols-2 gap-6">
+                        <mat-form-field class="w-56">
+                            <mat-label>Tipo</mat-label>
+                            <select matNativeControl [(ngModel)]="cliente.role" name="role" [disabled]="!isAdmin">
+                                <option value="user">Usuário</option>
+                                <option value="admin">Administrador</option>
+                            </select>
+                        </mat-form-field>
+                        <mat-form-field class="w-56">
+                            <mat-label>Status</mat-label>
+                            <select matNativeControl [(ngModel)]="cliente.recordStatus" name="recordStatus"
+                                [disabled]="!isAdmin">
+                                <option [ngValue]="true">Ativo</option>
+                                <option [ngValue]="false">Inativo</option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lg:w-full flex justify-end">
+        <div *ngIf="isEditMode">
+            <div class="p-8 rounded-3xl bg-white shadow text-md w-80 mt-10">
+                <h3 class="text-md font-semibold text-gray-600 uppercase mb-8">Registro</h3>
+                <div *ngIf="cliente.dataCadastro" class="mb-4">
+                    <span class="font-medium text-md text-gray-500">Data de Cadastro</span>
+                    <p class="text-gray-800">{{ cliente.dataCadastro | date:'dd/MM/yyyy HH:mm' }}</p>
+                </div>
+
+                <div *ngIf="cliente.usuarioCadastro" class="mb-4">
+                    <span class="font-medium text-md text-gray-500">Usuário de Cadastro</span>
+                    <p class="font-semibold text-primary-500">{{ cliente.usuarioCadastro }}</p>
+                </div>
+
+                <ng-container *ngIf="cliente.dataUltimaAlteracao">
+                    <div class="mb-4">
+                        <span class="font-medium text-md text-gray-500">Data de Alteração</span>
+                        <p class="text-gray-800">{{ cliente.dataUltimaAlteracao | date:'dd/MM/yyyy HH:mm' }}</p>
+                    </div>
+                    <div class="mb-4">
+                        <span class="font-medium text-md text-gray-500">Usuário de Alteração</span>
+                        <p class="font-semibold text-primary-500">{{ cliente.usuarioUltimaAlteracao }}</p>
+                    </div>
+                </ng-container>
+
+                <ng-container *ngIf="cliente.dataInativacao">
+                     <div class="mb-4">
+                        <span class="font-medium text-sm text-gray-500">Data de Inativação</span>
+                        <p class="text-gray-800">{{ cliente.dataInativacao | date:'dd/MM/yyyy HH:mm' }}</p>
+                    </div>
+                     <div class="mb-4">
+                        <span class="font-medium text-xs text-gray-500">Usuário de Inativação</span>
+                        <p class="font-semibold text-primary-500">{{ cliente.usuarioInativacao }}</p>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,150 @@
+<div class="w-full p-6 bg-gray-50 dark: min-h-screen">
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-6xl font-bold text-gray-800">Clientes</h1>
+      <p class=" mb-5 dark:text-black">Gerencie seus clientes e contatos</p>
+    </div>
+
+    <button
+      class="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-medium rounded-lg shadow"
+      (click)="abrirAdicao()">
+      + Adicionar Novo Cliente
+    </button>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-4">
+
+    <div class="flex flex-col ">
+      <div class="flex justify-between mb-5">
+        <h2 class="text-4xl font-semibold text-gray-700">Clientes</h2>
+
+        <button
+          class="px-4 py-2 text-sm bg-gray-100 hover:bg-gray-200 text-gray-700 border border-gray-300 rounded-lg self-end"
+          (click)="alternarUsers()">
+          {{ exibindoInativos ? 'Ver Ativos' : 'Ver Inativos' }}
+        </button>
+      </div>
+
+      <input type="text" placeholder="Buscar cliente..." [(ngModel)]="termoBusca" (input)="buscar()"
+        class="px-4 py-2 text-md border border-gray-300 rounded-lg min-w-full sm:w-1/2 focus:outline-none focus:ring-2 focus:ring-blue-500 mb-5" />
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="w-full table-auto text-sm text-left text-gray-600">
+        <thead class="bg-gray-100 text-gray-700 font-semibold border-b">
+          <tr>
+            <th class="px-4 py-2">Nome</th>
+            <th class="px-4 py-2">CPF</th>
+            <th class="px-4 py-2">Email</th>
+            <th class="px-4 py-2">Telefone</th>
+            <th class="px-4 py-2">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of exibindoInativos ? UsersInativos : Users" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2 font-medium text-gray-800">{{ user.nome }}</td>
+            <td class="px-4 py-2">{{ user.cpf }}</td>
+            <td class="px-4 py-2">{{ user.email }}</td>
+            <td class="px-4 py-2">{{ user.telefone }}</td>
+            <td class="px-4 py-2 flex flex-row ">
+
+              <!-- Botão: Editar (ativo) -->
+<button
+  *ngIf="!exibindoInativos"
+  class="w-8 h-8 mx-2 flex items-center justify-center rounded-md border border-gray-300 bg-white text-gray-800 hover:bg-gray-200 transition-all duration-200"
+  (click)="abrirEdicao(user)"
+  aria-label="Editar usuário"
+>
+  <mat-icon svgIcon="heroicons_outline:pencil-square" class="w-5 h-5"></mat-icon>
+</button>
+
+<!-- Botão: Excluir (ativo) -->
+<button
+  *ngIf="!exibindoInativos"
+  class="w-8 h-8 mx-2 flex items-center justify-center rounded-md border border-red-200 bg-red-500 text-white hover:bg-red-600 transition-all duration-200"
+  (click)="abrirExclusao(user)"
+  aria-label="Excluir usuário"
+>
+  <mat-icon svgIcon="feather:trash-2" class="w-2 h-2 text-white"></mat-icon>
+</button>
+
+<!-- Botão: Reativar (inativo) -->
+<button
+  *ngIf="exibindoInativos"
+  class="w-8 h-8 mx-2 flex items-center justify-center rounded-md border border-green-200 bg-green-100 text-green-700 hover:bg-green-200 transition-all duration-200"
+  (click)="abrirReativacao(user)"
+  aria-label="Reativar usuário"
+>
+  <mat-icon svgIcon="feather:refresh-ccw" class="w-5 h-5"></mat-icon>
+</button>
+
+
+              <!-- MODAL ADIÇÃO/EDIÇÃO -->
+              <div *ngIf="exibindoModal" class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+                  <h2 class="text-xl font-semibold mb-4">
+                    {{ editando ? 'Editar Cliente' : 'Adicionar Novo Cliente' }}
+                  </h2>
+
+                  <div class="space-y-3">
+                    <input type="text" [(ngModel)]="UserModal.name" placeholder="Nome"
+                      class="w-full px-3 py-2 border rounded">
+                    <input type="text" [(ngModel)]="UserModal.cpf" placeholder="CPF"
+                      class="w-full px-3 py-2 border rounded">
+                    <input type="email" [(ngModel)]="UserModal.email" placeholder="Email"
+                      class="w-full px-3 py-2 border rounded">
+                    <input type="text" [(ngModel)]="UserModal.telefone" placeholder="Telefone"
+                      class="w-full px-3 py-2 border rounded">
+                    <input *ngIf="!editando" type="password" [(ngModel)]="UserModal.password" placeholder="Senha"
+                      class="w-full px-3 py-2 border rounded">
+                  </div>
+
+                  <div class="mt-4 flex justify-end space-x-2">
+                    <button class="bg-gray-300 px-4 py-2 rounded" (click)="fecharModal()">Cancelar</button>
+                    <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                      (click)="salvarUser()">Salvar</button>
+                  </div>
+
+                  <!-- MENSAGENS -->
+                  <p *ngIf="mensagemModalSucesso" class="text-green-600 mt-2">{{ mensagemModalSucesso }}</p>
+                  <p *ngIf="mensagemModalErro" class="text-red-600 mt-2">{{ mensagemModalErro }}</p>
+                </div>
+              </div>
+
+              <!-- MODAL EXCLUSÃO -->
+              <div *ngIf="exibindoModalExclusao" class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md text-center">
+                  <h2 class="text-lg font-semibold mb-4">Confirmar exclusão</h2>
+                  <p>Tem certeza que deseja excluir o cliente <strong>{{ UserParaExcluir?.name }}</strong>?</p>
+
+                  <div class="mt-4 flex justify-center gap-4">
+                    <button class="px-4 py-2 bg-gray-300 rounded"
+                      (click)="exibindoModalExclusao = false">Cancelar</button>
+                    <button class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                      (click)="excluirUser()">Excluir</button>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- MODAL REATIVAÇÃO -->
+              <div *ngIf="exibindoModalReativacao" class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md text-center">
+                  <h2 class="text-lg font-semibold mb-4">Confirmar reativação</h2>
+                  <p>Deseja reativar o cliente <strong>{{ UserParaReativar?.name }}</strong>?</p>
+
+                  <div class="mt-4 flex justify-center gap-4">
+                    <button class="px-4 py-2 bg-gray-300 rounded"
+                      (click)="exibindoModalReativacao = false">Cancelar</button>
+                    <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                      (click)="reativarUser()">Reativar</button>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,79 @@
+<div class="w-full p-8">
+  <h2 class="text-6xl font-bold mb-1">Início</h2>
+  <p class="mb-8">Visão geral do seu negócio</p>
+
+  <div class="flex flex-row justify-between gap-6 mb-12 h-50 w-full">
+    <div
+      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+      <div>
+        <p class="text-sm font-semibold text-gray-700">Total de Clientes</p>
+        <ng-container *ngIf="!loadingClientes; else loadingSpinner">
+                    <h3 class="text-2xl font-bold dark:text-black">{{ totalClientes }}</h3>
+                </ng-container>
+        <ng-template #loadingSpinner>
+                    <div class="h-8 flex items-center">
+                        <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+                    </div>
+                </ng-template>
+        <span class="text-green-600 text-xs">+12% em relação ao mês anterior</span>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
+        <mat-icon svgIcon="heroicons_solid:users" class="text-white"></mat-icon>
+      </div>
+    </div>
+
+    <div
+      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+      <div>
+        <p class="text-sm font-semibold text-gray-700">Quantidade de Contratos</p>
+        <h3 class="text-2xl font-bold dark:text-black">6</h3>
+        <span class="text-red-600 text-xs">-5% em relação ao mês anterior</span>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
+        <mat-icon svgIcon="heroicons_solid:document" class="text-white"></mat-icon>
+      </div>
+    </div>
+
+    <div
+      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+      <div>
+        <p class="text-sm font-semibold text-gray-700">Valor Bruto</p>
+        <h3 class="text-2xl font-bold dark:text-black">R$ 54.500,45</h3>
+        <span class="text-green-600 text-xs">+18% em relação ao mês anterior</span>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
+        <mat-icon svgIcon="heroicons_solid:banknotes" class="text-white"></mat-icon>
+      </div>
+    </div>
+
+    <div
+      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+      <div>
+        <p class="text-sm font-semibold text-gray-700">Valor Líquido</p>
+        <h3 class="text-2xl font-bold dark:text-black">R$ 13.455,76</h3>
+        <span class="text-green-600 text-xs">+8% em relação ao mês anterior</span>
+      </div>
+      <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
+        <mat-icon svgIcon="heroicons_solid:credit-card" class="text-white"></mat-icon>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white p-6 rounded-lg shadow h-96 flex flex-col">
+      <h4 class="text-lg font-semibold mb-4 dark:text-black">Contratos por Mês</h4>
+      <div class="flex-1 flex flex-col items-center justify-center text-gray-500">
+        <mat-icon svgIcon="heroicons_solid:chart-bar"></mat-icon>
+        <p>Sem dados disponíveis!</p>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow h-96 flex flex-col">
+      <h4 class="text-lg font-semibold mb-4 dark:text-black">Receita Mensal</h4>
+      <div class="flex-1 flex flex-col items-center justify-center text-gray-500">
+        <mat-icon svgIcon="heroicons_solid:circle-stack"></mat-icon>
+        <p>Sem dados disponíveis!</p>
+      </div>
+    </div>
+  </div>
+</div>

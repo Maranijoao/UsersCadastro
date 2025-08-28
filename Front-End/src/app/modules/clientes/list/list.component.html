@@ -1,0 +1,78 @@
+<div class="absolute flex flex-row w-full inset-0 bg-white dark:bg-transparent">
+  <!-- coluna esquerda: lista -->
+  <div class="flex w-full h-full lg:w-[28rem] flex-col border-r">
+    <!-- header -->
+    <div class="flex flex-col gap-3 h-16 px-4 my-6 bg-gray-50/60">
+      <div class="text-xl font-bold ml-2">Usuários</div>
+      <div class="ml-auto relative w-full max-w-md">
+        <input
+          type="text"
+          class="w-full rounded-md border px-3 py-2 text-sm outline-none focus:ring-2 ring-primary-500"
+          placeholder="Buscar..."
+          [(ngModel)]="search"
+          (ngModelChange)="applyFilter()"
+        />
+      </div>
+    </div>
+
+    <!-- loading -->
+    <div *ngIf="loading" class="p-4 text-sm text-slate-500">Carregando...</div>
+
+    <!-- lista -->
+    <div class="flex-auto h-full overflow-y-scroll">
+      <ng-container *ngIf="filtered?.length; else vazio">
+        <button
+          *ngFor="let c of filtered; trackBy: trackById"
+          (click)="select(c)"
+          class="w-full text-left"
+        >
+          <div
+            class="relative flex items-center gap-3 px-4 py-4 border-b hover:bg-slate-50"
+            [class.bg-sky-50]="selectedId === c.id"
+            [class.border-l-4]="selectedId === c.id"
+            [class.border-l-sky-500]="selectedId === c.id"
+          >
+            <!-- avatar -->
+            <div class="relative">
+              <div
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-200 font-semibold text-slate-700"
+              >
+                
+                {{ getInitial(c.name) }}
+              </div>
+              <span
+                class="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full ring-2 ring-white"
+                [class]="statusDotClass(c.recordStatus)"
+                [title]="c.recordStatus ? 'Ativo' : 'Inativo'"
+              ></span>
+            </div>
+
+            <!-- texto -->
+            <div class="min-w-0 flex-1">
+             
+              <div class="font-medium truncate">{{ c.name }}</div>
+              <div class="text-xs text-slate-500 truncate">{{ c.email }}</div>
+            </div>
+
+            <!-- role -->
+            <div
+              class="whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium"
+              [class]="roleBadgeClass(c.role)"
+            >
+              {{ (c.role || 'user') | titlecase }}
+            </div>
+          </div>
+        </button>
+      </ng-container>
+
+      <ng-template #vazio>
+        <div class="p-6 text-center text-slate-500">Nenhum cliente encontrado!</div>
+      </ng-template>
+    </div>
+  </div>
+
+  <!-- coluna direita: detalhes via router-outlet -->
+  <div class="flex w-full h-full overflow-hidden">
+    <router-outlet></router-outlet>
+  </div>
+</div>
