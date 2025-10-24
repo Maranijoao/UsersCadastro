@@ -1,4 +1,4 @@
-﻿namespace CadastroCliente.Models
+﻿namespace CadastroCliente.Models.DTOs.Users
 {
     public class AddressParams
     {
@@ -11,4 +11,3 @@
         public string? State { get; set; }
     }
 }
-

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace CadastroCliente.Models
+namespace CadastroCliente.Helpers
 {
     public static class SecurityHelper
     {

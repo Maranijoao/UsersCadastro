@@ -1,4 +1,6 @@
-﻿using CadastroCliente.Data;
+﻿using CadastroCliente.Repositories;
+using CadastroCliente.Repositories.Data;
+using CadastroCliente.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -78,6 +80,8 @@ builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<AddressRepository>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<UserLogRepository>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<EmailService>();
 
 builder.Services.AddCors(options =>
 {
@@ -88,7 +92,7 @@ builder.Services.AddCors(options =>
 var app = builder.Build();
 
 
-// Middlewares - Ordem Importa
+// Middlewares 
 
 app.UseCors("AllowALL");
 

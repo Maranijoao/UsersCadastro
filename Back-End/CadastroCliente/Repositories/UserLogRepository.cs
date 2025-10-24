@@ -1,7 +1,8 @@
-﻿using CadastroCliente.Models;
+﻿using CadastroCliente.Models.Entities;
+using CadastroCliente.Repositories.Data;
 using Microsoft.Data.SqlClient;
 
-namespace CadastroCliente.Data
+namespace CadastroCliente.Repositories
 {
     public class UserLogRepository
     {

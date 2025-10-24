@@ -1,6 +1,74 @@
 [
   {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.AuthController",
+    "Method": "ForgotPassword",
+    "RelativePath": "api/auth/forgot-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CadastroCliente.Models.DTOs.Auth.ForgotPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "login",
+        "Type": "CadastroCliente.Models.DTOs.Auth.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.AuthController",
+    "Method": "GetMe",
+    "RelativePath": "api/auth/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "CadastroCliente.Models.Entities.User",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.AuthController",
+    "Method": "ResetPassword",
+    "RelativePath": "api/auth/reset-password",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "CadastroCliente.Models.DTOs.Auth.ResetPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.UsersController",
     "Method": "GetAll",
     "RelativePath": "api/Users",
     "HttpMethod": "GET",
@@ -11,11 +79,31 @@
         "Name": "term",
         "Type": "System.String",
         "IsRequired": false
+      },
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "statusFilter",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "roleFilter",
+        "Type": "System.String",
+        "IsRequired": false
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[CadastroCliente.Models.User, CadastroCliente, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "CadastroCliente.Helpers.PagedResult\u00601[[CadastroCliente.Models.Entities.User, CadastroCliente, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -26,7 +114,7 @@
     ]
   },
   {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UsersController",
     "Method": "Create",
     "RelativePath": "api/Users",
     "HttpMethod": "POST",
@@ -35,13 +123,13 @@
     "Parameters": [
       {
         "Name": "user",
-        "Type": "CadastroCliente.Models.User",
+        "Type": "CadastroCliente.Models.Entities.User",
         "IsRequired": true
       }
     ],
     "ReturnTypes": [
       {
-        "Type": "CadastroCliente.Models.User",
+        "Type": "CadastroCliente.Models.Entities.User",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -52,7 +140,7 @@
     ]
   },
   {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UsersController",
     "Method": "GetById",
     "RelativePath": "api/Users/{id}",
     "HttpMethod": "GET",
@@ -67,7 +155,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "CadastroCliente.Models.User",
+        "Type": "CadastroCliente.Models.Entities.User",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -78,7 +166,7 @@
     ]
   },
   {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UsersController",
     "Method": "Update",
     "RelativePath": "api/Users/{id}",
     "HttpMethod": "PUT",
@@ -91,15 +179,15 @@
         "IsRequired": true
       },
       {
-        "Name": "user",
-        "Type": "CadastroCliente.Models.User",
+        "Name": "userFromRequest",
+        "Type": "CadastroCliente.Models.Entities.User",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UsersController",
     "Method": "Delete",
     "RelativePath": "api/Users/{id}",
     "HttpMethod": "DELETE",
@@ -115,82 +203,10 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
-    "Method": "GetInactive",
-    "RelativePath": "api/Users/inactive",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "term",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[CadastroCliente.Models.User, CadastroCliente, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
-    "Method": "Login",
-    "RelativePath": "api/Users/login",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "login",
-        "Type": "CadastroCliente.Models.LoginRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": [
-      {
-        "Type": "CadastroCliente.Models.User",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
-    "Method": "GetMe",
-    "RelativePath": "api/Users/me",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "CadastroCliente.Models.User",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ]
-  },
-  {
-    "ContainingType": "CadastroUser.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UsersController",
     "Method": "Reactivate",
-    "RelativePath": "api/Users/reactivate/{id}",
-    "HttpMethod": "PATCH",
+    "RelativePath": "api/Users/{id}/reactivate",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [
@@ -201,5 +217,25 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "Method": "GetUserRegistrationsByDayAsync",
+    "RelativePath": "api/Users/registrations-by-day",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[CadastroCliente.Models.DTOs.Shared.ChartDataPoint, CadastroCliente, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
   }
 ]

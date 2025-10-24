@@ -1,4 +1,4 @@
-﻿namespace CadastroCliente.Models
+﻿namespace CadastroCliente.Models.Entities
 {
     public class UserLog
     {

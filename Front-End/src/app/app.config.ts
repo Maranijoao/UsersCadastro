@@ -12,9 +12,11 @@ import { provideAuth } from 'app/core/auth/auth.provider';
 import { provideIcons } from 'app/core/icons/icons.provider';
 import { mockApiServices } from 'app/mock-api';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
+import { provideNgxMask } from 'ngx-mask';
 
 export const appConfig: ApplicationConfig = {
     providers: [
+        provideNgxMask(),
         provideAnimations(),
         provideHttpClient(),
         provideRouter(routes,
@@ -85,7 +87,7 @@ export const appConfig: ApplicationConfig = {
             },
             fuse: {
                 layout: 'dense',
-                scheme: 'light',
+                scheme: 'dark',
                 screens: {
                     sm: '600px',
                     md: '960px',

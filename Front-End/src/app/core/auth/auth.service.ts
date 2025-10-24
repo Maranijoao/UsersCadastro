@@ -1,116 +1,130 @@
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { AuthUtils } from 'app/core/auth/auth.utils';
-import { UserService } from 'app/core/user/user.service';
-import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
+import { Observable, ReplaySubject, tap, map, catchError, of, throwError } from 'rxjs';
+import { User } from 'app/core/user/user.types';
+import { AuthUtils } from './auth.utils';
 
-@Injectable({ providedIn: 'root' })
+// Interfaces para a requisição e resposta de login
+export interface LoginRequest {
+    email: string;
+    password: string;
+}
+
+export interface LoginResponse {
+    token: string;
+    user: User;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class AuthService {
     private _authenticated: boolean = false;
-    private _httpClient = inject(HttpClient);
-    private _userService = inject(UserService);
+    private _user = new ReplaySubject<User | null>(1);
+    private _currentUser: User | null = null;
+    private _baseUrl = 'http://localhost:5263/api/auth';
 
-    set accessToken(token: string) {
-        localStorage.setItem('accessToken', token);
+    constructor(private _httpClient: HttpClient) { }
+
+    // --- Acessores ---
+    set user(value: User | null) {
+        this._currentUser = value;
+        this._user.next(value);
     }
 
-    get accessToken(): string {
-        return localStorage.getItem('accessToken') ?? '';
+    get user$(): Observable<User | null> {
+        return this._user.asObservable();
     }
 
+    get isAdmin$(): Observable<boolean> {
+        return this.user$.pipe(map(user => !!user && user.role === 'admin'));
+    }
+
+    get accessToken(): string | null {
+        return localStorage.getItem('accessToken');
+    }
+
+    private set accessToken(token: string | null) {
+        if (token) {
+            localStorage.setItem('accessToken', token);
+        } else {
+            localStorage.removeItem('accessToken');
+        }
+    }
+
+    // --- Métodos ---
     check(): Observable<boolean> {
-        if (this._authenticated) {
-            return of(true);
-        }
-        if (!this.accessToken) {
-            return of(false);
-        }
+        if (this._authenticated) return of(true);
+        if (!this.accessToken) return of(false);
         if (AuthUtils.isTokenExpired(this.accessToken)) {
-            this.signOut();
-            return of(false);
+            return this.signOut().pipe(map(() => false));
         }
         return this.signInUsingToken();
     }
 
-    signIn(credentials: { email: string; password: string }): Observable<any> {
-        if (this._authenticated) {
-            return throwError(() => 'O usuário já está logado.');
-        }
-
-        return this._httpClient.post('http://localhost:5263/api/Users/login', credentials).pipe(
-            tap((response: any) => {
+    /**
+     * Realiza o login e trata as mensagens de erro da API.
+     */
+    signIn(loginData: LoginRequest): Observable<LoginResponse> {
+        return this._httpClient.post<LoginResponse>(`${this._baseUrl}/login`, loginData).pipe(
+            tap((response) => {
                 this.accessToken = response.token;
+                this.user = response.user;
                 this._authenticated = true;
-                this._userService.user = response.cliente;
             }),
-            catchError((err: HttpErrorResponse) => {
-                let errorMessage;
-                if (err.status) {
-                    console.log(err)
-                    errorMessage = err.error || 'Email ou senha inválidos.';
+            catchError((response: HttpErrorResponse) => {
+                let errorMessage = 'Ocorreu um erro, por favor tente novamente.';
+
+                if (typeof response.error === 'string') {
+                    errorMessage = response.error;
                 }
-                return throwError(() => new Error(errorMessage));
-            }),
+
+                return throwError(() => errorMessage);
+            })
         );
     }
 
-    /**
-     * Valida o token existente indo buscar os dados do utilizador.
-     * Esta é a forma correta de restaurar uma sessão.
-     */
     signInUsingToken(): Observable<boolean> {
-        return this._userService.get().pipe(
+        return this._httpClient.get<User>(`${this._baseUrl}/me`).pipe(
             map((user) => {
-                if (user) {
-                    this._authenticated = true;
-                    return true;
-                }
-                return false;
+                this.user = user;
+                this._authenticated = true;
+                return true;
             }),
             catchError(() => {
-                // Se a busca falhar (ex: token inválido), desloga o utilizador.
-                this.signOut();
+                this.signOut().subscribe();
                 return of(false);
             })
         );
     }
 
     signOut(): Observable<any> {
-        localStorage.removeItem('accessToken');
+        this.accessToken = null;
+        this.user = null;
         this._authenticated = false;
-        this._userService.user = null;
         return of(true);
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Métodos Auxiliares de Autenticação
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Regista um novo utilizador.
-     */
-    signUp(user: { name: string; email: string; password: string; company: string }): Observable<any> {
-        return this._httpClient.post('api/auth/sign-up', user);
+    // --- Métodos Adicionais de Autenticação (Placeholders) ---
+    signUp(user: any): Observable<any> {
+        return this._httpClient.post(`${this._baseUrl}/sign-up`, user);
     }
 
-    /**
-     * Solicita a recuperação de password.
-     */
-    forgotPassword(email: string): Observable<any> {
-        return this._httpClient.post('api/auth/forgot-password', email);
+    forgotPassword(email: string): Observable<any> 
+    {
+        return this._httpClient.post(`${this._baseUrl}/forgot-password`, { email });
     }
 
-    /**
-     * Define uma nova password.
-     */
-    resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
+    resetPassword(token: string, newPassword: string): Observable<any> 
+    {    
+        return this._httpClient.post(`${this._baseUrl}/reset-password`, { token, newPassword });
     }
 
-    /**
-     * Desbloqueia a sessão.
-     */
-    unlockSession(credentials: { email: string; password: string }): Observable<any> {
-        return this._httpClient.post('api/auth/unlock-session', credentials);
+    unlockSession(credentials: LoginRequest): Observable<any> {
+        return this._httpClient.post(`${this._baseUrl}/unlock-session`, credentials);
+    }
+
+    getCurrentUserName(): string {
+        return this._currentUser?.name || 'Utilizador do Sistema';
     }
 }

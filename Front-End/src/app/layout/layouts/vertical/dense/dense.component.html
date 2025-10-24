@@ -14,8 +14,8 @@
         <!-- Logo -->
         <div class="flex items-center justify-center h-20">
             <img
-                class="w-8"
-                src="assets/images/logo/logo.svg"
+                class="w-16"
+                src="assets/images/logo/elevadg.svg"
                 alt="Logo image">
         </div>
     </ng-container>
@@ -28,25 +28,31 @@
     <div class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
         <div class="flex items-center pr-2 space-x-2">
             <!-- Navigation toggle button -->
-            <button
+
+             <div class="text-4xl font-bold">
+          Eleva<span class="font-normal text-blue-500">Digital</span>
+        </div>
+
+            <!-- <button
                 mat-icon-button
                 (click)="toggleNavigation('mainNavigation')">
                 <mat-icon [svgIcon]="'heroicons_outline:bars-3'"></mat-icon>
-            </button>
+            </button> -->
             <!-- Navigation appearance toggle button -->
-            <button
+            <!-- <button
                 class="hidden md:inline-flex"
                 mat-icon-button
                 (click)="toggleNavigationAppearance()">
                 <mat-icon [svgIcon]="'heroicons_outline:arrows-right-left'"></mat-icon>
-            </button>
+            </button> -->
+            
         </div>
         <!-- Components -->
         <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
             <languages></languages>
             <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
             <search [appearance]="'bar'"></search>
-            <shortcuts></shortcuts>
+            <!-- <shortcuts></shortcuts> -->
             <!-- <messages></messages> -->
             <!-- <notifications></notifications> -->
             <!-- <button
@@ -70,7 +76,6 @@
     <!-- <div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
         <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
     </div> -->
-
 </div>
 
 <!-- Quick chat -->

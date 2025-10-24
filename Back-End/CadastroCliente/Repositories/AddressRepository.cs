@@ -1,8 +1,9 @@
-﻿using CadastroCliente.Models;
+﻿using CadastroCliente.Models.Entities;
+using CadastroCliente.Repositories.Data;
 using Microsoft.Data.SqlClient;
 using System.Net;
 
-namespace CadastroCliente.Data
+namespace CadastroCliente.Repositories
 {
     public class AddressRepository
     {

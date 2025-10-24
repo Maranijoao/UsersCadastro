@@ -83,29 +83,25 @@ export class AuthForgotPasswordComponent implements OnInit
                 {
                     // Re-enable the form
                     this.forgotPasswordForm.enable();
-
                     // Reset the form
                     this.forgotPasswordNgForm.resetForm();
-
                     // Show the alert
                     this.showAlert = true;
                 }),
             )
             .subscribe(
-                (response) =>
-                {
-                    // Set the alert
+                (response) => {
+                    // Por segurança, mostramos sempre a mesma mensagem de sucesso.
                     this.alert = {
-                        type   : 'success',
-                        message: 'Redefinição de senha enviada! Você receberá um e-mail se estiver registrado em nosso sistema.',
+                        type: 'success',
+                        message: "Se o seu e-mail estiver registado e ativo, receberá um link para redefinir a sua senha.",
                     };
                 },
-                (response) =>
-                {
-                    // Set the alert
+                (error) => {
+                    // Mesmo em caso de erro (ex: e-mail não encontrado), mostramos a mensagem de sucesso.
                     this.alert = {
-                        type   : 'error',
-                        message: 'Email does not found! Are you sure you are already a member?',
+                        type: 'error',
+                        message: "Email não encontrado! Você tem certeza de que tem um cadastro?",
                     };
                 },
             );

@@ -1,33 +1,36 @@
-<div class="w-full h-full overflow-y-auto bg-white p-9">
-    <div *ngIf="loading" class="text-center text-gray-500">
-        <p>Carregando dados do cliente...</p>
+<div class="w-full h-full overflow-y-auto bg-gray-100 dark:bg-gray-900 p-4 sm:p-6 md:p-8">
+    <div *ngIf="loading" class="text-center text-gray-500 dark:text-gray-400">
+        <p>A carregar dados do cliente...</p>
     </div>
 
-    <div *ngIf="!loading && !user" class="text-center text-gray-500">
+    <div *ngIf="!loading && !user" class="text-center text-gray-500 dark:text-gray-400">
         <p>Selecione um cliente na lista para ver os detalhes.</p>
     </div>
 
     <ng-container *ngIf="!loading && user">
         <!-- Cabeçalho -->
-        <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow">
+        <div class="flex justify-between items-center bg-white dark:bg-gray-800 p-6 rounded-xl shadow">
             <div class="flex items-center gap-4">
                 <div class="relative">
                     <div
-                        class="flex h-20 w-20 items-center justify-center rounded-full bg-slate-200 text-2xl font-semibold">
+                        class="flex h-20 w-20 items-center justify-center rounded-full bg-slate-200 dark:bg-gray-600 text-2xl font-semibold text-gray-700 dark:text-gray-200">
                         {{ getInitial(user.name) || '?' }}
                     </div>
-                    <span *ngIf="isEditMode" class="absolute bottom-2 right-2 h-4 w-4 rounded-full ring-2 ring-white"
-                        [class.bg-emerald-500]="user.recordStatus" [class.bg-rose-500]="!user.recordStatus"
+                    <span *ngIf="isEditMode"
+                        class="absolute bottom-2 right-2 h-4 w-4 rounded-full ring-2 ring-white dark:ring-gray-900"
+                        [class.bg-emerald-500]="user.recordStatus" [class.bg-rose-700]="!user.recordStatus"
                         [title]="statusText()">
                     </span>
                 </div>
                 <div class="min-w-0">
-                    <div class="text-2xl font-bold leading-tight truncate">{{ user.name || 'Novo Usuário' }}</div>
+                    <div class="text-2xl font-bold leading-tight truncate text-gray-900 dark:text-gray-100">{{ user.name
+                        || 'Novo Usuário' }}</div>
                     <div *ngIf="isEditMode" class="mt-1 flex items-center gap-2">
                         <span class="rounded-full px-2.5 py-0.5 text-xs font-medium" [class]="statusClasses()">
                             {{ statusText() }}
                         </span>
-                        <span class="rounded-full px-2.5 py-0.5 text-xs font-medium"
+                        <span
+                            class="rounded-full px-2.5 py-0.5 text-xs font-medium bg-slate-100 text-slate-700 dark:bg-gray-700 dark:text-gray-300"
                             [class]="roleBadgeClass(user.role)">
                             {{ (user.role || 'user') | titlecase }}
                         </span>
@@ -35,15 +38,15 @@
                 </div>
             </div>
             <div *ngIf="isAdmin" class="flex gap-3">
-                <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition"
-                    (click)="cancelar()">Cancelar</button>
+                <button
+                    class="px-4 py-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 transition"
+                    (click)="cancel()">Cancelar</button>
                 <button class="px-4 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition"
-                    (click)="salvar()">Salvar</button>
+                    (click)="save()">Salvar</button>
             </div>
         </div>
 
-        <!-- Formulário -->
-        <div class="mt-8 rounded-3xl bg-white shadow p-6">
+        <div class="mt-8 rounded-3xl bg-white dark:bg-gray-800 shadow p-6">
             <div class="space-y-6">
                 <!-- Dados Pessoais -->
                 <div class="grid sm:grid-cols-2 gap-6">
@@ -61,11 +64,23 @@
                 <div class="grid sm:grid-cols-2 gap-6">
                     <mat-form-field class="w-full">
                         <mat-label>CPF</mat-label>
-                        <input matInput [(ngModel)]="user.cpf" name="cpf" [disabled]="!isAdmin">
+                        <input matInput [(ngModel)]="user.cpf" name="cpf" mask="000.000.000-00" [disabled]="!isAdmin">
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>Telefone</mat-label>
-                        <input matInput [(ngModel)]="user.telefone" name="telefone" [disabled]="!isAdmin">
+                        <input matInput [(ngModel)]="user.phoneNumber" name="phoneNumber" mask="(00) 00000-0000"
+                            [disabled]="!isAdmin">
+                    </mat-form-field>
+                    <mat-form-field class="w-full">
+                        <mat-label>
+                            <span>Data de Nascimento</span>
+                        </mat-label>
+                        <input matInput type="text" appDateMask placeholder="DD/MM/AAAA" [(ngModel)]="user.birthDate"
+                            name="birthDate" [disabled]="!isAdmin">
+                        <span matSuffix *ngIf="user?.birthDate"
+                            class="text-md font-normal text-gray-500 dark:text-gray-400">
+                            {{ displayAge }}
+                        </span>
                     </mat-form-field>
                 </div>
 
@@ -73,39 +88,38 @@
                 <div *ngIf="!isEditMode" class="grid sm:grid-cols-2 gap-6">
                     <mat-form-field class="w-full">
                         <mat-label>Senha</mat-label>
-                        <input matInput [(ngModel)]="user.senha" name="senha" type="password" required>
+                        <input matInput [(ngModel)]="user.password" name="password" type="password" required>
                     </mat-form-field>
                     <mat-form-field class="w-full">
                         <mat-label>Confirmar Senha</mat-label>
-                        <input matInput [(ngModel)]="confirmarsenha" name="confirmarsenha" type="password" required>
+                        <input matInput [(ngModel)]="confirmPassword" name="confirmPassword" type="password" required>
                     </mat-form-field>
                 </div>
 
-
-                <hr class="my-4">
+                <hr class="my-4 dark:border-gray-700">
                 <div>
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-md font-semibold text-gray-600 uppercase">Endereços</h3>
-                        <button *ngIf="isAdmin" mat-flat-button color="primary" (click)="adicionarEndereco()">
+                        <h3 class="text-md font-semibold text-gray-600 dark:text-gray-300 uppercase">Endereços</h3>
+                        <button *ngIf="isAdmin" mat-flat-button color="primary" (click)="addAddress()">
                             <mat-icon svgIcon="heroicons_outline:plus"></mat-icon>
                             <span>Adicionar Endereço</span>
                         </button>
                     </div>
 
-                    <div *ngIf="!user.enderecos || user.enderecos.length === 0"
-                        class="text-center text-gray-400 p-4 border-2 border-dashed rounded-md">
+                    <div *ngIf="!user.address || user.address.length === 0"
+                        class="text-center text-gray-400 dark:text-gray-300 p-4 border-2 border-dashed dark:border-gray-500 rounded-md">
                         Nenhum endereço cadastrado.
                     </div>
 
-                    <div *ngFor="let endereco of user.enderecos; let i = index; trackBy: trackEnderecoById"
-                        class="space-y-4 border p-4 rounded-md mb-4 relative pt-8">
+                    <div *ngFor="let address of user.address; let i = index; trackBy: trackAddressById"
+                        class="space-y-4 border dark:border-gray-700 p-4 rounded-md mb-4 relative pt-8">
 
                         <div class="absolute top-2 right-2">
                             <button mat-icon-button [matMenuTriggerFor]="addressMenu" [disabled]="!isAdmin">
                                 <mat-icon svgIcon="heroicons_outline:ellipsis-vertical"></mat-icon>
                             </button>
                             <mat-menu #addressMenu="matMenu">
-                                <button mat-menu-item (click)="removerEndereco(i)">
+                                <button mat-menu-item (click)="removeAddrees(i)">
                                     <mat-icon svgIcon="heroicons_outline:trash"></mat-icon>
                                     <span>Remover</span>
                                 </button>
@@ -115,107 +129,135 @@
                         <div class="grid sm:grid-cols-4 gap-4">
                             <mat-form-field class="sm:col-span-2">
                                 <mat-label>CEP</mat-label>
-                                <input matInput [(ngModel)]="endereco.cep" [name]="'cep-' + i" [disabled]="!isAdmin"
-                                    (blur)="buscarCep(endereco.cep, endereco)"
-                                    (input)="buscarCep(endereco.cep, endereco)">
+                                <input matInput [(ngModel)]="address.cep" [name]="'cep-' + i" [disabled]="!isAdmin"
+                                    (blur)="searchCep(address.cep, address)" (input)="searchCep(address.cep, address)">
                             </mat-form-field>
                             <mat-form-field class="sm:col-span-2">
                                 <mat-label>Endereço</mat-label>
-                                <input matInput [(ngModel)]="endereco.logradouro" [name]="'logradouro-' + i"
+                                <input matInput [(ngModel)]="address.street" [name]="'street-' + i"
                                     [disabled]="!isAdmin">
                             </mat-form-field>
                         </div>
                         <div class="grid sm:grid-cols-4 gap-4">
                             <mat-form-field class="sm:col-span-2">
                                 <mat-label>Número</mat-label>
-                                <input matInput [(ngModel)]="endereco.numero" [name]="'numero-' + i"
+                                <input matInput [(ngModel)]="address.number" [name]="'number-' + i"
                                     [disabled]="!isAdmin">
                             </mat-form-field>
                             <mat-form-field class="sm:col-span-2">
                                 <mat-label>Complemento</mat-label>
-                                <input matInput [(ngModel)]="endereco.complemento" [name]="'complemento-' + i"
+                                <input matInput [(ngModel)]="address.complement" [name]="'complement-' + i"
                                     [disabled]="!isAdmin">
                             </mat-form-field>
                         </div>
                         <div class="grid sm:grid-cols-3 gap-4">
                             <mat-form-field>
                                 <mat-label>Bairro</mat-label>
-                                <input matInput [(ngModel)]="endereco.bairro" [name]="'bairro-' + i"
+                                <input matInput [(ngModel)]="address.neighborhood" [name]="'neighborhood-' + i"
                                     [disabled]="!isAdmin">
                             </mat-form-field>
                             <mat-form-field>
                                 <mat-label>Cidade</mat-label>
-                                <input matInput [(ngModel)]="endereco.cidade" [name]="'cidade-' + i"
-                                    [disabled]="!isAdmin">
+                                <input matInput [(ngModel)]="address.city" [name]="'city-' + i" [disabled]="!isAdmin">
                             </mat-form-field>
                             <mat-form-field>
                                 <mat-label>UF</mat-label>
-                                <input matInput [(ngModel)]="endereco.uf" [name]="'uf-' + i" [disabled]="!isAdmin"
+                                <input matInput [(ngModel)]="address.state" [name]="'state-' + i" [disabled]="!isAdmin"
                                     maxlength="2">
                             </mat-form-field>
                         </div>
                     </div>
                 </div>
 
-                <hr class="my-2">
+                <hr class="my-2 dark:border-gray-700">
                 <div>
-                    <h3 class="text-md font-semibold text-gray-600 uppercase mb-4">Acesso</h3>
+                    <h3 class="text-md font-semibold text-gray-600 dark:text-gray-300 uppercase mb-4">Acesso</h3>
                     <div class="grid sm:grid-cols-2 gap-6">
-                        <mat-form-field class="w-56">
+                        <mat-form-field appearance="fill"
+                            class="w-56 [&_.mdc-line-ripple]:hidden [&_.mat-mdc-form-field-flex]:bg-white [&_.mat-mdc-form-field-flex]:dark:bg-gray-800 [&_.mat-mdc-form-field-flex]:rounded-lg [&_.mat-mdc-floating-label]:text-gray-600 [&_.mat-mdc-floating-label]:dark:text-gray-400 [&_.mat-mdc-select-arrow]:text-gray-600 [&_.mat-mdc-select-arrow]:dark:text-gray-400">
                             <mat-label>Tipo</mat-label>
-                            <select matNativeControl [(ngModel)]="user.role" name="role" [disabled]="!isAdmin">
-                                <option value="user">Usuário</option>
-                                <option value="admin">Administrador</option>
-                            </select>
+                            <mat-select [(ngModel)]="user.role" name="role" [disabled]="!isAdmin"
+                                class="text-gray-800 dark:text-gray-200" panelClass="dark-details-panel">
+                                <mat-option value="user">Usuário</mat-option>
+                                <mat-option value="admin">Administrador</mat-option>
+                            </mat-select>
                         </mat-form-field>
-                        <mat-form-field class="w-56">
+
+                        <mat-form-field appearance="fill"
+                            class="w-56 [&_.mdc-line-ripple]:hidden [&_.mat-mdc-form-field-flex]:bg-white [&_.mat-mdc-form-field-flex]:dark:bg-gray-800 [&_.mat-mdc-form-field-flex]:rounded-lg [&_.mat-mdc-floating-label]:text-gray-600 [&_.mat-mdc-floating-label]:dark:text-gray-400 [&_.mat-mdc-select-arrow]:text-gray-600 [&_.mat-mdc-select-arrow]:dark:text-gray-400">
                             <mat-label>Status</mat-label>
-                            <select matNativeControl [(ngModel)]="user.recordStatus" name="recordStatus"
-                                [disabled]="!isAdmin">
-                                <option [ngValue]="true">Ativo</option>
-                                <option [ngValue]="false">Inativo</option>
-                            </select>
+                            <mat-select [(ngModel)]="user.recordStatus" name="recordStatus" [disabled]="!isAdmin"
+                                class="text-gray-800 dark:text-gray-200" panelClass="dark-details-panel">
+                                <mat-option [value]="true">Ativo</mat-option>
+                                <mat-option [value]="false">Inativo</mat-option>
+                            </mat-select>
                         </mat-form-field>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="lg:w-full flex justify-end">
-        <div *ngIf="isEditMode">
-            <div class="p-8 rounded-3xl bg-white shadow text-md w-80 mt-10">
-                <h3 class="text-md font-semibold text-gray-600 uppercase mb-8">Registro</h3>
-                <div *ngIf="user.dataCadastro" class="mb-4">
-                    <span class="font-medium text-md text-gray-500">Data de Cadastro</span>
-                    <p class="text-gray-800">{{ user.dataCadastro | date:'dd/MM/yyyy HH:mm' }}</p>
+        <!-- Bloco de Registro de Logs -->
+        <div class="lg:w-full flex">
+            <div *ngIf="isEditMode" class="w-full">
+                <div class="p-8 rounded-3xl bg-white dark:bg-gray-800 shadow text-md w-120 mt-10">
+                    <div>
+                        <h3 class="text-md font-semibold text-gray-600 dark:text-gray-300 uppercase mb-6">Registro</h3>
+                    </div>
+                    <div class="flex flex-col sm:flex-row w-full gap-7">
+                        <div>
+                            <div *ngIf="user.createdAt" class="mb-4">
+                                <span class="font-medium text-md text-gray-500 dark:text-gray-400">Data de
+                                    Cadastro</span>
+                                <p class="text-gray-800 dark:text-gray-200">{{ user.createdAt | date:'dd/MM/yyyy HH:mm'
+                                    }}</p>
+                            </div>
+                            <div *ngIf="user.createdBy" class="mb-4">
+                                <span class="font-medium text-md text-gray-500 dark:text-gray-400">Usuário de
+                                    Cadastro</span>
+                                <p class="font-semibold text-primary-500 dark:text-primary-400">{{ user.createdBy }}</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <ng-container *ngIf="user.updatedAt">
+                                @if (user.updatedAt)
+                                {<div class="mb-4">
+                                    <span class="font-medium text-md text-gray-500 dark:text-gray-400">Data de
+                                        Alteração</span>
+                                    <p class="text-gray-800 dark:text-gray-200">{{ user.updatedAt | date:'dd/MM/yyyy
+                                        HH:mm' }}</p>
+                                </div>}
+                                @if (user.updatedBy)
+                                {<div class="mb-4">
+                                    <span class="font-medium text-md text-gray-500 dark:text-gray-400">Usuário de
+                                        Alteração</span>
+                                    <p class="font-semibold text-primary-500 dark:text-primary-400">{{ user.updatedBy }}
+                                    </p>
+                                </div>}
+                            </ng-container>
+                        </div>
+
+                        <div>
+                            <ng-container *ngIf="!user.recordStatus">
+                                @if (user.inactivatedAt)
+                                {<div class="mb-4">
+                                    <span class="font-medium text-sm text-gray-500 dark:text-gray-400">Data de
+                                        Inativação</span>
+                                    <p class="text-gray-800 dark:text-gray-200">{{ user.inactivatedAt | date:'dd/MM/yyyy
+                                        HH:mm' }}</p>
+                                </div>}
+                                @if (user.inactivatedBy) {<div class="mb-4">
+                                    <span class="font-medium text-sm text-gray-500 dark:text-gray-400">Usuário de
+                                        Inativação</span>
+                                    <p class="font-semibold text-primary-500 dark:text-primary-400">{{
+                                        user.inactivatedBy }}</p>
+                                </div>}
+                            </ng-container>
+                        </div>
+                    </div>
                 </div>
-
-                <div *ngIf="user.usuarioCadastro" class="mb-4">
-                    <span class="font-medium text-md text-gray-500">Usuário de Cadastro</span>
-                    <p class="font-semibold text-primary-500">{{ user.usuarioCadastro }}</p>
-                </div>
-
-                <ng-container *ngIf="user.dataUltimaAlteracao">
-                    <div class="mb-4">
-                        <span class="font-medium text-md text-gray-500">Data de Alteração</span>
-                        <p class="text-gray-800">{{ user.dataUltimaAlteracao | date:'dd/MM/yyyy HH:mm' }}</p>
-                    </div>
-                    <div class="mb-4">
-                        <span class="font-medium text-md text-gray-500">Usuário de Alteração</span>
-                        <p class="font-semibold text-primary-500">{{ user.usuarioUltimaAlteracao }}</p>
-                    </div>
-                </ng-container>
-
-                <ng-container *ngIf="user.dataInativacao">
-                     <div class="mb-4">
-                        <span class="font-medium text-sm text-gray-500">Data de Inativação</span>
-                        <p class="text-gray-800">{{ user.dataInativacao | date:'dd/MM/yyyy HH:mm' }}</p>
-                    </div>
-                     <div class="mb-4">
-                        <span class="font-medium text-xs text-gray-500">Usuário de Inativação</span>
-                        <p class="font-semibold text-primary-500">{{ user.usuarioInativacao }}</p>
-                    </div>
-                </ng-container>
             </div>
         </div>
-    </div>
+    </ng-container>
+</div>

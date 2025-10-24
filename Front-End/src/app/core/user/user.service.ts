@@ -1,125 +1,134 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, ReplaySubject, forkJoin, map, switchMap } from 'rxjs'; // 1. Adicionado 'map'
-import { tap } from 'rxjs/operators';
+import { Observable, BehaviorSubject, tap, forkJoin, map, ReplaySubject, Subject } from 'rxjs';
 import { User } from './user.types';
+import { RoleFilter, StatusFilter } from 'app/modules/clientes/sidebar/sidebar.component';
 
-@Injectable({ providedIn: 'root' })
+export interface ChartDataPoint {
+    x: string;
+    y: number;
+}
+
+export interface PagedResult<T> {
+    items: T[];
+    totalCount: number;
+    pageNumber: number;
+    pageSize: number;
+    totalPages: number;
+    hasPreviousPage: boolean;
+    hasNextPage: boolean;
+    roleFilter: string;
+    statusFilter: string;
+}
+
+@Injectable({
+    providedIn: 'root'
+})
 export class UserService {
-    private readonly _httpClient = inject(HttpClient);
-    private readonly _baseUrl = 'http://localhost:5263/api/Users';
+    private _users = new BehaviorSubject<User[]>([]);
+    private _pagination = new BehaviorSubject<PagedResult<any> | null>(null);
+    private _user = new BehaviorSubject<User | null>(null);
+    private _allUsers = new ReplaySubject<User[]>(1);
+    private _listNeedsRefresh = new Subject<void>();
+    private _totalUsersCount = new BehaviorSubject<number>(0);
+    private _baseUrl = 'http://localhost:5263/api/users';
 
-    private readonly _user = new ReplaySubject<User>(1);
-    private readonly _Users: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
-    private readonly _UsersInativos: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
-    private readonly _allUsers = new ReplaySubject<User[]>(1);
-    // -----------------------------------------------------------------------------------------------------
-    // @ Accessors
-    // -----------------------------------------------------------------------------------------------------
+    constructor(private _httpClient: HttpClient) { }
 
-    set user(value: User) {
-        this._user.next(value);
+    // --- Acessores ---
+
+    get users$(): Observable<User[]> {
+        return this._users.asObservable();
     }
 
-    get user$(): Observable<User> {
+    get user$(): Observable<User | null> {
         return this._user.asObservable();
     }
 
-    get Users$(): Observable<User[]> {
-        return this._Users.asObservable();
+    get pagination$(): Observable<PagedResult<any> | null> {
+        return this._pagination.asObservable();
     }
 
-    get UsersInativos$(): Observable<User[]> {
-        return this._UsersInativos.asObservable();
+    get listNeedsRefresh$(): Observable<void> {
+        return this._listNeedsRefresh.asObservable();
     }
 
     get allUsers$(): Observable<User[]> {
         return this._allUsers.asObservable();
     }
 
-    get isAdmin$(): Observable<boolean> {
-        return this.user$.pipe(
-            map(user => user.role === 'admin')
-        );
+    get totalUsersCount$(): Observable<number> {
+        return this._totalUsersCount.asObservable();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
+    // --- Métodos Públicos ---
 
-    get(): Observable<User> {
-        return this._httpClient.get<User>(this._baseUrl + '/me').pipe(
-            tap((user) => {
-                this._user.next(user);
-            }),
-        );
+    notifyListChanged(): void {
+        this._listNeedsRefresh.next();
     }
 
-    getAll(termo: string = ''): Observable<User[]> {
-        let params = new HttpParams();
-        if (termo.trim()) {
-            params = params.set('termo', termo);
-        }
-        return this._httpClient.get<User[]>(this._baseUrl, { params }).pipe(
-            tap((Users) => this._Users.next(Users))
-        );
-    }
-
-    getAllInativos(termo: string = ''): Observable<User[]> {
-        let params = new HttpParams();
-        if (termo.trim()) {
-            params = params.set('termo', termo);
-        }
-        return this._httpClient.get<User[]>(`${this._baseUrl}/inactive`, { params }).pipe(
-            tap((Users) => this._UsersInativos.next(Users))
-        );
+    getUserRegistrationsByDay(): Observable<ChartDataPoint[]> {
+        return this._httpClient.get<ChartDataPoint[]>(`${this._baseUrl}/registrations-by-day`);
     }
 
     getAllUsersCombined(): Observable<User[]> {
         return forkJoin({
-            ativos: this.getAll(),
-            inativos: this.getAllInativos()
+            users: this.getUsers()
         }).pipe(
-            map(({ ativos, inativos }) => {
-                const todosOsUsuarios = [...ativos, ...inativos];
-                return todosOsUsuarios.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
-            }),
-
-            tap(usuariosOrdenados => {
-                this._allUsers.next(usuariosOrdenados);
+            map(({ users }) => {
+                const allUsers = [...users].sort((a, b) =>
+                    (a.name || '').localeCompare(b.name || '')
+                );
+                this._allUsers.next(allUsers);
+                return allUsers;
             })
         );
     }
 
-    getUserById(id: number): Observable<User | undefined> {
+    getUsers(term: string = '', pageNumber: number = 1, pageSize: number = 10, roleFilter: string = 'all', statusFilter: string = 'all'
+    ): Observable<any> {
+        let params = new HttpParams()
+            .set('term', term)
+            .set('pageNumber', pageNumber.toString())
+            .set('pageSize', pageSize.toString())
+
+        if (roleFilter !== 'all') {
+            console.log(roleFilter);
+            params = params.set('roleFilter', roleFilter);
+        }
+
+        if (statusFilter !== 'all') {
+            const statusValue = statusFilter === 'active' ? 'true' : 'false';
+            params = params.set('statusFilter', statusValue);
+        }
+
+        return this._httpClient.get<PagedResult<User>>(this._baseUrl, { params }).pipe(
+            tap((pagedResult) => {
+                this._totalUsersCount.next(pagedResult.totalCount);
+                this._users.next(pagedResult.items);
+                this._pagination.next(pagedResult);
+            })
+        );
+    }
+
+    getUserById(id: number): Observable<User> {
         return this._httpClient.get<User>(`${this._baseUrl}/${id}`);
     }
 
-    // - Métodos de Escrita --
+    add(user: User): Observable<User> {
+        return this._httpClient.post<User>(this._baseUrl, user);
+    }
 
     update(user: User): Observable<User> {
-        return this._httpClient.put<User>(`${this._baseUrl}/${user.id}`, user).pipe(
-            switchMap(() => this.getAllUsersCombined()),
-            map(() => user)
-        );
+        return this._httpClient.put<User>(`${this._baseUrl}/${user.id}`, user);
     }
 
-    delete(id: number): Observable<void> {
-        return this._httpClient.delete<void>(`${this._baseUrl}/${id}`).pipe(
-            tap(() => this.getAllUsersCombined().subscribe())
-        );
+    inactivate(id: number): Observable<any> {
+        return this._httpClient.delete(`${this._baseUrl}/${id}`);
     }
 
-    reativar(user: User): Observable<User> {
-        return this._httpClient.patch<User>(`${this._baseUrl}/reativar/${user.id}`, user).pipe(
-            tap(() => this.getAllUsersCombined().subscribe())
-        );
-    }
-
-    add(user: User): Observable<User> {
-        return this._httpClient.post<User>(this._baseUrl, user).pipe(
-            switchMap(() => this.getAllUsersCombined()),
-            map(() => user)
-        );
+    reactivate(id: number): Observable<any> {
+        return this._httpClient.post(`${this._baseUrl}/${id}/reactivate`, {});
     }
 }
+

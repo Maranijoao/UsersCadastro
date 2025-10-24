@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CadastroCliente.Models;
+namespace CadastroCliente.Models.DTOs.Auth;
 
     public class LoginRequest
     {
@@ -10,4 +10,3 @@ namespace CadastroCliente.Models;
         [Required]
         public string Password { get; set; } = string.Empty;
     }
-

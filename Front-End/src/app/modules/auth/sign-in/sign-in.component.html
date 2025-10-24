@@ -38,12 +38,12 @@
         <div class="w-full sm:w-auto py-8 px-4 sm:p-12 md:p-16">
             <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
                 <!-- Logo -->
-                <div class="w-80">
-                    <img src="assets/images/logo/nexura-logo.svg">
-                </div>
+                <div class="text-6xl font-bold">
+          Eleva<span class="font-normal text-blue-500">Digital</span>
+        </div>
 
                 <!-- Title -->
-                <div class="mt-8 text-4xl font-extrabold tracking-tight leading-tight">Fazer Login</div>
+                <div class="mt-7 text-4xl font-extrabold tracking-tight leading-tight">Fazer Login</div>
                 <div class="flex items-baseline mt-0.5 font-medium">
                     <!-- <div>Não tem uma conta?</div>
                     <a class="ml-1 text-primary-500 hover:underline" [routerLink]="['/sign-up']">Cadastre-se
@@ -82,7 +82,7 @@
                             <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'password'"
                                 [svgIcon]="'heroicons_solid:eye'"></mat-icon>
                             <mat-icon class="icon-size-5" *ngIf="passwordField.type === 'text'"
-                                [svgIcon]="'heroicons_solid:eye-slash'"></mat-icon>
+                                [svgIcon]="'heroicons_solid:'"></mat-icon>
                         </button>
                         <mat-error>
                             A senha é obrigatória
@@ -100,7 +100,6 @@
                     </div>
 
                     <!-- Submit button -->
-                    <!-- CORRIGIDO: Alterado para type="submit" e removido o (click) -->
                     <button type="submit" class="fuse-mat-button-large w-full mt-6" mat-flat-button [color]="'primary'"
                         [disabled]="signInForm.disabled">
                         <span *ngIf="!signInForm.disabled">
@@ -110,24 +109,11 @@
                             [mode]="'indeterminate'"></mat-progress-spinner>
                     </button>
 
-                    <!-- Separator -->
-                    <div class="flex items-center mt-8">
-                        <div class="flex-auto mt-px border-t"></div>
-                        <div class="mx-2 text-secondary">Ou continue com</div>
-                        <div class="flex-auto mt-px border-t"></div>
-                    </div>
-
                     <!-- Single sign-on buttons -->
                     <div class="flex items-center mt-8 space-x-4">
-                        <button class="flex-auto" type="button" mat-stroked-button>
-                            <mat-icon class="icon-size-5" [svgIcon]="'feather:facebook'"></mat-icon>
-                        </button>
-                        <button class="flex-auto" type="button" mat-stroked-button>
-                            <mat-icon class="icon-size-5" [svgIcon]="'feather:twitter'"></mat-icon>
-                        </button>
-                        <button class="flex-auto" type="button" mat-stroked-button>
+                        <!-- <button class="flex-auto" type="button" mat-stroked-button>
                             <mat-icon class="icon-size-5" [svgIcon]="'feather:github'"></mat-icon>
-                        </button>
+                        </button> -->
                     </div>
                 </form>
             </div>

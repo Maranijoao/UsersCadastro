@@ -1,24 +1,24 @@
-﻿using CadastroCliente.Data;
-using CadastroCliente.Models;
+﻿using CadastroCliente.Helpers;
+using CadastroCliente.Models.DTOs.Shared;
+using CadastroCliente.Models.Entities;
+using CadastroCliente.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
+using System.Text.Json;
 
-namespace CadastroUser.Controllers;
+namespace CadastroCliente.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
 public class UsersController : ControllerBase
 {
-    private readonly UserRepository _userRepository;
-    private readonly TokenService _tokenService;
+    private readonly UserService _userService;
     private readonly ILogger<UsersController> _logger;
 
-    public UsersController(UserRepository userRepository, TokenService tokenService, ILogger<UsersController> logger)
+    public UsersController(UserService userService, ILogger<UsersController> logger)
     {
-        _userRepository = userRepository;
-        _tokenService = tokenService;
+        _userService = userService;
         _logger = logger;
     }
 
@@ -26,65 +26,50 @@ public class UsersController : ControllerBase
 
     // Lista com filtro
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<User>>> GetAll([FromQuery] string? term = "")
+    [Authorize(Roles = "admin")]
+    public async Task<ActionResult<PagedResult<User>>> GetAll(
+        [FromQuery] string term = "",
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] string statusFilter = "all",
+        [FromQuery] string roleFilter = "all")
     {
-        var users = await _userRepository.GetAllAsync(term, 1);
-        return Ok(users);
+        try
+        {
+            _logger.LogInformation("A iniciar a busca por utilizadores com o termo: '{Term}'", term);
+            var pagedResult = await _userService.GetAllAsync(term, pageNumber, pageSize, statusFilter, roleFilter);
+            _logger.LogInformation("Busca concluída com sucesso. Foram encontrados {Count} registos.", pagedResult.TotalCount);
+            return Ok(pagedResult);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ocorreu um erro ao executar a pesquisa por utilizadores.");
+            return StatusCode(500, "Ocorreu um erro interno ao processar a sua solicitação de pesquisa.");
+        }
     }
 
-    // Listar Users inativos
-    [HttpGet("inactive")]
-    public async Task<ActionResult<IEnumerable<User>>> GetInactive([FromQuery] string? term = "")
+    [HttpGet("registrations-by-day")]
+    [Authorize(Roles = "admin")]
+    public async Task<ActionResult<IEnumerable<ChartDataPoint>>> GetUserRegistrationsByDayAsync()
     {
-        var inactiveUsers = await _userRepository.GetInactiveAsync(term);
-        return Ok(inactiveUsers);
+        try
+        {
+            var chartData = await _userService.GetUserRegistrationsByDayAsync();
+            return Ok(chartData);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ocorreu um erro ao buscar os dados para o gráfico de registros.");
+            return StatusCode(500, "Ocorreu um erro interno.");
+        }
     }
 
     [HttpGet("{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult<User>> GetById(int id)
     {
-        var user = await _userRepository.GetByIdAsync(id);
-        return user == null ? NotFound() : Ok(user);
-    }
-
-    [HttpGet("me")]
-    public async Task<ActionResult<User>> GetMe()
-    {
-        var email = User.FindFirst(ClaimTypes.Email)?.Value;
-        if (string.IsNullOrEmpty(email))
-        {
-            return Unauthorized();
-        }
-
-        var user = await _userRepository.GetByEmailAsync(
-            email);
-        return user == null ? NotFound() : Ok(user);
-    }
-
-    [HttpPost("login")]
-    [AllowAnonymous]
-    public async Task<ActionResult<User>> Login([FromBody] LoginRequest login)
-    {
-        var user = await _userRepository.LoginAsync(login.Email, login.Password);
-        Console.Write(user);
-
-        string PasswordHash = SecurityHelper.ComputeSha256Hash(login.Password);
-
-        if (user is null)
-            return NotFound("user não cadastrado");
-
-        if (user.Password != PasswordHash)
-            return NotFound("Email ou Password inválidos");
-
-        if (user.RecordStatus == false)
-            return NotFound("Sua conta está inativa, Por favor entre em contato com o suporte");
-        var token = _tokenService.GenerateToken(user);
-
-        return Ok(new
-        {
-            token,
-            user
-        });
+        var user = await _userService.GetByIdAsync(id);
+        return user == null ? NotFound("Usuário não encontrado.") : Ok(user);
     }
 
     // --- Endpoints de Escrita (Apenas para Administradores) ---
@@ -93,48 +78,40 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "admin")]
     public async Task<ActionResult<User>> Create([FromBody] User user)
     {
+        _logger.LogInformation("Objeto recebido para CRIAR utilizador: {UserData}", JsonSerializer.Serialize(user));
+
         if (user == null) return BadRequest();
-
-        var loggedInUser = User.Identity?.Name ?? "Usuário Desconhecido";
-
-        var createdUser = await _userRepository.AddAsync(user, loggedInUser);
+        var loggedInUser = User.Identity?.Name ?? "Sistema";
+        var createdUser = await _userService.AddAsync(user, loggedInUser);
 
         return CreatedAtAction(nameof(GetById), new { id = createdUser.Id }, createdUser);
     }
 
     [HttpPut("{id}")]
     [Authorize(Roles = "admin")]
-    public async Task<ActionResult> Update(int id, [FromBody] User user)
+    public async Task<ActionResult> Update(int id, [FromBody] User userFromRequest)
     {
-        if (id != user.Id)
+        _logger.LogInformation("Objeto recebido para ATUALIZAR utilizador {UserId}: {UserData}", id, JsonSerializer.Serialize(userFromRequest));
+
+        if (id != userFromRequest.Id)
         {
-            return BadRequest("O ID da URL não corresponde ao ID do Usuário enviado.");
+            return BadRequest("O ID da URL não corresponde com o ID do usuário.");
         }
 
-        var userFromDb = await _userRepository.GetByIdAsync(id);
-        if (userFromDb == null)
-        {
-            return NotFound("Usuário não encontrado.");
-        }
-
-        var Password = SecurityHelper.ComputeSha256Hash(user.Password);
-        if (userFromDb.Password != user.Password)
-            user.Password = Password;
-
-
-        var loggedInUser = User.Identity?.Name ?? "Usuário Desconhecido";
-
+        var loggedInUser = User.Identity?.Name ?? "Sistema";
         try
         {
-            await _userRepository.UpdateAsync(user, loggedInUser);
+            await _userService.UpdateAsync(id, userFromRequest, loggedInUser);
             return NoContent();
+        }
+        catch (KeyNotFoundException ex)
+        {
+            return NotFound(ex.Message);
         }
         catch (Exception ex)
         {
-            // Se ocorrer um erro no repositório, ele será logado aqui.
-            _logger.LogError(ex, "Ocorreu um erro ao atualizar o user com ID {userId}", id);
-            // Retorna um erro 500 para o frontend saber que algo correu mal.
-            return StatusCode(500, "Ocorreu um erro interno ao processar a sua solicitação.");
+            _logger.LogError(ex, "Erro ao atualizar o usuário com ID {userId}", id);
+            return StatusCode(500, "Ocorreu um erro interno.");
         }
     }
 
@@ -142,28 +119,21 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "admin")]
     public async Task<ActionResult> Delete(int id)
     {
-        var user = await _userRepository.GetByIdAsync(id);
+        var user = await _userService.GetByIdAsync(id);
         if (user == null) return NotFound();
 
-        var loggedInUser = User.Identity?.Name ?? "Usuário Desconhecido";
+        var loggedInUser = User.Identity?.Name ?? "Sistema";
+        await _userService.DeleteAsync(id, loggedInUser);
 
-        await _userRepository.DeleteAsync(id, loggedInUser);
-
-        return Ok(new { mensagem = "Usuário Inativado com sucesso " });
+        return Ok(new { message = "Usuário inativado com sucesso." });
     }
 
-    [HttpPatch("reactivate/{id}")]
+    [HttpPost("{id}/reactivate")]
     [Authorize(Roles = "admin")]
     public async Task<ActionResult> Reactivate(int id)
     {
-        var user = await _userRepository.GetByIdAsync(id);
-        if (user == null)
-            return NotFound("Usuário não encontrado");
-
-        if (user.RecordStatus is true)
-            return BadRequest("Usuário já está ativo");
-
-        await _userRepository.ReactivateAsync(id);
-        return Ok(new { mensagem = "Usuário reativado com sucesso" });
+        var loggedInUser = User.Identity?.Name ?? "Sistema";
+        await _userService.ReactivateAsync(id, loggedInUser);
+        return Ok(new { message = "Usuário reativado com sucesso." });
     }
 }

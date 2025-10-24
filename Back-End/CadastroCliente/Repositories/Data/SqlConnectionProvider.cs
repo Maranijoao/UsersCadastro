@@ -1,6 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 
-namespace CadastroCliente.Data
+namespace CadastroCliente.Repositories.Data
 {
     public class SqlConnectionProvider
     {

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace CadastroCliente.Models;
+namespace CadastroCliente.Models.DTOs.Users;
 //Com validações
 
 public class UserParams

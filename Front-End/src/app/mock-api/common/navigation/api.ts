@@ -1,23 +1,22 @@
 import { Injectable } from '@angular/core';
 import { FuseNavigationItem } from '@fuse/components/navigation';
 import { FuseMockApiService } from '@fuse/lib/mock-api';
-import { compactNavigation, defaultNavigation, futuristicNavigation, horizontalNavigation } from 'app/mock-api/common/navigation/data';
-import { cloneDeep } from 'lodash-es';
+import { compactNavigation, generateNavigation, futuristicNavigation, horizontalNavigation } from 'app/mock-api/common/navigation/data';
+import { clone, cloneDeep, compact } from 'lodash-es';
+import { AuthService } from 'app/core/auth/auth.service';
+import { UserService } from 'app/core/user/user.service';
 
 @Injectable({providedIn: 'root'})
 export class NavigationMockApi
 {
-    private readonly _compactNavigation: FuseNavigationItem[] = compactNavigation;
-    private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
-    private readonly _futuristicNavigation: FuseNavigationItem[] = futuristicNavigation;
-    private readonly _horizontalNavigation: FuseNavigationItem[] = horizontalNavigation;
-
     /**
      * Constructor
      */
-    constructor(private _fuseMockApiService: FuseMockApiService)
+    constructor(
+        private _fuseMockApiService: FuseMockApiService,
+    )
     {
-        // Register Mock API handlers
+        // Register Mock API handlers\
         this.registerHandlers();
     }
 
@@ -37,50 +36,40 @@ export class NavigationMockApi
             .onGet('api/common/navigation')
             .reply(() =>
             {
-                // Fill compact navigation children using the default navigation
-                this._compactNavigation.forEach((compactNavItem) =>
-                {
-                    this._defaultNavigation.forEach((defaultNavItem) =>
-                    {
-                        if ( defaultNavItem.id === compactNavItem.id )
-                        {
-                            compactNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
+                const isAdmin = true;
+                const defaultNavigation = generateNavigation(isAdmin);
+                const compactNav = cloneDeep(compactNavigation);
+                const futuristicNav = cloneDeep(futuristicNavigation);
+                const horizontalNav = cloneDeep(horizontalNavigation);
+
+                compactNav.forEach((item) => {
+                    const found = defaultNavigation.find(d => d.id === item.id);
+                    if (found && found.children) {
+                        item.children = cloneDeep(found.children);
+                    }
                 });
 
-                // Fill futuristic navigation children using the default navigation
-                this._futuristicNavigation.forEach((futuristicNavItem) =>
-                {
-                    this._defaultNavigation.forEach((defaultNavItem) =>
-                    {
-                        if ( defaultNavItem.id === futuristicNavItem.id )
-                        {
-                            futuristicNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
+                futuristicNav.forEach((item) => {
+                    const found = defaultNavigation.find(d => d.id === item.id);
+                    if (found && found.children) {
+                        item.children = cloneDeep(found.children);
+                    }
                 });
 
-                // Fill horizontal navigation children using the default navigation
-                this._horizontalNavigation.forEach((horizontalNavItem) =>
-                {
-                    this._defaultNavigation.forEach((defaultNavItem) =>
-                    {
-                        if ( defaultNavItem.id === horizontalNavItem.id )
-                        {
-                            horizontalNavItem.children = cloneDeep(defaultNavItem.children);
-                        }
-                    });
+                horizontalNav.forEach((item) => {
+                    const found = defaultNavigation.find(d => d.id === item.id);
+                    if (found && found.children) {
+                        item.children = cloneDeep(found.children);
+                    }
                 });
 
-                // Return the response
                 return [
                     200,
                     {
-                        compact   : cloneDeep(this._compactNavigation),
-                        default   : cloneDeep(this._defaultNavigation),
-                        futuristic: cloneDeep(this._futuristicNavigation),
-                        horizontal: cloneDeep(this._horizontalNavigation),
+                        compact   : (compactNav),
+                        default   : cloneDeep(defaultNavigation),
+                        futuristic : (compactNav),
+                        horizontal: (compactNav)
                     },
                 ];
             });

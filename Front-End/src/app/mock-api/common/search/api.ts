@@ -3,13 +3,13 @@ import { FuseNavigationItem, FuseNavigationService } from '@fuse/components/navi
 import { FuseMockApiService } from '@fuse/lib/mock-api';
 import { contacts } from 'app/mock-api/apps/contacts/data';
 import { tasks } from 'app/mock-api/apps/tasks/data';
-import { defaultNavigation } from 'app/mock-api/common/navigation/data';
+import { generateNavigation } from 'app/mock-api/common/navigation/data';
+import { AuthService } from 'app/core/auth/auth.service';
+import { UserService } from 'app/core/user/user.service';
 import { cloneDeep } from 'lodash-es';
 
-@Injectable({providedIn: 'root'})
-export class SearchMockApi
-{
-    private readonly _defaultNavigation: FuseNavigationItem[] = defaultNavigation;
+@Injectable({ providedIn: 'root' })
+export class SearchMockApi {
     private readonly _contacts: any[] = contacts;
     private readonly _tasks: any[] = tasks;
 
@@ -19,8 +19,7 @@ export class SearchMockApi
     constructor(
         private _fuseMockApiService: FuseMockApiService,
         private _fuseNavigationService: FuseNavigationService,
-    )
-    {
+    ) {
         // Register Mock API handlers
         this.registerHandlers();
     }
@@ -32,26 +31,27 @@ export class SearchMockApi
     /**
      * Register Mock API handlers
      */
-    registerHandlers(): void
-    {
-        // Get the flat navigation and store it
-        const flatNavigation = this._fuseNavigationService.getFlatNavigation(this._defaultNavigation);
-
-        // -----------------------------------------------------------------------------------------------------
+    registerHandlers(): void {
+        // ----------------------------------------------------------------------------------------------------
         // @ Search results - GET
         // -----------------------------------------------------------------------------------------------------
         this._fuseMockApiService
             .onPost('api/common/search')
-            .reply(({request}) =>
-            {
+            .reply(({ request }) => {
+
+                const isAdmin = true;
+
+                const defaultNavigation = generateNavigation(isAdmin);
+
+                const flatNavigation = this._fuseNavigationService.getFlatNavigation(defaultNavigation);
+
                 // Get the search query
                 const query = cloneDeep(request.body.query.toLowerCase());
 
                 // If the search query is an empty string,
                 // return an empty array
-                if ( query === '' )
-                {
-                    return [200, {results: []}];
+                if (query === '') {
+                    return [200, { results: [] }];
                 }
 
                 // Filter the contacts
@@ -70,11 +70,9 @@ export class SearchMockApi
                 const results = [];
 
                 // If there are contacts results...
-                if ( contactsResults.length > 0 )
-                {
+                if (contactsResults.length > 0) {
                     // Normalize the results
-                    contactsResults.forEach((result) =>
-                    {
+                    contactsResults.forEach((result) => {
                         // Add a link
                         result.link = '/apps/contacts/' + result.id;
 
@@ -84,36 +82,32 @@ export class SearchMockApi
 
                     // Add to the results
                     results.push({
-                        id     : 'contacts',
-                        label  : 'Contacts',
+                        id: 'contacts',
+                        label: 'Contacts',
                         results: contactsResults,
                     });
                 }
 
                 // If there are page results...
-                if ( pagesResults.length > 0 )
-                {
+                if (pagesResults.length > 0) {
                     // Normalize the results
-                    pagesResults.forEach((result: any) =>
-                    {
+                    pagesResults.forEach((result: any) => {
                         // Add the page title as the value
                         result.value = result.title;
                     });
 
                     // Add to the results
                     results.push({
-                        id     : 'pages',
-                        label  : 'Pages',
+                        id: 'pages',
+                        label: 'Pages', 
                         results: pagesResults,
                     });
                 }
 
                 // If there are tasks results...
-                if ( tasksResults.length > 0 )
-                {
+                if (tasksResults.length > 0) {
                     // Normalize the results
-                    tasksResults.forEach((result) =>
-                    {
+                    tasksResults.forEach((result) => {
                         // Add a link
                         result.link = '/apps/tasks/' + result.id;
 
@@ -123,8 +117,8 @@ export class SearchMockApi
 
                     // Add to the results
                     results.push({
-                        id     : 'tasks',
-                        label  : 'Tasks',
+                        id: 'tasks',
+                        label: 'Tasks',
                         results: tasksResults,
                     });
                 }

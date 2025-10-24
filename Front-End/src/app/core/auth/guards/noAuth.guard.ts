@@ -1,23 +1,28 @@
 import { inject } from '@angular/core';
-import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
+import { CanActivateChildFn, CanActivateFn, Router, UrlTree } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
-import { of, switchMap } from 'rxjs';
+import { of, switchMap, Observable } from 'rxjs';
 
-export const NoAuthGuard: CanActivateFn | CanActivateChildFn = (route, state) =>
+export const NoAuthGuard: CanActivateFn | CanActivateChildFn = (route, state): Observable<boolean | UrlTree> =>
 {
     const router: Router = inject(Router);
+    const authService: AuthService = inject(AuthService);
 
-    // Check the authentication status
-    return inject(AuthService).check().pipe(
+    return authService.check().pipe(
         switchMap((authenticated) =>
         {
-            // If the user is authenticated...
             if ( authenticated )
             {
-                return of(router.parseUrl(''));
+
+                if (state.url.startsWith('/reset-password'))
+                {
+                    return of(true);
+                }
+
+                const urlTree = router.parseUrl(''); 
+                return of(urlTree);
             }
 
-            // Allow the access
             return of(true);
         }),
     );

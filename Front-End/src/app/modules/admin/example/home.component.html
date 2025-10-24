@@ -1,20 +1,25 @@
-<div class="w-full p-8">
-  <h2 class="text-6xl font-bold mb-1">Início</h2>
-  <p class="mb-8">Visão geral do seu negócio</p>
+<!-- Container principal com cores de fundo para ambos os temas -->
+<div class="w-full p-8 bg-gray-50 dark:bg-gray-900">
 
-  <div class="flex flex-row justify-between gap-6 mb-12 h-50 w-full">
-    <div
-      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+  <!-- Títulos com cores de texto para ambos os temas -->
+  <h2 class="text-3xl lg:text-4xl font-bold mb-1 text-gray-800 dark:text-gray-100">Início</h2>
+  <p class="mb-8 text-gray-600 dark:text-gray-300">Visão geral do seu negócio</p>
+
+  <!-- Cards de Totais com cores para ambos os temas -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+    <!-- Card 1: Total de Usuários -->
+    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
-        <p class="text-sm font-semibold text-gray-700">Total de Clientes</p>
+        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Total de Usuários</p>
         <ng-container *ngIf="!loadingClientes; else loadingSpinner">
-                    <h3 class="text-2xl font-bold dark:text-black">{{ totalClientes }}</h3>
-                </ng-container>
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ totalClientes }}</h3>
+        </ng-container>
         <ng-template #loadingSpinner>
-                    <div class="h-8 flex items-center">
-                        <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
-                    </div>
-                </ng-template>
+          <div class="h-8 flex items-center">
+            <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+          </div>
+        </ng-template>
         <span class="text-green-600 text-xs">+12% em relação ao mês anterior</span>
       </div>
       <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
@@ -22,23 +27,22 @@
       </div>
     </div>
 
-    <div
-      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+    <!-- Outros cards (aplicar o mesmo padrão de cores) -->
+    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
-        <p class="text-sm font-semibold text-gray-700">Quantidade de Contratos</p>
-        <h3 class="text-2xl font-bold dark:text-black">6</h3>
+        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Quantidade de Contratos</p>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">6</h3>
         <span class="text-red-600 text-xs">-5% em relação ao mês anterior</span>
       </div>
       <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
-        <mat-icon svgIcon="heroicons_solid:document" class="text-white"></mat-icon>
+        <mat-icon svgIcon="heroicons_solid:document-text" class="text-white"></mat-icon>
       </div>
     </div>
 
-    <div
-      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
-        <p class="text-sm font-semibold text-gray-700">Valor Bruto</p>
-        <h3 class="text-2xl font-bold dark:text-black">R$ 54.500,45</h3>
+        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Valor Bruto</p>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">R$ 54.500,45</h3>
         <span class="text-green-600 text-xs">+18% em relação ao mês anterior</span>
       </div>
       <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
@@ -46,11 +50,10 @@
       </div>
     </div>
 
-    <div
-      class="flex items-center justify-between bg-white p-6 w-full rounded-lg shadow hover:-translate-y-1 transition">
+    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
-        <p class="text-sm font-semibold text-gray-700">Valor Líquido</p>
-        <h3 class="text-2xl font-bold dark:text-black">R$ 13.455,76</h3>
+        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Valor Líquido</p>
+        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">R$ 13.455,76</h3>
         <span class="text-green-600 text-xs">+8% em relação ao mês anterior</span>
       </div>
       <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
@@ -59,19 +62,15 @@
     </div>
   </div>
 
+  <!-- Gráficos -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white p-6 rounded-lg shadow h-96 flex flex-col">
-      <h4 class="text-lg font-semibold mb-4 dark:text-black">Contratos por Mês</h4>
-      <div class="flex-1 flex flex-col items-center justify-center text-gray-500">
-        <mat-icon svgIcon="heroicons_solid:chart-bar"></mat-icon>
-        <p>Sem dados disponíveis!</p>
-      </div>
-    </div>
 
-    <div class="bg-white p-6 rounded-lg shadow h-96 flex flex-col">
-      <h4 class="text-lg font-semibold mb-4 dark:text-black">Receita Mensal</h4>
-      <div class="flex-1 flex flex-col items-center justify-center text-gray-500">
-        <mat-icon svgIcon="heroicons_solid:circle-stack"></mat-icon>
+    <app-users-chart></app-users-chart>
+    
+    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow h-full flex flex-col w-full">
+      <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Contratos por Mês</h4>
+      <div class="flex-1 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
+        <mat-icon svgIcon="heroicons_solid:chart-bar"></mat-icon>
         <p>Sem dados disponíveis!</p>
       </div>
     </div>
