@@ -2,7 +2,7 @@
 import { FuseNavigationItem } from '@fuse/components/navigation';
 
 /**
- * @param isAdmin Booleano que indica se o usuário é administrador.
+ * @param isAdmin 
  */
 export const generateNavigation = (isAdmin: boolean): FuseNavigationItem[] => {
     const navigation: FuseNavigationItem[] = [
@@ -22,15 +22,29 @@ export const generateNavigation = (isAdmin: boolean): FuseNavigationItem[] => {
             title: 'Usuários',
             type : 'basic',
             icon : 'heroicons_outline:user-group',
-            link : '/clientes'
+            link : '/clientes' 
         });
     }
+
+    navigation.push({
+        id   : 'simulacoes',
+        title: 'Simulações',
+        type : 'basic',
+        icon : 'heroicons_outline:calculator',
+        link : '/simulations' 
+    });
+
+    navigation.push({
+        id   : 'emprestimos',
+        title: 'Empréstimos',
+        type : 'basic',
+        icon : 'heroicons_outline:clipboard-document-check', 
+        link : '/loans' 
+    });
 
     return navigation;
 };
 
-// Demais navegações (se não precisarem de lógica, podem continuar estáticas)
-// Se elas também dependem do menu principal, elas serão populadas no arquivo api.ts
 export const compactNavigation: FuseNavigationItem[] = [];
 export const futuristicNavigation: FuseNavigationItem[] = [];
 export const horizontalNavigation: FuseNavigationItem[] = [];

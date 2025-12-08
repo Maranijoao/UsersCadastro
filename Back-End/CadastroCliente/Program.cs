@@ -8,7 +8,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Configuração da chave JWT
 
 var key = Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!);
@@ -56,25 +55,26 @@ builder.Services.AddSwaggerGen(c =>
     });
 
     c.AddSecurityRequirement(new OpenApiSecurityRequirement
+  {
     {
+      new OpenApiSecurityScheme
+      {
+        Reference = new OpenApiReference
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                }
-            },
-            Array.Empty<string>()
+          Type = ReferenceType.SecurityScheme,
+          Id = "Bearer"
         }
-    });
+      },
+      Array.Empty<string>()
+    }
+  });
 });
 
-
-// Injeção de dependências
-
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+  .AddJsonOptions(options =>
+  {
+      options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+  });
 builder.Services.AddSingleton<SqlConnectionProvider>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<AddressRepository>();
@@ -82,17 +82,22 @@ builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<UserLogRepository>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<ISimulationService, SimulationService>();
+builder.Services.AddScoped<ISimulationRepository, SimulationRepository>();
+builder.Services.AddScoped<IRateTableRepository, RateTableRepository>();
+builder.Services.AddScoped<IRateTableService, RateTableService>();
+builder.Services.AddScoped<IInstallmentRepository, InstallmentRepository>();
+builder.Services.AddScoped<IInstallmentService, InstallmentService>();
 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowALL",
-        policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+      policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 var app = builder.Build();
 
-
-// Middlewares 
+// Middlewares 
 
 app.UseCors("AllowALL");
 
@@ -101,7 +106,7 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication(); 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -9,14 +9,14 @@ using System.Text.Json;
 namespace CadastroCliente.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/users")]
 [Authorize]
-public class UsersController : ControllerBase
+public class UserController : ControllerBase
 {
     private readonly UserService _userService;
-    private readonly ILogger<UsersController> _logger;
+    private readonly ILogger<UserController> _logger;
 
-    public UsersController(UserService userService, ILogger<UsersController> logger)
+    public UserController(UserService userService, ILogger<UserController> logger)
     {
         _userService = userService;
         _logger = logger;
@@ -71,8 +71,8 @@ public class UsersController : ControllerBase
         var user = await _userService.GetByIdAsync(id);
         return user == null ? NotFound("Usuário não encontrado.") : Ok(user);
     }
-
-    // --- Endpoints de Escrita (Apenas para Administradores) ---
+    
+    // --- Endpoints de Escrita (Apenas para Administradores) "[Authorize(Roles = "admin")]" ---
 
     [HttpPost]
     [Authorize(Roles = "admin")]
@@ -91,7 +91,6 @@ public class UsersController : ControllerBase
     [Authorize(Roles = "admin")]
     public async Task<ActionResult> Update(int id, [FromBody] User userFromRequest)
     {
-        _logger.LogInformation("Objeto recebido para ATUALIZAR utilizador {UserId}: {UserData}", id, JsonSerializer.Serialize(userFromRequest));
 
         if (id != userFromRequest.Id)
         {

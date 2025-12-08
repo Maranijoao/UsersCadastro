@@ -1,0 +1,111 @@
+<div class="flex flex-col flex-auto w-full p-6 sm:p-8">
+    
+    <div class="flex flex-wrap items-center justify-between">
+        <div>
+            <div class="text-3xl font-semibold tracking-tight leading-8">Simulações</div>
+            <div class="font-medium tracking-tight text-secondary">
+                <span *ngIf="!pagination">Carregando...</span>
+            </div>
+        </div>
+        <div class="flex items-center mt-4 sm:mt-0 space-x-2">
+            <button mat-flat-button color="primary" (click)="goToDetails('new')">
+                <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                <span class="ml-2">Nova Simulação</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="flex items-center justify-between w-full mt-8">
+        <mat-form-field class="fuse-mat-dense w-full sm:w-64">
+            <mat-label>Pesquisar</mat-label>
+            <input matInput 
+                   [placeholder]="'Pesquise por tipo ou usuário...'"
+                   [(ngModel)]="search" 
+                   (ngModelChange)="onSearchChanged()">
+            <mat-icon matPrefix [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+        </mat-form-field>
+    </div>
+
+    <div *ngIf="loading" class="flex items-center justify-center mt-16">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+    <ng-container *ngIf="!loading && simulations.length > 0">
+        <div class="grid grid-cols-1 gap-6 w-full mt-8">
+            
+            <div class="hidden md:grid grid-cols-10 gap-6 z-10 sticky top-0 px-6 py-2 
+                        bg-white dark:bg-gray-800 rounded-t-xl 
+                        text-sm font-semibold  text-gray-800 dark:text-gray-200 tracking-wider uppercase">
+                <div class="col-span-1">Tipo</div>
+                <div class="col-span-3">Proposta</div>
+                <div class="col-span-4">Registro</div>
+                <div class="col-span-2 text-right">Ações</div>
+            </div>
+            
+            <div *ngFor="let sim of simulations; trackBy: trackById"
+                 (click)="goToDetails(sim.id)"
+                 class="grid md:grid-cols-10 gap-6 p-6 rounded-xl shadow 
+                        bg-card dark:bg-gray-800 cursor-pointer 
+                        hover:bg-blue-50 dark:hover:bg-gray-700 transition-all border-l-4 border-transparent hover:border-blue-500">
+                
+                <div class="md:col-span-1 flex flex-col md:items-start">
+                    <div class="md:hidden text-sm font-semibold uppercase text-secondary">Tipo</div>
+                    <div class="text-lg font-bold text-gray-800 dark:text-white">{{ sim.product }}</div>
+                </div>
+
+                <div class="md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-1">
+                    <div>
+                        <div class="text-sm font-medium text-secondary">Valor do Contrato</div>
+                        <div class="font-medium">{{ sim.contractValue | currency:'BRL':'R$' }}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-secondary">Valor Líquido</div>
+                        <div class="font-medium">{{ sim.releasedAmount | currency:'BRL':'R$' }}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-secondary">Valor da Parcela</div>
+                        <div class="font-medium">{{ sim.installmentAmount | currency:'BRL':'R$' }}</div>
+                    </div>
+                    <!-- <div>
+                        <div class="text-sm font-medium text-secondary">Código</div>
+                        <div class="font-medium">{{ sim.id }}</div>
+                    </div> -->
+                </div>
+
+                <div class="md:col-span-4 grid grid-cols-2 gap-3">
+                    <div>
+                        <div class="text-sm font-medium text-secondary">Usuário</div>
+                        <div class="font-medium">{{ sim.createdBy }}</div>
+                    </div>
+                    <div>
+                        <div class="text-sm font-medium text-secondary">Cadastrado em</div>
+                        <div class="font-medium">{{ sim.createdAt | date:'dd/MM/yyyy HH:mm' }}</div>
+                    </div>
+                </div>
+                
+                <div class="md:col-span-2 flex items-center justify-end">
+                    <button mat-icon-button (click)="goToDetails(sim.id); $event.stopPropagation();"
+                            aria-label="Editar simulação">
+                        <mat-icon [svgIcon]="'heroicons_outline:pencil'"></mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </ng-container>
+
+    <div *ngIf="!loading && simulations.length === 0" 
+         class="flex items-center justify-center mt-16 p-8 bg-card rounded-2xl shadow">
+        <div class="text-lg font-medium text-secondary">Nenhuma simulação encontrada.</div>
+    </div>
+
+    <div *ngIf="pagination && pagination.totalCount > 0" 
+         class="flex items-center justify-center mt-8">
+        <mat-paginator [length]="pagination.totalCount"
+                       [pageSize]="pagination.pageSize"
+                       [pageSizeOptions]="[5, 10, 25]"
+                       [pageIndex]="pagination.pageNumber - 1"
+                       (page)="onPageChange($event)">
+        </mat-paginator>
+    </div>
+</div>

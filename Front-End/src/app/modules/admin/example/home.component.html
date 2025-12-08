@@ -9,7 +9,8 @@
   <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
     <!-- Card 1: Total de Usuários -->
-    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
+    <div
+      class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
         <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Total de Usuários</p>
         <ng-container *ngIf="!loadingClientes; else loadingSpinner">
@@ -28,21 +29,39 @@
     </div>
 
     <!-- Outros cards (aplicar o mesmo padrão de cores) -->
-    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
+    <div
+      class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
-        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Quantidade de Contratos</p>
-        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">6</h3>
-        <span class="text-red-600 text-xs">-5% em relação ao mês anterior</span>
+        <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Total de Simulações</p>
+        <ng-container *ngIf="!loadingSimulations; else loadingSpinner">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">{{ totalSimulations }}</h3>
+        </ng-container>
+        <ng-template #loadingSpinner>
+          <div class="h-8 flex items-center">
+            <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+          </div>
+        </ng-template>
+        <span class="text-red-600 text-xs">-8% em relação ao mês anterior</span>
       </div>
       <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
         <mat-icon svgIcon="heroicons_solid:document-text" class="text-white"></mat-icon>
       </div>
     </div>
 
-    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
+    <div
+      class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
         <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Valor Bruto</p>
-        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">R$ 54.500,45</h3>
+        <ng-container *ngIf="!loadingValues; else loadingBrutoSpinner">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+            {{ totalContractValue | currency:'BRL':'R$':'1.2-2' }}
+          </h3>
+        </ng-container>
+        <ng-template #loadingBrutoSpinner>
+          <div class="h-8 flex items-center">
+            <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+          </div>
+        </ng-template>
         <span class="text-green-600 text-xs">+18% em relação ao mês anterior</span>
       </div>
       <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
@@ -50,11 +69,22 @@
       </div>
     </div>
 
-    <div class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
+    <div
+      class="flex items-center justify-between bg-white dark:bg-gray-800 p-6 rounded-lg shadow hover:-translate-y-1 transition">
       <div>
         <p class="text-sm font-semibold text-gray-600 dark:text-gray-400">Valor Líquido</p>
-        <h3 class="text-2xl font-bold text-gray-900 dark:text-white">R$ 13.455,76</h3>
+        <ng-container *ngIf="!loadingValues; else loadingLiquidoSpinner">
+          <h3 class="text-2xl font-bold text-gray-900 dark:text-white">
+            {{ totalReleasedAmount | currency:'BRL':'R$':'1.2-2' }}
+          </h3>
+        </ng-container>
+        <ng-template #loadingLiquidoSpinner>
+          <div class="h-8 flex items-center">
+            <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+          </div>
+        </ng-template>
         <span class="text-green-600 text-xs">+8% em relação ao mês anterior</span>
+
       </div>
       <div class="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center">
         <mat-icon svgIcon="heroicons_solid:credit-card" class="text-white"></mat-icon>
@@ -66,9 +96,9 @@
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
     <app-users-chart></app-users-chart>
-    
+
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow h-full flex flex-col w-full">
-      <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Contratos por Mês</h4>
+      <h4 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-100">Simulações por Mês</h4>
       <div class="flex-1 flex flex-col items-center justify-center text-gray-500 dark:text-gray-400">
         <mat-icon svgIcon="heroicons_solid:chart-bar"></mat-icon>
         <p>Sem dados disponíveis!</p>

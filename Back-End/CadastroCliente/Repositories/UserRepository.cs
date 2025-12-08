@@ -237,7 +237,7 @@ namespace CadastroCliente.Repositories
                 commandUser.Parameters.AddWithValue("@Cpf", user.Cpf);
                 commandUser.Parameters.AddWithValue("@Email", user.Email);
                 commandUser.Parameters.AddWithValue("@PhoneNumber", user.PhoneNumber);
-                commandUser.Parameters.AddWithValue("@Password", SecurityHelper.ComputeSha256Hash(user.Password));
+                commandUser.Parameters.AddWithValue("@Password", user.Password);
                 commandUser.Parameters.AddWithValue("@Role", user.Role);
                 commandUser.Parameters.AddWithValue("@CreatedAt", user.CreatedAt);
                 commandUser.Parameters.AddWithValue("@CreatedBy", user.CreatedBy);
@@ -272,7 +272,7 @@ namespace CadastroCliente.Repositories
             }
         }
         
-        // ATUALIZAR user
+        // ATUALIZAR User
         public async Task UpdateAsync(User user, string loggedInUser)
         {
             using var connection = _connectionProvider.GetConnection();

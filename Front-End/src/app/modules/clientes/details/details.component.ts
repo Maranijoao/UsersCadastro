@@ -135,12 +135,15 @@ export class UserDetailsComponent implements OnInit, OnDestroy {
     if (!this.user) return;
     this.loading = true;
 
-    const date = this.user.birthDate.split('/');
+    if (this.user.birthDate != null)
+    {
+      const date = this.user.birthDate.split('/');
       const day = date[0];
       const month = date[1];
       const year = date[2];
-
+      
       this.user.birthDate = `${year}-${month}-${day}`;
+    }
 
     let saveObservable: Observable<any>;
     const timestamp = new Date().toISOString();

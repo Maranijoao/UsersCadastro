@@ -225,14 +225,13 @@
                                 {<div class="mb-4">
                                     <span class="font-medium text-md text-gray-500 dark:text-gray-400">Data de
                                         Alteração</span>
-                                    <p class="text-gray-800 dark:text-gray-200">{{ user.updatedAt | date:'dd/MM/yyyy
-                                        HH:mm' }}</p>
+                                    <p class="text-gray-800 dark:text-gray-200">{{ user.updatedAt | date:'dd/MM/yyyy HH:mm' }}</p>
                                 </div>}
                                 @if (user.updatedBy)
                                 {<div class="mb-4">
                                     <span class="font-medium text-md text-gray-500 dark:text-gray-400">Usuário de
                                         Alteração</span>
-                                    <p class="font-semibold text-primary-500 dark:text-primary-400">{{ user.updatedBy }}
+                                    <p class="font-semibold text-primary-500 dark:text-primary-400"> {{ user.updatedBy }}
                                     </p>
                                 </div>}
                             </ng-container>
@@ -244,8 +243,8 @@
                                 {<div class="mb-4">
                                     <span class="font-medium text-sm text-gray-500 dark:text-gray-400">Data de
                                         Inativação</span>
-                                    <p class="text-gray-800 dark:text-gray-200">{{ user.inactivatedAt | date:'dd/MM/yyyy
-                                        HH:mm' }}</p>
+                                    <p class="text-gray-800 dark:text-gray-200">{{ user.inactivatedAt | 
+                                    date:'dd/MM/yyyy HH:mm' }}</p>
                                 </div>}
                                 @if (user.inactivatedBy) {<div class="mb-4">
                                     <span class="font-medium text-sm text-gray-500 dark:text-gray-400">Usuário de

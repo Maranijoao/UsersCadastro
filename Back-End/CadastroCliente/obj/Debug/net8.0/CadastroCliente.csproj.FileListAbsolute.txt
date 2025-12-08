@@ -103,6 +103,9 @@ C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Microsoft.OpenApi.dll
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Microsoft.SqlServer.Server.dll
+C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\SendGrid.dll
+C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\StarkbankEcdsa.dll
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
@@ -153,6 +156,3 @@ C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\obj\Debug\net8.
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\obj\Debug\net8.0\CadastroCliente.pdb
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\obj\Debug\net8.0\CadastroCliente.genruntimeconfig.cache
 C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\obj\Debug\net8.0\ref\CadastroCliente.dll
-C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\Newtonsoft.Json.dll
-C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\SendGrid.dll
-C:\Users\Ajinsoft\Desktop\UsersCadastro\Back-End\CadastroCliente\bin\Debug\net8.0\StarkbankEcdsa.dll

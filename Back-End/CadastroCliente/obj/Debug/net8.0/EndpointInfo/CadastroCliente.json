@@ -127,10 +127,438 @@
         }
       }
     },
-    "/api/Users": {
+    "/api/Installment/simulation/{simulationId}": {
       "get": {
         "tags": [
-          "Users"
+          "Installment"
+        ],
+        "parameters": [
+          {
+            "name": "simulationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedInstallmentResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedInstallmentResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedInstallmentResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Installment/pay/{id}": {
+      "post": {
+        "tags": [
+          "Installment"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInputDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInputDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RateTables/simulation": {
+      "get": {
+        "tags": [
+          "RateTables"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RateTables": {
+      "post": {
+        "tags": [
+          "RateTables"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateTableInputDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateTableInputDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateTableInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/RateTables/{id}": {
+      "get": {
+        "tags": [
+          "RateTables"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Simulations/calculate": {
+      "post": {
+        "tags": [
+          "Simulations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationInputDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationInputDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationInputDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResultDto"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResultDto"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SimulationResultDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Simulations/confirm": {
+      "post": {
+        "tags": [
+          "Simulations"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationResultDto"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationResultDto"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SimulationResultDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Simulation"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Simulation"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Simulation"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Simulations/{id}": {
+      "put": {
+        "tags": [
+          "Simulations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Simulation"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Simulation"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Simulation"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/Simulation"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Simulation"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Simulation"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Simulations"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Simulations": {
+      "get": {
+        "tags": [
+          "Simulations"
+        ],
+        "parameters": [
+          {
+            "name": "term",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "default": ""
+            }
+          },
+          {
+            "name": "pageNumber",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 1
+            }
+          },
+          {
+            "name": "pageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedSimulationResult"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedSimulationResult"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PagedSimulationResult"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Simulations/totals": {
+      "get": {
+        "tags": [
+          "Simulations"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardTotalsDtos"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardTotalsDtos"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardTotalsDtos"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "tags": [
+          "User"
         ],
         "parameters": [
           {
@@ -201,7 +629,7 @@
       },
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "requestBody": {
           "content": {
@@ -246,10 +674,10 @@
         }
       }
     },
-    "/api/Users/registrations-by-day": {
+    "/api/users/registrations-by-day": {
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
         "responses": {
           "200": {
@@ -284,10 +712,10 @@
         }
       }
     },
-    "/api/Users/{id}": {
+    "/api/users/{id}": {
       "get": {
         "tags": [
-          "Users"
+          "User"
         ],
         "parameters": [
           {
@@ -325,7 +753,7 @@
       },
       "put": {
         "tags": [
-          "Users"
+          "User"
         ],
         "parameters": [
           {
@@ -365,7 +793,7 @@
       },
       "delete": {
         "tags": [
-          "Users"
+          "User"
         ],
         "parameters": [
           {
@@ -385,10 +813,10 @@
         }
       }
     },
-    "/api/Users/{id}/reactivate": {
+    "/api/users/{id}/reactivate": {
       "post": {
         "tags": [
-          "Users"
+          "User"
         ],
         "parameters": [
           {
@@ -467,6 +895,20 @@
         },
         "additionalProperties": false
       },
+      "DashboardTotalsDtos": {
+        "type": "object",
+        "properties": {
+          "totalReleasedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalContractValue": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
       "ForgotPasswordRequest": {
         "required": [
           "email"
@@ -477,6 +919,92 @@
             "minLength": 1,
             "type": "string",
             "format": "email"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InstallmentDetailDto": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "interest": {
+            "type": "number",
+            "format": "double"
+          },
+          "amortization": {
+            "type": "number",
+            "format": "double"
+          },
+          "balance": {
+            "type": "number",
+            "format": "double"
+          },
+          "value": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "InstallmentDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "simulationId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "installmentNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "originalAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paidAmount": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "openingBalance": {
+            "type": "number",
+            "format": "double"
+          },
+          "interest": {
+            "type": "number",
+            "format": "double"
+          },
+          "amortization": {
+            "type": "number",
+            "format": "double"
+          },
+          "balance": {
+            "type": "number",
+            "format": "double"
           }
         },
         "additionalProperties": false
@@ -499,6 +1027,141 @@
         },
         "additionalProperties": false
       },
+      "PagedSimulationResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SimulationListItemDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaginatedInstallmentResult": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstallmentDto"
+            },
+            "nullable": true
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "hasNextPage": {
+            "type": "boolean",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentInputDto": {
+        "required": [
+          "amount",
+          "paymentDate"
+        ],
+        "type": "object",
+        "properties": {
+          "amount": {
+            "minimum": 0,01,
+            "type": "number",
+            "format": "double"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RateTableInputDto": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "minInstallmentAmount": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "maxInstallmentAmount": {
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "availableRates": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            },
+            "nullable": true
+          },
+          "availableTerms": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
       "ResetPasswordRequest": {
         "required": [
           "newPassword",
@@ -513,6 +1176,226 @@
           "newPassword": {
             "minLength": 6,
             "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Simulation": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "product": {
+            "type": "string",
+            "nullable": true
+          },
+          "rateTable": {
+            "type": "string",
+            "nullable": true
+          },
+          "rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "term": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "installmentAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "releasedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "contractValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalFinancedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "iofFinanced": {
+            "type": "boolean"
+          },
+          "hasGracePeriod": {
+            "type": "boolean"
+          },
+          "gracePeriodDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "gracePeriodInterest": {
+            "type": "number",
+            "format": "double"
+          },
+          "frequencyDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalIOF": {
+            "type": "number",
+            "format": "double"
+          },
+          "simulationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimulationInputDto": {
+        "required": [
+          "product",
+          "rateTable"
+        ],
+        "type": "object",
+        "properties": {
+          "product": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "rateTable": {
+            "minLength": 1,
+            "type": "string"
+          },
+          "rate": {
+            "maximum": 100,
+            "minimum": 0,01,
+            "type": "number",
+            "format": "double"
+          },
+          "term": {
+            "maximum": 999,
+            "minimum": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "requestedAmount": {
+            "minimum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "financeIOF": {
+            "type": "boolean"
+          },
+          "gracePeriodDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "frequencyDays": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimulationListItemDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "product": {
+            "type": "string",
+            "nullable": true
+          },
+          "releasedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "installmentAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "contractValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SimulationResultDto": {
+        "type": "object",
+        "properties": {
+          "releasedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalIOF": {
+            "type": "number",
+            "format": "double"
+          },
+          "gracePeriodInterest": {
+            "type": "number",
+            "format": "double"
+          },
+          "totalFinancedAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "contractValue": {
+            "type": "number",
+            "format": "double"
+          },
+          "installmentAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "product": {
+            "type": "string",
+            "nullable": true
+          },
+          "rateTable": {
+            "type": "string",
+            "nullable": true
+          },
+          "rate": {
+            "type": "number",
+            "format": "double"
+          },
+          "term": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "iofFinanced": {
+            "type": "boolean"
+          },
+          "gracePeriodDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "firstDueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "installments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InstallmentDetailDto"
+            },
+            "nullable": true
           }
         },
         "additionalProperties": false
@@ -668,18 +1551,8 @@
             "type": "integer",
             "format": "int32"
           },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32",
-            "readOnly": true
-          },
-          "hasPreivousPage": {
-            "type": "boolean",
-            "readOnly": true
-          },
-          "hasNextPage": {
-            "type": "boolean",
-            "readOnly": true
+          "hasPreviousPage": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

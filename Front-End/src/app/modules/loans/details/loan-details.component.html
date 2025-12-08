@@ -1,0 +1,190 @@
+<div class="flex flex-col flex-auto p-6 sm:p-8 bg-gray-50/50 dark:bg-gray-900">
+
+    <div class="flex items-center justify-between mb-6">
+        <div class="flex flex-col">
+            <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
+                <mat-icon class="text-blue-600" [svgIcon]="'heroicons_outline:document-text'"></mat-icon>
+                Contrato de Empréstimo {{simulationId}}
+            </h2>
+            <span class="text-secondary ml-8">Visualize os dados e gerencie pagamentos</span>
+        </div>
+        <button mat-stroked-button [routerLink]="'../'">
+            <mat-icon [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
+            <span class="ml-2">Voltar</span>
+        </button>
+    </div>
+
+    <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border border-gray-200 dark:border-gray-700">
+        <h3 class="text-sm font-semibold text-gray-300 uppercase tracking-wide mb-4">Dados do Contrato</h3>
+        <div class="grid sm:grid-cols-4 gap-6">
+
+            <mat-form-field class="w-full pointer-events-none">
+                <mat-label>Produto</mat-label>
+                <input matInput [value]="input.product" readonly>
+            </mat-form-field>
+
+            <mat-form-field class="w-full pointer-events-none">
+                <mat-label>Tabela</mat-label>
+                <input matInput [value]="input.rateTable" readonly>
+            </mat-form-field>
+
+            <mat-form-field class="w-full pointer-events-none">
+                <mat-label>Valor Contratado</mat-label>
+                <input matInput [value]="input.requestedAmount | currency:'BRL'" readonly>
+            </mat-form-field>
+
+            <mat-form-field class="w-full pointer-events-none">
+                <mat-label>Condições</mat-label>
+                <input matInput
+                    [value]="input.term + 'x de ' + (result?.installmentAmount | currency:'BRL') + ' (' + input.rate + '%)'"
+                    readonly>
+            </mat-form-field>
+        </div>
+
+        <div class="flex gap-6 mt-2 items-center">
+            <mat-checkbox [checked]="input.financeIOF" disabled color="primary">
+                <span class="text-gray-300">IOF Financiado</span>
+            </mat-checkbox>
+            <span class="text-gray-300" *ngIf="input.gracePeriodDays > 0">Carência: {{input.gracePeriodDays}}
+                dias</span>
+        </div>
+    </div>
+
+    <div *ngIf="result" class="grid grid-cols-1 sm:grid-cols-4 gap-6 mt-6">
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+            <div class="text-sm font-medium text-gray-400">Valor Liberado</div>
+            <div class="text-2xl font-bold text-gray-300 dark:text-white mt-1">
+                {{ result.releasedAmount | currency:'BRL' }}
+            </div>
+            <div class="text-xs text-gray-400 mt-1">Valor Liberado ao Cliente</div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+            <div class="text-sm font-medium text-gray-400">Saldo Devedor Atual</div>
+            <div class="text-2xl font-bold text-gray-300 dark:text-white mt-1">
+                {{ result.totalFinancedAmount | currency:'BRL' }}
+            </div>
+            <div class="text-xs text-gray-400 mt-1">Valor Original Financiado</div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+            <div class="text-sm font-medium text-gray-400">Total IOF</div>
+            <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
+                {{ result.totalIOF | currency:'BRL' }}
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+            <div class="text-sm font-medium text-gray-400">Total Contrato</div>
+            <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
+                {{ result.contractValue | currency:'BRL' }}
+            </div>
+        </div>
+    </div>
+
+    <div
+        class="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div
+            class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
+            <h3 class="text-3xl font-bold text-gray-800 dark:text-white">Gestão de Parcelas</h3>
+
+            <div class="flex items-center gap-3">
+                <button mat-raised-button class="!bg-blue-600 hover:bg-blue-700 !text-white" (click)="exportToExcel()"
+                    [disabled]="isLoadingInstallments">
+                    <mat-icon>file_download</mat-icon>
+                    Exportar para Excel
+                </button>
+
+                <mat-paginator [length]="totalInstallments" [pageSize]="12" [pageSizeOptions]="[12, 24, 60, 72, 96]"
+                    class="bg-transparent" showFirstLastButtons> </mat-paginator>
+            </div>
+        </div>
+
+        <div class="relative overflow-auto">
+            <div *ngIf="isLoadingInstallments"
+                class="absolute inset-0 z-10 bg-white/50 dark:bg-gray-900/50 flex items-center justify-center">
+                <mat-progress-spinner diameter="40" mode="indeterminate"></mat-progress-spinner>
+            </div>
+
+            <table mat-table [dataSource]="dataSource" class="w-full">
+                <ng-container matColumnDef="installmentNumber">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase">#</th>
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-center font-bold text-gray-300">
+                        {{el.installmentNumber}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="dueDate">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase">
+                        Vencimento</th>
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-gray-300"> {{el.dueDate |
+                        date:'dd/MM/yyyy'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="openingBalance">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
+                        Saldo Inicial</th>
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right text-gray-300"> {{el.openingBalance |
+                        currency:'BRL'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="interest">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
+                        Juros</th>
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right text-gray-300"> {{el.interest |
+                        currency:'BRL'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="amortization">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
+                        Amortização</th>
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right text-gray-300"> {{el.amortization |
+                        currency:'BRL'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="originalAmount">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
+                        Prestação</th>
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right font-bold text-gray-300">
+                        {{el.originalAmount | currency:'BRL'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="finalBalance">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
+                        Saldo Final</th>
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right font-bold text-gray-300"> {{el.balance
+                        | currency:'BRL'}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="actions">
+                    <th mat-header-cell *matHeaderCellDef
+                        class="px-4 py-3 bg-gray-500 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-center sticky right-0 bg-white shadow-l border-l">
+                        Ações</th>
+                    <td mat-cell *matCellDef="let el"
+                        class="px-4 py-3 text-center sticky right-0 bg-gray-600 dark:bg-gray-800 border-l border-gray-600">
+                        <button *ngIf="el.status !== 'Paid'" mat-icon-button
+                            class="text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                            (click)="openPaymentDialog(el)" matTooltip="Pagar / Amortizar">
+                            <mat-icon [svgIcon]="'heroicons_outline:currency-dollar'"></mat-icon>
+                        </button>
+                        <div *ngIf="el.status === 'Paid'"
+                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                            Pago
+                        </div>
+                    </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"
+                    class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-600"></tr>
+            </table>
+        </div>
+    </div>
+</div>

@@ -68,9 +68,263 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.InstallmentController",
+    "Method": "PayInstallment",
+    "RelativePath": "api/Installment/pay/{id}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "input",
+        "Type": "CadastroCliente.Models.DTOs.PaymentInputDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.InstallmentController",
+    "Method": "GetForSimulation",
+    "RelativePath": "api/Installment/simulation/{simulationId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "simulationId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CadastroCliente.Models.DTOs.Installment.PaginatedInstallmentResult",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "RateTablesController",
+    "Method": "Create",
+    "RelativePath": "api/RateTables",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "dto",
+        "Type": "CadastroCliente.Models.DTOs.RateTableInputDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RateTablesController",
+    "Method": "GetById",
+    "RelativePath": "api/RateTables/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RateTablesController",
+    "Method": "GetForSimulation",
+    "RelativePath": "api/RateTables/simulation",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.SimulationsController",
     "Method": "GetAll",
-    "RelativePath": "api/Users",
+    "RelativePath": "api/Simulations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "term",
+        "Type": "System.String",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageNumber",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "PagedSimulationResult",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.SimulationsController",
+    "Method": "Update",
+    "RelativePath": "api/Simulations/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "simulationData",
+        "Type": "CadastroCliente.Models.Entities.Simulation",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CadastroCliente.Models.Entities.Simulation",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.SimulationsController",
+    "Method": "GetById",
+    "RelativePath": "api/Simulations/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.SimulationsController",
+    "Method": "Calculate",
+    "RelativePath": "api/Simulations/calculate",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "input",
+        "Type": "CadastroCliente.Models.DTOs.Simulation.SimulationInputDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CadastroCliente.Models.DTOs.Simulation.SimulationResultDto",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.SimulationsController",
+    "Method": "Confirm",
+    "RelativePath": "api/Simulations/confirm",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "resultDto",
+        "Type": "CadastroCliente.Models.DTOs.Simulation.SimulationResultDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "CadastroCliente.Models.Entities.Simulation",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.SimulationsController",
+    "Method": "GetTotals",
+    "RelativePath": "api/Simulations/totals",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "CadastroCliente.Models.DTOs.Dashboard.DashboardTotalsDtos",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "CadastroCliente.Controllers.UserController",
+    "Method": "GetAll",
+    "RelativePath": "api/users",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -103,7 +357,7 @@
     ],
     "ReturnTypes": [
       {
-        "Type": "CadastroCliente.Helpers.PagedResult\u00601[[CadastroCliente.Models.Entities.User, CadastroCliente, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "Type": "CadastroCliente.Models.DTOs.Shared.PagedResult\u00601[[CadastroCliente.Models.Entities.User, CadastroCliente, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
         "MediaTypes": [
           "text/plain",
           "application/json",
@@ -114,9 +368,9 @@
     ]
   },
   {
-    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UserController",
     "Method": "Create",
-    "RelativePath": "api/Users",
+    "RelativePath": "api/users",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -140,9 +394,9 @@
     ]
   },
   {
-    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UserController",
     "Method": "GetById",
-    "RelativePath": "api/Users/{id}",
+    "RelativePath": "api/users/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -166,9 +420,9 @@
     ]
   },
   {
-    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UserController",
     "Method": "Update",
-    "RelativePath": "api/Users/{id}",
+    "RelativePath": "api/users/{id}",
     "HttpMethod": "PUT",
     "IsController": true,
     "Order": 0,
@@ -187,9 +441,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UserController",
     "Method": "Delete",
-    "RelativePath": "api/Users/{id}",
+    "RelativePath": "api/users/{id}",
     "HttpMethod": "DELETE",
     "IsController": true,
     "Order": 0,
@@ -203,9 +457,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UserController",
     "Method": "Reactivate",
-    "RelativePath": "api/Users/{id}/reactivate",
+    "RelativePath": "api/users/{id}/reactivate",
     "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
@@ -219,9 +473,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "CadastroCliente.Controllers.UsersController",
+    "ContainingType": "CadastroCliente.Controllers.UserController",
     "Method": "GetUserRegistrationsByDayAsync",
-    "RelativePath": "api/Users/registrations-by-day",
+    "RelativePath": "api/users/registrations-by-day",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,

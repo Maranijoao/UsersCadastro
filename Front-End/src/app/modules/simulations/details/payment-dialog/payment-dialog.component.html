@@ -1,0 +1,92 @@
+<div class="flex flex-col h-full">
+    <!-- Cabeçalho com Ícone e Título -->
+    <div
+        class="flex items-center justify-between px-6 py-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center">
+            <div
+                class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 mr-4">
+                <mat-icon [svgIcon]="'heroicons_outline:banknotes'"></mat-icon>
+            </div>
+            <h2 class="text-lg font-semibold text-gray-800 dark:text-white m-0">
+                Pagamento da Parcela {{data.installmentNumber}}
+            </h2>
+        </div>
+        <button mat-icon-button (click)="onCancel()" tabindex="-1">
+            <mat-icon [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
+        </button>
+    </div>
+
+    <div mat-dialog-content class="flex flex-col flex-auto px-6 py-6 gap-6">
+
+        <div
+            class="flex flex-col p-4 bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-xl">
+            <span class="text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-300 mb-1">
+                Valor Original da Parcela
+            </span>
+            <span class="text-3xl font-bold text-gray-800 dark:text-white">
+                {{ data.originalAmount | currency:'BRL' }}
+            </span>
+            <span class="text-xs text-gray-400 mt-1">
+                Vencimento original
+            </span>
+        </div>
+
+        <form [formGroup]="paymentForm" class="flex flex-col gap-5">
+
+            <!-- Data do Pagamento -->
+            <mat-form-field appearance="outline" class="w-full">
+                <mat-label>Data do Pagamento</mat-label>
+                <input matInput [matDatepicker]="picker" formControlName="paymentDate">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+                <mat-error *ngIf="paymentForm.get('paymentDate')?.hasError('required')">
+                    Data é obrigatória
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Valor Pago -->
+            <div class="relative">
+                <mat-form-field appearance="outline" class="w-full"
+                    [class.mat-form-field-invalid]="paymentForm.get('amount')?.invalid">
+                    <mat-label>Valor a Pagar</mat-label>
+                    <span matPrefix class="text-gray-500 font-medium mr-2">R$&nbsp;</span>
+
+                    <input matInput formControlName="amount" mask="separator.2" thousandSeparator="." decimalMarker=","
+                        [leadZero]="true" class="font-bold text-lg text-gray-800 dark:text-gray-100">
+
+                    <mat-error *ngIf="paymentForm.get('amount')?.hasError('required')">
+                        Valor é obrigatório
+                    </mat-error>
+                </mat-form-field>
+
+                <div *ngIf="paymentForm.get('amount')?.value > data.originalAmount"
+                    class="absolute -bottom-6 left-0 right-0 flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-pulse">
+                    <mat-icon class="icon-size-3 mr-1" [svgIcon]="'heroicons_mini:arrow-down'"></mat-icon>
+                    Você está amortizando {{ (paymentForm.get('amount')?.value - data.originalAmount) | currency:'BRL'
+                    }} do seu saldo devedor!
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <div mat-dialog-actions
+        class="flex items-center justify-end px-6 py-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+        <button mat-button (click)="onCancel()" class="mr-2">
+            Cancelar
+        </button>
+
+        <button mat-flat-button [disabled]="paymentForm.invalid" (click)="onConfirm()"
+            class="px-6 text-white transition-colors duration-200" [ngClass]="{
+                    'bg-blue-600 hover:bg-blue-700': paymentForm.get('amount')?.value <= data.originalAmount,
+                    'bg-blue-700 hover:bg-blue-800': paymentForm.get('amount')?.value > data.originalAmount
+                }">
+            <span *ngIf="paymentForm.get('amount')?.value > data.originalAmount">
+                Confirmar e Amortizar
+            </span>
+            <span *ngIf="paymentForm.get('amount')?.value <= data.originalAmount">
+                Confirmar Pagamento
+            </span>
+        </button>
+    </div>
+</div>

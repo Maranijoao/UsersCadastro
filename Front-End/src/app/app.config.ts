@@ -12,6 +12,8 @@ import { provideAuth } from 'app/core/auth/auth.provider';
 import { provideIcons } from 'app/core/icons/icons.provider';
 import { mockApiServices } from 'app/mock-api';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { PaginatorIntlPtBr } from 'assets/i18n/paginator-intl.pt-br';
 import { provideNgxMask } from 'ngx-mask';
 
 export const appConfig: ApplicationConfig = {
@@ -42,6 +44,11 @@ export const appConfig: ApplicationConfig = {
                     monthYearA11yLabel: 'LLLL yyyy',
                 },
             },
+        },
+
+        {
+            provide: MatPaginatorIntl,
+            useClass: PaginatorIntlPtBr,
         },
 
         // Transloco Config
@@ -120,6 +127,7 @@ export const appConfig: ApplicationConfig = {
                         id: 'theme-amber',
                         name: 'Amber',
                     },
+                    
                 ],
             },
         }),

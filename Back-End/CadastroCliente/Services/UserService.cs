@@ -34,9 +34,17 @@ namespace CadastroCliente.Services
 
         // --- MÉTODOS DE ESCRITA (COM LÓGICA DE NEGÓCIO) ---
 
-        public Task<User> AddAsync(User user, string loggedInUser)
+        public async Task<User> AddAsync(User user, string loggedInUser)
         {
-            return _userRepository.AddAsync(user, loggedInUser);
+            var existing = await _userRepository.GetByEmailAsync(user.Email);
+            if (existing != null)
+            {
+                throw new InvalidOperationException("Esse e-mail já está em uso.");
+            }
+
+            user.Password = SecurityHelper.ComputeSha256Hash(user.Password);
+
+            return await _userRepository.AddAsync(user, loggedInUser);
         }
 
         public async Task UpdateAsync(int id, User userFromRequest, string loggedInUser)

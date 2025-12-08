@@ -10,6 +10,32 @@ export interface Address {
   state: string;
 }
 
+export interface SimulationInput{
+  product: string;
+  rateTable: string;
+  rate: number;
+  term: number;
+  installmentAmount: number;
+} 
+
+export interface SimulationResult {
+  releasedAmount: number;
+  contractValue: number;
+  product: string;
+  rateTable: string;
+  rate: number;
+  term: number;
+  installmentAmount: number;
+}
+
+export interface Simulation extends SimulationInput {
+  id: number;
+  userId: number;
+  simulationDate: string;
+  createdAt: string;
+  createdBy: string;
+}
+
 export interface UserLog {
   id: number;
   userId: number;
