@@ -128,3 +128,5 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
+Back-End/.vs/CadastroCliente/CopilotIndices/17.14.719.50355/CodeChunks.db-wal
+Back-End/.vs/CadastroCliente/CopilotIndices/17.14.719.50355/SemanticSymbols.db-wal
