@@ -8,12 +8,13 @@ import { FormsModule } from '@angular/forms';
 import { AuthService } from 'app/core/auth/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { SidebarComponent, StatusFilter, RoleFilter } from '../sidebar/sidebar.component';
 
 @Component({
     selector: 'app-clientes-list',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, FormsModule, MatButtonModule, MatIconModule, SidebarComponent],
+    imports: [CommonModule, RouterOutlet, FormsModule, MatButtonModule, MatIconModule, MatPaginatorModule, SidebarComponent],
     templateUrl: './list.component.html'
 })
 
@@ -29,6 +30,8 @@ export class ClientesListComponent implements OnInit, OnDestroy {
     pageSize: number = 10;
     roleFilter: RoleFilter = 'all';
     statusFilter: StatusFilter = 'all';
+
+    pageSizeOptions: number[] = [5, 10, 25, 50];
 
     private searchSubject = new Subject<string>();
     private _unsubscribeAll = new Subject<void>();
@@ -97,6 +100,12 @@ export class ClientesListComponent implements OnInit, OnDestroy {
                 this.cd.markForCheck();
             }))
             .subscribe();
+    }
+
+    onPageChange(event: PageEvent): void {
+        this.pageNumber = event.pageIndex + 1;
+        this.pageSize = event.pageSize;
+        this.fetchUsers();
     }
 
     onStatusFilterChanged(status: StatusFilter): void {

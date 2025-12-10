@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { NgxMaskDirective } from 'ngx-mask';
 
 export interface PaymentDialogData {
   installmentNumber: number;
@@ -29,9 +29,8 @@ export interface PaymentDialogData {
     MatDatepickerModule,
     MatNativeDateModule,
     NgxMaskDirective,
-    NgxMaskPipe,
     MatIconModule
-  ],
+],
   templateUrl: './payment-dialog.component.html'
 })
 export class PaymentDialogComponent implements OnInit {
@@ -58,7 +57,6 @@ export class PaymentDialogComponent implements OnInit {
     if (this.paymentForm.valid) {
       const formValue = this.paymentForm.value;
       
-      // Retorna o objeto com valor e data para quem chamou o modal
       this.dialogRef.close({
         amount: Number(formValue.amount),
         date: formValue.paymentDate

@@ -3,20 +3,84 @@
   "WorkspaceRootPath": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\installmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\installmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\simulation\\simulationresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\simulation\\simulationresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\simulationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\simulationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\isimulationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\isimulationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\simulationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\simulationservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\simulation\\simulationlistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\simulation\\simulationlistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\repositories\\simulationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\repositories\\simulationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\installmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\installmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\iratetableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\iratetableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\users\\userparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\users\\userparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\users\\addressparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\users\\addressparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\shared\\chartdatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\shared\\chartdatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\simulation\\simulationinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\simulation\\simulationinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\entities\\simulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\entities\\simulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\repositories\\installmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\repositories\\installmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\entities\\installment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\entities\\installment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\entities\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\entities\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\installment\\installmentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\installment\\installmentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\installment\\paymentinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\installment\\paymentinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\controllers\\simulationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\controllers\\simulationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\controllers\\installmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\controllers\\installmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\emailservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -31,28 +95,8 @@
       "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\iinstallmentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\repositories\\simulationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\repositories\\simulationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\controllers\\installmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\controllers\\installmentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\controllers\\ratetablescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\controllers\\ratetablescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\controllers\\simulationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\controllers\\simulationscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\installment\\paymentinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\installment\\paymentinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\repositories\\installmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\repositories\\installmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\repositories\\iinstallmentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -71,36 +115,8 @@
       "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\repositories\\isimulationrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\entities\\installment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\entities\\installment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\installment\\installmentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\installment\\installmentdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\services\\iratetableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\iratetableservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\controllers\\authcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\entities\\simulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\entities\\simulation.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\simulation\\simulationinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\simulation\\simulationinputdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\simulation\\simulationlistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\simulation\\simulationlistitemdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\simulation\\simulationresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\simulation\\simulationresultdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\repositories\\userlogrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -143,24 +159,8 @@
       "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\services\\tokenservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\users\\userparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\users\\userparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\entities\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\entities\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\entities\\address.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\users\\addressparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\users\\addressparams.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\shared\\chartdatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|solutionrelative:cadastrocliente\\models\\dtos\\shared\\chartdatapoint.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{08EFFEC7-029C-42A6-937E-5CC1C45B7AFC}|CadastroCliente\\CadastroCliente.csproj|c:\\users\\ajinsoft\\desktop\\userscadastro\\back-end\\cadastrocliente\\models\\dtos\\auth\\forgotpasswordrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -210,7 +210,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 28,
+          "SelectedChildIndex": 12,
           "Children": [
             {
               "$type": "Bookmark",
@@ -246,7 +246,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 16,
               "Title": "PaymentInputDto.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Installment\\PaymentInputDto.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Installment\\PaymentInputDto.cs",
@@ -258,7 +258,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 23,
               "Title": "RateTablesController.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Controllers\\RateTablesController.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Controllers\\RateTablesController.cs",
@@ -270,80 +270,83 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 17,
               "Title": "SimulationsController.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Controllers\\SimulationsController.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Controllers\\SimulationsController.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Controllers\\SimulationsController.cs",
               "RelativeToolTip": "CadastroCliente\\Controllers\\SimulationsController.cs",
-              "ViewState": "AgIAACQAAAAAAAAAAAAowD4AAAARAAAAAAAAAA==",
+              "ViewState": "AgIAAGgAAAAAAAAAAAAowJIAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-30T12:55:32.62Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 10,
               "Title": "SimulationInputDto.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Simulation\\SimulationInputDto.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Simulation\\SimulationInputDto.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Simulation\\SimulationInputDto.cs",
               "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Simulation\\SimulationInputDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwAUAAAALAAAAAAAAAA==",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB0AAAAuAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T16:47:17.317Z"
+              "WhenOpened": "2025-10-29T16:47:17.317Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 24,
+              "DocumentIndex": 0,
               "Title": "SimulationResultDto.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Simulation\\SimulationResultDto.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Simulation\\SimulationResultDto.cs",
-              "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Simulation\\SimulationResultDto.cs",
-              "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Simulation\\SimulationResultDto.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAkAAAA4AAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Simulation\\SimulationResultDto.cs*",
+              "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Simulation\\SimulationResultDto.cs*",
+              "ViewState": "AgIAABIAAAAAAAAAAAAkwBwAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-29T16:47:48.473Z"
+              "WhenOpened": "2025-10-29T16:47:48.473Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 15,
               "Title": "InstallmentDto.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Installment\\InstallmentDto.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Installment\\InstallmentDto.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Installment\\InstallmentDto.cs",
               "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Installment\\InstallmentDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAqwA0AAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABwAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-10T13:14:24.32Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 11,
               "Title": "Simulation.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\Entities\\Simulation.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\Entities\\Simulation.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\Entities\\Simulation.cs",
               "RelativeToolTip": "CadastroCliente\\Models\\Entities\\Simulation.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAtAAAAAAAAAA==",
+              "ViewState": "AgIAAAgAAAAAAAAAAAAwwBkAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T16:20:45.172Z"
+              "WhenOpened": "2025-11-10T16:20:45.172Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "SimulationService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\SimulationService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\SimulationService.cs",
-              "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\SimulationService.cs",
-              "RelativeToolTip": "CadastroCliente\\Services\\SimulationService.cs",
-              "ViewState": "AgIAAFEAAAAAAAAAAAAiwKcAAAAzAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\SimulationService.cs*",
+              "RelativeToolTip": "CadastroCliente\\Services\\SimulationService.cs*",
+              "ViewState": "AgIAAPYAAAAAAAAAAADwvwkBAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-10-30T12:25:30.464Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 25,
+              "DocumentIndex": 29,
               "Title": "UserLogRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\UserLogRepository.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\UserLogRepository.cs",
@@ -355,19 +358,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 4,
               "Title": "SimulationRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\SimulationRepository.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\SimulationRepository.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\SimulationRepository.cs",
               "RelativeToolTip": "CadastroCliente\\Repositories\\SimulationRepository.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAAFQAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAKQAAAAAAAAAAAAowMQAAABmAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-30T12:20:49.72Z"
+              "WhenOpened": "2025-10-30T12:20:49.72Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 18,
               "Title": "InstallmentController.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Controllers\\InstallmentController.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Controllers\\InstallmentController.cs",
@@ -385,13 +389,13 @@
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\InstallmentRepository.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\InstallmentRepository.cs",
               "RelativeToolTip": "CadastroCliente\\Repositories\\InstallmentRepository.cs",
-              "ViewState": "AgIAAP4AAAAAAAAAAAAiwBQBAAAOAAAAAAAAAA==",
+              "ViewState": "AgIAAO0AAAAAAAAAAAAwwBgBAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-10T13:30:34.772Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 24,
               "Title": "IInstallmentRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\IInstallmentRepository.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\IInstallmentRepository.cs",
@@ -403,7 +407,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 27,
               "Title": "ISimulationRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\ISimulationRepository.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\ISimulationRepository.cs",
@@ -415,7 +419,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 26,
+              "DocumentIndex": 30,
               "Title": "RateTableRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\RateTableRepository.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\RateTableRepository.cs",
@@ -427,7 +431,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 26,
               "Title": "IRateTableRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\IRateTableRepository.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\IRateTableRepository.cs",
@@ -439,7 +443,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 25,
               "Title": "AddressRepository.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Repositories\\AddressRepository.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Repositories\\AddressRepository.cs",
@@ -464,7 +468,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 6,
               "Title": "IRateTableService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\IRateTableService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\IRateTableService.cs",
@@ -472,11 +476,12 @@
               "RelativeToolTip": "CadastroCliente\\Services\\IRateTableService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-31T13:51:27.914Z"
+              "WhenOpened": "2025-10-31T13:51:27.914Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 21,
               "Title": "RateTableService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\RateTableService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\RateTableService.cs",
@@ -484,25 +489,24 @@
               "RelativeToolTip": "CadastroCliente\\Services\\RateTableService.cs",
               "ViewState": "AgIAABkAAAAAAAAAAAAmwEMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-10-31T13:54:02.557Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-10-31T13:54:02.557Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 5,
               "Title": "InstallmentService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\InstallmentService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\InstallmentService.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\InstallmentService.cs",
               "RelativeToolTip": "CadastroCliente\\Services\\InstallmentService.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAgwE0AAAAdAAAAAAAAAA==",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAIwGoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-10T14:01:43.977Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 22,
               "Title": "IInstallmentService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\IInstallmentService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\IInstallmentService.cs",
@@ -510,24 +514,24 @@
               "RelativeToolTip": "CadastroCliente\\Services\\IInstallmentService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAABfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-10T14:00:52.57Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-10T14:00:52.57Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
+              "DocumentIndex": 3,
               "Title": "SimulationListItemDto.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Simulation\\SimulationListItemDto.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Simulation\\SimulationListItemDto.cs",
               "ToolTip": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Simulation\\SimulationListItemDto.cs",
               "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Simulation\\SimulationListItemDto.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-03T13:34:30.037Z"
+              "WhenOpened": "2025-11-03T13:34:30.037Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 27,
+              "DocumentIndex": 31,
               "Title": "RateTableDto.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\RateTable\\RateTableDto.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\RateTable\\RateTableDto.cs",
@@ -539,7 +543,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 13,
               "Title": "Installment.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\Entities\\Installment.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\Entities\\Installment.cs",
@@ -551,7 +555,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 28,
+              "DocumentIndex": 32,
               "Title": "DashboardTotalsDtos.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Dashboard\\DashboardTotalsDtos.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Dashboard\\DashboardTotalsDtos.cs",
@@ -563,7 +567,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 29,
+              "DocumentIndex": 33,
               "Title": "RateTable.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\Entities\\RateTable.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\Entities\\RateTable.cs",
@@ -575,7 +579,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 30,
+              "DocumentIndex": 34,
               "Title": "PaginationHelper.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Helpers\\PaginationHelper.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Helpers\\PaginationHelper.cs",
@@ -587,7 +591,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 31,
+              "DocumentIndex": 35,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Program.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Program.cs",
@@ -599,7 +603,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 32,
+              "DocumentIndex": 36,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\appsettings.json",
               "RelativeDocumentMoniker": "CadastroCliente\\appsettings.json",
@@ -611,7 +615,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 33,
+              "DocumentIndex": 37,
               "Title": "UserLog.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\Entities\\UserLog.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\Entities\\UserLog.cs",
@@ -623,7 +627,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 20,
               "Title": "UserService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\UserService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\UserService.cs",
@@ -631,12 +635,11 @@
               "RelativeToolTip": "CadastroCliente\\Services\\UserService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAC0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-10T13:50:29.159Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-10T13:50:29.159Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 34,
+              "DocumentIndex": 38,
               "Title": "TokenService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\TokenService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\TokenService.cs",
@@ -648,7 +651,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 35,
+              "DocumentIndex": 7,
               "Title": "UserParams.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Users\\UserParams.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Users\\UserParams.cs",
@@ -656,11 +659,12 @@
               "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Users\\UserParams.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T16:24:32.655Z"
+              "WhenOpened": "2025-08-20T16:24:32.655Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 36,
+              "DocumentIndex": 39,
               "Title": "User.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\Entities\\User.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\Entities\\User.cs",
@@ -672,7 +676,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 37,
+              "DocumentIndex": 14,
               "Title": "Address.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\Entities\\Address.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\Entities\\Address.cs",
@@ -684,7 +688,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 19,
               "Title": "EmailService.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Services\\EmailService.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Services\\EmailService.cs",
@@ -692,8 +696,7 @@
               "RelativeToolTip": "CadastroCliente\\Services\\EmailService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACAAAAAdAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-16T12:28:47.323Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-09-16T12:28:47.323Z"
             },
             {
               "$type": "Document",
@@ -733,7 +736,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 39,
+              "DocumentIndex": 9,
               "Title": "ChartDataPoint.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Shared\\ChartDataPoint.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Shared\\ChartDataPoint.cs",
@@ -741,7 +744,8 @@
               "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Shared\\ChartDataPoint.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-09-10T13:44:48.043Z"
+              "WhenOpened": "2025-09-10T13:44:48.043Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -757,7 +761,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 38,
+              "DocumentIndex": 8,
               "Title": "AddressParams.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Models\\DTOs\\Users\\AddressParams.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Models\\DTOs\\Users\\AddressParams.cs",
@@ -765,11 +769,12 @@
               "RelativeToolTip": "CadastroCliente\\Models\\DTOs\\Users\\AddressParams.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-20T16:23:26.878Z"
+              "WhenOpened": "2025-08-20T16:23:26.878Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 28,
               "Title": "AuthController.cs",
               "DocumentMoniker": "C:\\Users\\Ajinsoft\\Desktop\\UsersCadastro\\Back-End\\CadastroCliente\\Controllers\\AuthController.cs",
               "RelativeDocumentMoniker": "CadastroCliente\\Controllers\\AuthController.cs",

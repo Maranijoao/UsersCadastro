@@ -41,11 +41,25 @@
             </mat-form-field>
         </div>
 
-        <div class="flex gap-6 mt-2 items-center">
-            <mat-checkbox [checked]="input.financeIOF" disabled color="primary">
-                <span class="text-gray-300">IOF Financiado</span>
-            </mat-checkbox>
-            <span class="text-gray-300" *ngIf="input.gracePeriodDays > 0">Carência: {{input.gracePeriodDays}}
+        <div class="flex flex-wrap gap-6 mt-2 items-center text-sm text-gray-500 dark:text-gray-400">
+
+            <div class="flex items-center">
+                <mat-checkbox [checked]="input.financeIOF" disabled color="primary">
+                    <span class="text-gray-300">IOF Financiado</span>
+                </mat-checkbox>
+            </div>
+
+            <div class="flex items-center">
+                <mat-checkbox [checked]="input.includeInsurance" disabled color="primary"></mat-checkbox>
+                <span class="text-gray-300 text-sm">Seguro ({{ input.insuranceRate }}%)</span>
+            </div>
+
+            <div class="flex items-center">
+                <mat-checkbox [checked]="input.financeTac" disabled color="primary"></mat-checkbox>
+                <span class="text-gray-300 text-sm">TAC Financiada ({{ input.tacAmount | currency:'BRL' }})</span>
+            </div>
+
+            <span class="text-gray-300 text-sm" *ngIf="input.gracePeriodDays > 0">Carência: {{input.gracePeriodDays}}
                 dias</span>
         </div>
     </div>

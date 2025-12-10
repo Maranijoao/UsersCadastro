@@ -19,6 +19,11 @@ export interface SimulationInput {
   financeIOF: boolean;
   gracePeriodDays: number;
   frequencyDays: number;
+
+  includeInsurance?: boolean;
+  insuranceRate?: number;
+  tacAmount?: number;
+  financeTac?: boolean;
 }
 
 export interface SimulationResult {
@@ -36,6 +41,14 @@ export interface SimulationResult {
   iofFinanced: boolean;
   gracePeriodDays: number;
   firstDueDate: string;
+
+  includeInsurance: boolean;
+  insuranceAmount: number;
+  insuranceRate: number;
+  tacAmount: number;
+  tacFinanced: boolean;
+
+  installments: any[];
 }
 
 export interface Simulation extends SimulationResult {

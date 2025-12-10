@@ -1241,6 +1241,29 @@
             "type": "number",
             "format": "double"
           },
+          "includeInsurance": {
+            "type": "boolean"
+          },
+          "insuranceRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "insuranceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "tacAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "tacFinanced": {
+            "type": "boolean"
+          },
+          "refinancedFromId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "simulationDate": {
             "type": "string",
             "format": "date-time"
@@ -1298,6 +1321,25 @@
           "frequencyDays": {
             "type": "integer",
             "format": "int32"
+          },
+          "includeInsurance": {
+            "type": "boolean"
+          },
+          "insuranceRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "refinancedFromId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "tacAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "financeTac": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1389,6 +1431,33 @@
           "firstDueDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "includeInsurance": {
+            "type": "boolean"
+          },
+          "insuranceAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "insuranceRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "tacAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "tacFinanced": {
+            "type": "boolean"
+          },
+          "refinancedFromId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "payoffAmount": {
+            "type": "number",
+            "format": "double"
           },
           "installments": {
             "type": "array",

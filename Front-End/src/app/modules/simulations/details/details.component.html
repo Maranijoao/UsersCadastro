@@ -35,7 +35,8 @@
             </mat-form-field>
         </div>
 
-        <h3 class="mt-8 text-lg font-medium text-gray-600 dark:text-gray-200 border-b pb-2 mb-4">Parâmetros da Simulação
+        <h3 class="mt-8 text-lg font-medium text-gray-600 dark:text-gray-200 border-b pb-2 mb-4">
+            Parâmetros da Simulação
         </h3>
 
         <!-- GRID DE INPUTS PRINCIPAIS -->
@@ -44,9 +45,7 @@
             <!-- VALOR SOLICITADO -->
             <mat-form-field class="w-full">
                 <mat-label>Valor Solicitado (Líquido)</mat-label>
-
                 <span matPrefix>R$&nbsp;</span>
-
                 <input matInput type="text" [(ngModel)]="input.requestedAmount" placeholder="0,00"
                     [disabled]="isCalculating || isConfirming" mask="separator.2" thousandSeparator="."
                     decimalMarker="," [leadZero]="true" />
@@ -72,7 +71,6 @@
                 </mat-select>
             </mat-form-field>
 
-            <!-- CARÊNCIA -->
             <mat-form-field class="w-full">
                 <mat-label>Carência (Dias)</mat-label>
                 <input matInput type="number" [(ngModel)]="input.gracePeriodDays" placeholder="0"
@@ -81,14 +79,58 @@
             </mat-form-field>
         </div>
 
-        <!-- CHECKBOX IOF -->
+        <div class="mt-6">
+            
+                <div class="p-4 grid md:grid-cols-2 gap-8">
+
+                    <!-- SEÇÃO SEGURO -->
+                    <div class="flex flex-col gap-3">
+                        <div class="flex items-center justify-between">
+                            <mat-slide-toggle [(ngModel)]="input.includeInsurance" color="primary"
+                                [disabled]="isCalculating || isConfirming">
+                                <span class="font-medium text-gray-700 dark:text-gray-300">Incluir Seguro
+                                    Prestamista</span>
+                            </mat-slide-toggle>
+                            <span *ngIf="input.includeInsurance"
+                                class="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded">
+                                + {{ valorSeguroEstimado | currency:'BRL' }} (Est.)
+                            </span>
+                        </div>
+
+                        <div *ngIf="input.includeInsurance" class="pl-2 animate-fade-in">
+                            <mat-form-field class="w-full sm:w-1/2 dense-form-field" subscriptSizing="dynamic">
+                                <mat-label>Taxa Seguro (%)</mat-label>
+                                <input matInput type="number" [(ngModel)]="input.insuranceRate"
+                                    [disabled]="isCalculating || isConfirming">
+                            </mat-form-field>
+                        </div>
+                    </div>
+
+                    <!-- SEÇÃO TAC -->
+                    <div class="flex flex-col gap-3 border-l pl-0 md:pl-8 border-gray-200 dark:border-gray-700">
+                        <div class="flex items-center justify-between">
+                            <span class="font-medium text-gray-700 dark:text-gray-300">Taxa de Cadastro (TAC)</span>
+                            <span class="font-bold text-gray-800 dark:text-white">{{ input.tacAmount | currency:'BRL'
+                                }}</span>
+                        </div>
+                        <mat-checkbox [(ngModel)]="input.financeTac" color="primary"
+                            [disabled]="isCalculating || isConfirming">
+                            Financiar TAC (Somar ao contrato)
+                        </mat-checkbox>
+                        <div class="text-sm text-gray-500">
+                            {{ input.financeTac ? 'O cliente paga parcelado com juros.' : 'Descontado do valor liberado.' }}
+                        </div>
+                    </div>
+
+                </div>
+        </div>
+
         <div class="mt-4 mb-6">
             <mat-checkbox [(ngModel)]="input.financeIOF" [disabled]="isCalculating || isConfirming" color="primary">
                 Financiar IOF (Somar ao contrato)
             </mat-checkbox>
         </div>
 
-        <!-- MENSAGEM DE ERRO -->
         <div *ngIf="errorMessage"
             class="mb-6 p-4 bg-red-100 dark:bg-red-800/20 text-red-700 dark:text-red-400 rounded-lg flex items-center">
             <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:exclamation-circle'"></mat-icon>
@@ -134,6 +176,13 @@
                     <span class="font-semibold text-lg">{{ result.gracePeriodInterest | currency:'BRL' }}</span>
                     <span class="text-xs text-gray-400" *ngIf="result.gracePeriodDays > 0">{{ result.gracePeriodDays }}
                         dias</span>
+                </div>
+
+                <div class="flex flex-col">
+                    <span class="text-gray-500 dark:text-gray-400">Seguro Prestamista</span>
+                    <span class="font-semibold text-lg">{{ result.insuranceAmount | currency:'BRL' }}</span>
+                    <span class="text-xs text-gray-400" *ngIf="result.includeInsurance">Incluso ({{ result.insuranceRate }}%)</span>
+                    <span class="text-xs text-gray-400" *ngIf="!result.includeInsurance">Não contratado</span>
                 </div>
 
                 <!-- COLUNA 3: TOTAL FINANCIADO -->

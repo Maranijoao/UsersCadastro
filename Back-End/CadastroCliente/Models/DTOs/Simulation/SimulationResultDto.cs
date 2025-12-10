@@ -20,6 +20,14 @@ namespace CadastroCliente.Models.DTOs.Simulation
         public int GracePeriodDays { get; set; }  
         public DateTime FirstDueDate { get; set; }
 
+        public bool IncludeInsurance { get; set; }
+        public decimal InsuranceAmount { get; set; }
+        public decimal InsuranceRate { get; set; }
+        public decimal TacAmount { get; set; }
+        public bool TacFinanced { get; set; }
+        public int? RefinancedFromId { get; set; }
+        public decimal PayoffAmount { get; set; }
+
         public List<InstallmentDetailDto> Installments { get; set; }
             = new List<InstallmentDetailDto>();
     }

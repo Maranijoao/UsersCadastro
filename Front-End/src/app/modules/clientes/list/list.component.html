@@ -5,48 +5,43 @@
   </app-sidebar>
   }
 
-  <!-- Painel da Lista de Usuários -->
   <div class="flex w-full h-full lg:w-[28rem] flex-col border-r dark:border-gray-700">
-    <div class="flex flex-col gap-2 h-16 px-4 my-6 flex-shrink-0">
-      <div class="flex items-center">
-        <div class="text-xl font-bold ml-2 flex flex-col w-full" *ngIf="pagination && pagination.totalPages > 1">
-          <span class="text-sm text-gray-600 dark:text-white">
-            Página {{ pagination.pageNumber }} de {{ pagination.totalPages }}
-          </span>
-          <span class="text-xs text-gray-600 dark:text-white">
-            {{ ((pagination.pageNumber - 1) * pagination.pageSize) + 1 }} - {{ ((pagination. pageNumber - 1) *
-            pagination.pageSize) + users.length }} de {{ pagination.totalCount }}
-          </span>
-        </div>
 
-        <div class="w-full flex flex-row justify-end text-gray-600 dark:text-white">
-          <button mat-icon-button (click)="goToPreviousPage()" [disabled]="pageNumber == 1">
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-          <button mat-icon-button (click)="goToNextPage()" [disabled]="!pagination.hasNextPage">
-            <mat-icon>chevron_right</mat-icon>
-          </button>
-        </div>
-      </div>
+    <div class="p-4 border-b border-gray-100 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900 flex flex-col gap-3">
+      
+      <div class="relative w-full">
+    <mat-icon class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-200 h-5 w-5"
+      [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
+    <input type="text"
+      class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-transparent py-2 pl-10 pr-3 text-sm outline-none focus:ring-2 focus:ring-primary-500 text-gray-700 dark:text-gray-200 placeholder-gray-500 dark:placeholder:text-gray-400"
+      placeholder="Buscar usuários..." [(ngModel)]="search" (ngModelChange)="onSearchChanged()">
+  </div>
 
-      <div class="flex items-center gap-1">
-        <div class="relative w-full">
-          <mat-icon class="absolute left-2 top-1/2 -translate-y-1/2 text-gray-500 dark:text-gray-200 h-5 w-5"
-            [svgIcon]="'heroicons_outline:magnifying-glass'"></mat-icon>
-          <input type="text"
-            class="w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 py-2 pl-10 pr-3 text-sm outline-none focus:ring-2 text-gray-700 dark:text-gray-200 placeholder-gray-500 dark:placeholder:text-gray-200"
-            placeholder="Buscar..." [(ngModel)]="search" (ngModelChange)="onSearchChanged()">
-        </div>
+      <div class="border-t dark:border-gray-700 bg-white dark:bg-gray-900">
+        <mat-paginator 
+      [length]="pagination?.totalCount || 0" 
+      [pageSize]="pageSize" 
+      [pageIndex]="pageNumber - 1"
+      [pageSizeOptions]="pageSizeOptions" 
+      (page)="onPageChange($event)" 
+      showFirstLastButtons 
+      hidePageSize="true"
+      aria-label="Selecione a página de usuários" 
+      class="bg-transparent compact-paginator"> </mat-paginator>
       </div>
     </div>
 
-    <div *ngIf="loading" class="p-4 text-sm text-slate-500 dark:text-slate-400">A carregar...</div>
+    <div *ngIf="loading"
+      class="p-2 text-center text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800">
+      Carregando...
+    </div>
 
-    <div class="flex-1 overflow-y-auto mt-2">
+    <div class="flex-1 overflow-y-auto">
       <ng-container *ngIf="filtered?.length; else vazio">
-        <button *ngFor="let c of filtered; trackBy: trackById" (click)="select(c)" class="w-full text-left">
+        <button *ngFor="let c of filtered; trackBy: trackById" (click)="select(c)"
+          class="w-full text-left border-b border-gray-50 dark:border-gray-800 last:border-0">
           <div
-            class="relative flex items-center gap-3 px-4 pb-5 pt-4 dark:border-gray-700 hover:bg-slate-50 dark:hover:bg-gray-700/50"
+            class="relative flex items-center gap-3 px-4 py-4 hover:bg-slate-50 dark:hover:bg-gray-700/50 transition-colors"
             [class.bg-sky-50]="selectedId === c.id" [class.dark:bg-sky-900]="selectedId === c.id"
             [class.border-l-4]="selectedId === c.id" [class.border-l-sky-500]="selectedId === c.id">
 
@@ -64,22 +59,24 @@
               <div class="text-xs text-slate-500 dark:text-slate-400 truncate">{{ c.email }}</div>
             </div>
 
-            <div class="whitespace-nowrap rounded-full px-2.5 py-0.5 text-xs font-medium"
+            <div class="whitespace-nowrap rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
               [class]="roleBadgeClass(c.role)">
-              {{ (c.role || 'user') | titlecase }}
+              {{ (c.role || 'user') }}
             </div>
           </div>
         </button>
       </ng-container>
 
       <ng-template #vazio>
-        <div class="p-6 text-center text-slate-500 dark:text-slate-400">Nenhum usuário encontrado!</div>
+        <div class="flex flex-col items-center justify-center h-40 text-slate-500 dark:text-slate-400">
+          <mat-icon class="icon-size-8 mb-2" [svgIcon]="'heroicons_outline:users'"></mat-icon>
+          <span class="text-sm">Nenhum usuário encontrado</span>
+        </div>
       </ng-template>
     </div>
   </div>
 
-  <!-- Painel de Detalhes -->
-  <div class="flex w-full h-full overflow-hidden">
+  <div class="flex w-full h-full overflow-hidden bg-gray-50 dark:bg-gray-800/50">
     <router-outlet></router-outlet>
   </div>
 </div>

@@ -23,5 +23,12 @@ namespace CadastroCliente.Models.DTOs.Simulation
         public bool FinanceIOF { get; set; }
         public int GracePeriodDays { get; set; }
         public int FrequencyDays { get; set; } = 30;
+
+        public bool IncludeInsurance { get; set; }
+        public decimal InsuranceRate { get; set; }
+        public int? RefinancedFromId { get; set; }
+        public decimal TacAmount { get; set; }
+        public bool FinanceTac { get; set; }
+
     }
 }

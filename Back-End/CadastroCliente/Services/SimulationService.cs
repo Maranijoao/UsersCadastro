@@ -42,23 +42,48 @@ public class SimulationService : ISimulationService
         var validTerms = tableRules.GetTermsList();
         if (!validTerms.Contains(input.Term)) throw new ArgumentException($"Prazo {input.Term} meses não permitido.");
 
+        decimal valorQuitacaoAntiga = 0;
+
+        if (input.RefinancedFromId.HasValue && input.RefinancedFromId.Value > 0)
+        {
+            var parcelasAntigas = await _installmentRepository.GetBySimulationIdAsync(input.RefinancedFromId.Value, 1, 999);
+
+            valorQuitacaoAntiga = parcelasAntigas.Items
+                .Where(x => x.Status != "Paid")
+                .Sum(x => x.Balance);
+
+            if (valorQuitacaoAntiga <= 0)
+            {
+                _logger.LogWarning($"Tentativa de refinanciar contrato {input.RefinancedFromId} sem saldo devedor.");
+                valorQuitacaoAntiga = 0;
+            }
+        }
+
         // Variáveis de cálculo
         decimal valorSolicitado = input.RequestedAmount;
         decimal taxaMensal = input.Rate / 100m;
         double rateDouble = (double)(input.Rate / 100m);
         int prazo = input.Term;
-
         DateTime dataLiberacao = DateTime.Today.AddHours(12);
-
         int frequencia = input.FrequencyDays > 0 ? input.FrequencyDays : 30;
-
         int carenciaDiasInput = input.GracePeriodDays;
 
-        DateTime dataPrimeiroVencimento = dataLiberacao.AddDays(carenciaDiasInput);
+        DateTime dataPrimeiroVencimento = dataLiberacao.AddDays(carenciaDiasInput > 0 ? carenciaDiasInput : frequencia);
 
-        if (carenciaDiasInput == 0)
+        decimal baseParaFinanciar = valorSolicitado;
+
+        decimal valorTac = input.TacAmount;
+        if (input.FinanceTac)
         {
-            dataPrimeiroVencimento = dataLiberacao.AddDays(frequencia);
+            baseParaFinanciar += valorTac;
+        }
+
+        decimal valorSeguro = 0;
+        if (input.IncludeInsurance && input.InsuranceRate > 0)
+        {
+            valorSeguro = baseParaFinanciar * (input.InsuranceRate / 100m);
+            valorSeguro = Math.Round(valorSeguro, 2);
+            baseParaFinanciar += valorSeguro;
         }
 
         decimal fatorIOF = IOF_ADICIONAL + (IOF_DIARIO * 365);
@@ -68,33 +93,45 @@ public class SimulationService : ISimulationService
 
         if (input.FinanceIOF)
         {
-            valorBaseDivida = valorSolicitado / (1 - fatorIOF);
-            totalIOF = valorBaseDivida - valorSolicitado;
+            valorBaseDivida = baseParaFinanciar / (1 - fatorIOF);
+            totalIOF = valorBaseDivida - baseParaFinanciar;
+
             releasedAmount = valorSolicitado;
         }
 
         else
         {
-            releasedAmount = valorSolicitado - (valorSolicitado * fatorIOF);
-            valorBaseDivida = valorSolicitado;
-            totalIOF = valorSolicitado * fatorIOF;
+            totalIOF = baseParaFinanciar * fatorIOF;
+            valorBaseDivida = baseParaFinanciar;
+
+            releasedAmount = valorSolicitado;
+        }
+
+        if (input.FinanceTac)
+        {
+            releasedAmount -= valorTac;
+        }
+
+        releasedAmount -= valorQuitacaoAntiga;
+        
+        if (releasedAmount < 0)
+        {
+            throw new ArgumentException($"O valor solicitado é insuficiente. Saldo devedor antigo ({valorQuitacaoAntiga:C2}) + Taxas é maior que o valor novo.");
         }
 
         // Tratamento de Carência (Juros sobre dias excedentes)
+
         decimal saldoParaPrice = valorBaseDivida;
         decimal valorJurosCarencia = 0;
 
-        double rateDailyDouble = Math.Pow(1 + rateDouble, 1.0 / 30.0) - 1;
-        decimal rateDaily = (decimal)(rateDailyDouble * 100);
-
-        int gracePeriodDays = input.GracePeriodDays; 
-
-        if (gracePeriodDays > 0)
+        if (carenciaDiasInput > 0)
         {
-            valorJurosCarencia = saldoParaPrice * (rateDaily / 100m) * gracePeriodDays;
+            double RateDouble = (double)taxaMensal;
+            double rateDailyDouble = Math.Pow(1 + rateDouble, 1.0 / 30.0) - 1;
+            decimal rateDaily = (decimal)(rateDailyDouble * 100);
 
+            valorJurosCarencia = saldoParaPrice * (rateDaily / 100m) * carenciaDiasInput;
             valorJurosCarencia = Math.Round(valorJurosCarencia, 2);
-
             saldoParaPrice += valorJurosCarencia;
         }
 
@@ -118,10 +155,12 @@ public class SimulationService : ISimulationService
         return new SimulationResultDto
         {
             ReleasedAmount = Math.Round(releasedAmount, 2),
+            PayoffAmount = valorQuitacaoAntiga,                
+            RefinancedFromId = input.RefinancedFromId,
+
             TotalIOF = Math.Round(totalIOF, 2),
             GracePeriodInterest = Math.Round(valorJurosCarencia, 2),
             TotalFinancedAmount = Math.Round(saldoParaPrice, 2),
-
             InstallmentAmount = valorParcela,
             ContractValue = Math.Round(valorParcela * prazo, 2),
 
@@ -133,73 +172,14 @@ public class SimulationService : ISimulationService
             GracePeriodDays = input.GracePeriodDays,
             FirstDueDate = dataPrimeiroVencimento,
 
+            IncludeInsurance = input.IncludeInsurance,
+            InsuranceAmount = valorSeguro,
+            InsuranceRate = input.InsuranceRate,
+            TacAmount = valorTac,
+            TacFinanced = input.FinanceTac,
+
             Installments = parcelas
         };
-    }
-
-    private List<InstallmentDetailDto> GerarTabelaPrice(
-        decimal saldoInicial,
-        decimal valorParcela,
-        decimal taxaJuros,
-        int prazo,
-        DateTime dataLiberacao,
-        int frequenciaDias,
-        DateTime primeiroVencimentoReal)
-    {
-        var lista = new List<InstallmentDetailDto>();
-        decimal saldo = saldoInicial;
-
-        int diaBase = primeiroVencimentoReal.Day;
-
-        int mesesIniciais = (primeiroVencimentoReal.Year - dataLiberacao.Year) * 12 + primeiroVencimentoReal.Month - dataLiberacao.Month;
-        if (mesesIniciais < 1) mesesIniciais = 1;
-
-        //DateTime dataVencimento = dataPrimeiraParcela;
-
-        for (int n = 1; n <= prazo; n++)
-        {
-
-            decimal juros = Math.Round(saldo * taxaJuros, 2, MidpointRounding.AwayFromZero);
-            decimal amortizacao = Math.Round(valorParcela - juros, 2);
-
-            if (n == prazo)
-            {
-                amortizacao = saldo;
-                valorParcela = amortizacao + juros;
-            }
-
-            decimal saldoFinal = saldo - amortizacao;
-            if (saldoFinal < 0) saldoFinal = 0;
-
-            DateTime dataVencimentoCalculada;
-
-            if (frequenciaDias == 30)
-            {
-                DateTime dataMesAlvo = primeiroVencimentoReal.AddMonths(n - 1);
- 
-                int diasNoMes = DateTime.DaysInMonth(dataMesAlvo.Year, dataMesAlvo.Month);
-                int diaCorrigido = Math.Min(diaBase, diasNoMes);
-
-                dataVencimentoCalculada = new DateTime(dataMesAlvo.Year, dataMesAlvo.Month, diaCorrigido, 12, 0, 0);
-            }
-            else
-            {
-                dataVencimentoCalculada = primeiroVencimentoReal.AddDays((n - 1) * frequenciaDias);
-            }
-
-            lista.Add(new InstallmentDetailDto()
-            {
-                Number = n,
-                DueDate = dataVencimentoCalculada,
-                Value = valorParcela,
-                Interest = juros,
-                Amortization = amortizacao,
-                Balance = saldoFinal
-            });
-
-            saldo = saldoFinal;
-        }
-        return lista;
     }
 
     public async Task<Simulation> ConfirmAsync(SimulationResultDto resultDto, string loggedInUser, int userId)
@@ -221,6 +201,14 @@ public class SimulationService : ISimulationService
             HasGracePeriod = resultDto.GracePeriodDays > 0,
             FrequencyDays = 30,
 
+            IncludeInsurance = resultDto.IncludeInsurance,
+            InsuranceAmount = resultDto.InsuranceAmount,
+            InsuranceRate = resultDto.InsuranceRate,
+            TacAmount = resultDto.TacAmount,
+            TacFinanced = resultDto.TacFinanced,
+
+            RefinancedFromId = resultDto.RefinancedFromId,
+
             SimulationDate = DateTime.UtcNow,
             CreatedAt = DateTime.UtcNow,
             CreatedBy = loggedInUser
@@ -233,14 +221,11 @@ public class SimulationService : ISimulationService
             SimulationId = savedSimulation.Id,
             InstallmentNumber = i.Number,
             DueDate = i.DueDate.Date.AddHours(12),
-
             Status = "Pending",
-
             OriginalAmount = i.Value,
             Interest = i.Interest,
             Amortization = i.Amortization,
             Balance = i.Balance,
-
             OpeningBalance = i.Balance + i.Amortization,
 
         }).ToList();
@@ -250,60 +235,35 @@ public class SimulationService : ISimulationService
             await _installmentRepository.AddBulkAsync(installments);
         }
 
+        if (resultDto.RefinancedFromId.HasValue && resultDto.RefinancedFromId.Value > 0)
+        {
+            var parcelasAntigas = await _installmentRepository.GetBySimulationIdAsync(resultDto.RefinancedFromId.Value, 1, 999);
+            var parcelasPendentes = parcelasAntigas.Items.Where(x => x.Status != "Paid").ToList();
+
+            foreach (var pDto in parcelasPendentes)
+            {
+                var installmentEntity = await _installmentRepository.GetByIdAsync(pDto.Id);
+                
+                if (installmentEntity != null)
+                {
+                    installmentEntity.Status = "Paid";
+                    installmentEntity.PaymentDate = DateTime.UtcNow;
+                    installmentEntity.PaidAmount = installmentEntity.Balance;
+                    installmentEntity.Balance = 0;
+
+                    await _installmentRepository.UpdateAsync(installmentEntity);
+                }
+            }
+
+            _logger.LogInformation($"Contrato {resultDto.RefinancedFromId} quitado via refinanciamento pelo novo contrato {savedSimulation.Id}");
+        }
+
         return savedSimulation;
     }
 
     public async Task<Simulation> UpdateAsync(int id, Simulation simulation, string loggedInUser)
     {
-        var updatedSim = await _simRepository.UpdateAsync(id, simulation, loggedInUser);
-
-        DateTime dataLiberacao = DateTime.Today.AddHours(12);
-
-        int frequencia = simulation.FrequencyDays > 0 ? simulation.FrequencyDays : 30;
-        int diasParaVencimento = simulation.GracePeriodDays > 0 ? simulation.GracePeriodDays : frequencia;
-
-        DateTime dataPrimeiroVencimento;
-
-        if (frequencia == 30 && (diasParaVencimento % 30 == 0))
-        {
-            int meses = diasParaVencimento / 30;
-            if (meses < 1) meses = 1;
-            dataPrimeiroVencimento = dataLiberacao.AddMonths(meses);
-        }
-        else
-        {
-            dataPrimeiroVencimento = dataLiberacao.AddDays(diasParaVencimento);
-        }
-
-        dataPrimeiroVencimento = new DateTime(dataPrimeiroVencimento.Year, dataPrimeiroVencimento.Month, dataPrimeiroVencimento.Day, 12, 0, 0);
-
-        var installmentsDto = GerarTabelaPrice(
-            simulation.TotalFinancedAmount,
-            simulation.InstallmentAmount,
-            simulation.Rate / 100m,
-            simulation.Term,
-            dataLiberacao, 
-            frequencia,
-            dataPrimeiroVencimento 
-        );
-
-        var installmentsEntities = installmentsDto.Select(i => new Installment
-        {
-            SimulationId = id,
-            InstallmentNumber = i.Number,
-            DueDate = i.DueDate.Date.AddHours(12),
-            Status = "Pending",
-            OriginalAmount = i.Value,
-            Interest = i.Interest,
-            Amortization = i.Amortization,
-            Balance = i.Balance,
-            OpeningBalance = i.Balance + i.Amortization
-        }).ToList();
-
-        await _installmentRepository.DeleteBySimulationIdAsync(id);
-        await _installmentRepository.AddBulkAsync(installmentsEntities);
-
-        return updatedSim;
+        return await _simRepository.UpdateAsync(id, simulation, loggedInUser);
     }
 
     public Task<PagedSimulationResult> GetAllAsync(string term, int pageNumber, int pageSize)
@@ -319,5 +279,47 @@ public class SimulationService : ISimulationService
     public Task<DashboardTotalsDtos> GetDashboardTotalsAsync()
     {
         return _simRepository.GetDashboardTotalsAsync();
+    }
+
+    private List<InstallmentDetailDto> GerarTabelaPrice(decimal saldoInicial, decimal valorParcela, decimal taxaJuros, int prazo, DateTime dataLiberacao, int frequenciaDias, DateTime primeiroVencimentoReal)
+    {
+        var lista = new List<InstallmentDetailDto>();
+        decimal saldo = saldoInicial;
+        int diaBase = primeiroVencimentoReal.Day;
+
+        for (int n = 1; n <= prazo; n++)
+        {
+            decimal juros = Math.Round(saldo * taxaJuros, 2, MidpointRounding.AwayFromZero);
+            decimal amortizacao = Math.Round(valorParcela - juros, 2);
+
+            if (n == prazo) { amortizacao = saldo; valorParcela = amortizacao + juros; }
+
+            decimal saldoFinal = saldo - amortizacao;
+            if (saldoFinal < 0) saldoFinal = 0;
+
+            DateTime dataVencimentoCalculada;
+            if (frequenciaDias == 30)
+            {
+                DateTime dataMesAlvo = primeiroVencimentoReal.AddMonths(n - 1);
+                int diasNoMes = DateTime.DaysInMonth(dataMesAlvo.Year, dataMesAlvo.Month);
+                dataVencimentoCalculada = new DateTime(dataMesAlvo.Year, dataMesAlvo.Month, Math.Min(diaBase, diasNoMes), 12, 0, 0);
+            }
+            else
+            {
+                dataVencimentoCalculada = primeiroVencimentoReal.AddDays((n - 1) * frequenciaDias);
+            }
+
+            lista.Add(new InstallmentDetailDto()
+            {
+                Number = n,
+                DueDate = dataVencimentoCalculada,
+                Value = valorParcela,
+                Interest = juros,
+                Amortization = amortizacao,
+                Balance = saldoFinal
+            });
+            saldo = saldoFinal;
+        }
+        return lista;
     }
 }

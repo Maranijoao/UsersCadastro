@@ -34,11 +34,13 @@ namespace CadastroCliente.Repositories
                     INSERT INTO Simulations (
                         Product, RateTable, Rate, Term, InstallmentAmount, ReleasedAmount, ContractValue, 
                         TotalFinancedAmount, IOFFinanced, HasGracePeriod, GracePeriodDays, FrequencyDays, TotalIOF,
+                        IncludeInsurance, InsuranceRate, InsuranceAmount, TacAmount, TacFinanced,
                         SimulationDate, CreatedAt, CreatedBy
                     ) 
                     VALUES (
                         @Product, @RateTable, @Rate, @Term, @InstallmentAmount, @ReleasedAmount, @ContractValue, 
                         @TotalFinancedAmount, @IOFFinanced, @HasGracePeriod, @GracePeriodDays, @FrequencyDays, @TotalIOF,
+                        @IncludeInsurance, @InsuranceRate, @InsuranceAmount, @TacAmount, @TacFinanced,
                         GETUTCDATE(), @CreatedAt, @CreatedBy
                     );
                     SELECT CAST(SCOPE_IDENTITY() as int);";
@@ -58,6 +60,11 @@ namespace CadastroCliente.Repositories
                 command.Parameters.AddWithValue("@GracePeriodDays", simulation.GracePeriodDays);
                 command.Parameters.AddWithValue("@FrequencyDays", simulation.FrequencyDays);
                 command.Parameters.AddWithValue("@TotalIOF", simulation.TotalIOF);
+                command.Parameters.AddWithValue("@IncludeInsurance", simulation.IncludeInsurance);
+                command.Parameters.AddWithValue("@InsuranceRate", simulation.InsuranceRate);
+                command.Parameters.AddWithValue("@InsuranceAmount", simulation.InsuranceAmount);
+                command.Parameters.AddWithValue("@TacAmount", simulation.TacAmount);
+                command.Parameters.AddWithValue("@TacFinanced", simulation.TacFinanced);
                 command.Parameters.AddWithValue("@CreatedAt", simulation.CreatedAt);
                 command.Parameters.AddWithValue("@CreatedBy", simulation.CreatedBy);
 
@@ -106,13 +113,18 @@ namespace CadastroCliente.Repositories
                       ReleasedAmount = @ReleasedAmount,
                       ContractValue = @ContractValue, 
                       
-                      -- NOVOS CAMPOS ADICIONADOS AQUI:
                       TotalFinancedAmount = @TotalFinancedAmount,
                       IOFFinanced = @IOFFinanced,
                       HasGracePeriod = @HasGracePeriod,
                       GracePeriodDays = @GracePeriodDays,
                       FrequencyDays = @FrequencyDays,
                       TotalIOF = @TotalIOF,
+
+                      IncludeInsurance = @IncludeInsurance,
+                      InsuranceRate = @InsuranceRate,
+                      InsuranceAmount = @InsuranceAmount,
+                      TacAmount = @TacAmount,
+                      TacFinanced = @TacFinanced,
 
                       SimulationDate = GETUTCDATE() -- Atualiza data da simulação
                   WHERE Id = @Id",
@@ -132,6 +144,11 @@ namespace CadastroCliente.Repositories
             command.Parameters.AddWithValue("@GracePeriodDays", simulation.GracePeriodDays);
             command.Parameters.AddWithValue("@FrequencyDays", simulation.FrequencyDays);
             command.Parameters.AddWithValue("@TotalIOF", simulation.TotalIOF);
+            command.Parameters.AddWithValue("@IncludeInsurance", simulation.IncludeInsurance);
+            command.Parameters.AddWithValue("@InsuranceRate", simulation.InsuranceRate);
+            command.Parameters.AddWithValue("@InsuranceAmount", simulation.InsuranceAmount);
+            command.Parameters.AddWithValue("@TacAmount", simulation.TacAmount);
+            command.Parameters.AddWithValue("@TacFinanced", simulation.TacFinanced);
 
             await command.ExecuteNonQueryAsync();
             return simulation;
@@ -172,7 +189,12 @@ namespace CadastroCliente.Repositories
                     GracePeriodDays = reader["GracePeriodDays"] != DBNull.Value ? (int)reader["GracePeriodDays"] : 0,
                     FrequencyDays = reader["FrequencyDays"] != DBNull.Value ? (int)reader["FrequencyDays"] : 30,
                     TotalIOF = reader["TotalIOF"] != DBNull.Value ? (decimal)reader["TotalIOF"] : 0,
-                    GracePeriodInterest = totalFinanced - releasedAmount - totalIOF
+                    GracePeriodInterest = totalFinanced - releasedAmount - totalIOF,
+                    IncludeInsurance = reader["IncludeInsurance"] != DBNull.Value && (bool)reader["IncludeInsurance"],
+                    InsuranceRate = reader["InsuranceRate"] != DBNull.Value ? (decimal)reader["InsuranceRate"] : 0,
+                    InsuranceAmount = reader["InsuranceAmount"] != DBNull.Value ? (decimal)reader["InsuranceAmount"] : 0,
+                    TacAmount = reader["TacAmount"] != DBNull.Value ? (decimal)reader["TacAmount"] : 0,
+                    TacFinanced = reader["TacFinanced"] != DBNull.Value && (bool)reader["TacFinanced"]
                 };
             }
             return simulation;

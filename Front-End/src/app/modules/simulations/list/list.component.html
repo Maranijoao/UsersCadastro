@@ -4,11 +4,12 @@
         <div>
             <div class="text-3xl font-semibold tracking-tight leading-8">Simulações</div>
             <div class="font-medium tracking-tight text-secondary">
+                Gerencie suas simulações de empréstimos
                 <span *ngIf="!pagination">Carregando...</span>
             </div>
         </div>
-        <div class="flex items-center mt-4 sm:mt-0 space-x-2">
-            <button mat-flat-button color="primary" (click)="goToDetails('new')">
+        <div class="flex items-center mt-4 sm:mt-0 space-x-2 ">
+            <button mat-flat-button (click)="goToDetails('new')" class="bg-blue-500 hover:bg-blue-600">
                 <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
                 <span class="ml-2">Nova Simulação</span>
             </button>
@@ -66,10 +67,6 @@
                         <div class="text-sm font-medium text-secondary">Valor da Parcela</div>
                         <div class="font-medium">{{ sim.installmentAmount | currency:'BRL':'R$' }}</div>
                     </div>
-                    <!-- <div>
-                        <div class="text-sm font-medium text-secondary">Código</div>
-                        <div class="font-medium">{{ sim.id }}</div>
-                    </div> -->
                 </div>
 
                 <div class="md:col-span-4 grid grid-cols-2 gap-3">

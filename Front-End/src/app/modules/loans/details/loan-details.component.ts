@@ -56,7 +56,11 @@ export class LoanDetailsComponent implements OnInit {
     requestedAmount: 0,
     financeIOF: false,
     gracePeriodDays: 0,
-    frequencyDays: 30
+    frequencyDays: 30,
+    includeInsurance: false,
+    insuranceRate: 0,
+    tacAmount: 0,
+    financeTac: false
   };
 
   result: SimulationResult | null = null;
@@ -122,7 +126,12 @@ export class LoanDetailsComponent implements OnInit {
           requestedAmount: 0,
           financeIOF: simulation.iofFinanced,
           gracePeriodDays: simulation.gracePeriodDays,
-          frequencyDays: 30
+          frequencyDays: 30,
+
+          includeInsurance: simulation.includeInsurance,
+          insuranceRate: simulation.insuranceRate,
+          tacAmount: simulation.tacAmount,
+          financeTac: simulation.tacFinanced
         };
 
         const released = Number(simulation.releasedAmount);
@@ -134,7 +143,11 @@ export class LoanDetailsComponent implements OnInit {
           this.input.requestedAmount = released + iof;
         }
 
-        this.result = simulation;
+        if (!simulation.tacFinanced) {
+          this.input.requestedAmount += (simulation.tacAmount || 0);
+        }
+
+        this.result = simulation as unknown as SimulationResult;
 
         this.loadInstallments();
       }
@@ -192,27 +205,43 @@ export class LoanDetailsComponent implements OnInit {
   }
 
   exportToExcel(): void {
-    if (!this.dataSource.data || this.dataSource.data.length === 0) {
-      this._snackBar.open('Não há dados para exportar.', 'OK', { duration: 3000 });
-      return;
-    }
-    
-    const dataToExport = this.dataSource.data.map(item => {
-      return {
-        'Parcela': item.installmentNumber,
-        'Vencimento': new Date(item.dueDate).toLocaleDateString('pt-BR'),
-        'Saldo Devedor': item.openingBalance,
-        'Juros': item.interest,
-        'Amortização': item.amortization,
-        'Valor Parcela': item.originalAmount,
-        'Saldo Final': item.openingBalance
-      };
-    });
+    if (!this.simulationId) return;
 
-    const fileName = `Emprestimo_${this.simulationId}_Parcelas`;
-    this._excelService.exportAsExcelFile(dataToExport, fileName);
+    this.isLoadingInstallments = true;
+
+    this._installmentService.getInstallmentsForSimulation(this.simulationId, 1, 99999)
+      .pipe(finalize(() => this.isLoadingInstallments = false))
+      .subscribe({
+        next: (response: any) => {
+          const allInstallments = response.items || [];
+
+          if (!allInstallments || allInstallments.length === 0) {
+            this._snackBar.open('Não há dados para exportar.', 'OK', { duration: 3000 });
+            return;
+          }
+
+          const dataToExport = allInstallments.map((item: any) => {
+            return {
+              'Parcela': item.installmentNumber,
+              'Vencimento': new Date(item.dueDate).toLocaleDateString('pt-BR'),
+              'Saldo Devedor': item.openingBalance,
+              'Juros': item.interest,
+              'Amortização': item.amortization,
+              'Valor Parcela': item.originalAmount,
+              'Saldo Final': item.openingBalance
+            };
+          });
+
+          const fileName = `Emprestimo_${this.simulationId}_Parcelas_Completo`;
+          this._excelService.exportAsExcelFile(dataToExport, fileName);
+
+        },
+        error: (error) => {
+          console.error('Erro ao exportar:', error);
+          this._snackBar.open('Erro ao baixar os dados para exportação.', 'Fechar', { duration: 3000 });
+        }
+      });
   }
-
 
   get valorParcelaTexto(): string {
     if (!this.result) return '';

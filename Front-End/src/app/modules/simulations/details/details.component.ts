@@ -14,6 +14,9 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 
 import { PaymentDialogComponent } from './payment-dialog/payment-dialog.component';
@@ -42,7 +45,10 @@ import { finalize, switchMap, take, of, Observable, tap } from 'rxjs';
     MatPaginatorModule,
     MatCheckboxModule,
     MatDialogModule,
-    MatTooltipModule, 
+    MatTooltipModule,
+    MatSlideToggleModule,
+    MatCardModule,
+    MatDividerModule,
     NgxMaskDirective,
     NgxMaskPipe
   ],
@@ -58,7 +64,11 @@ export class SimulationDetailsComponent implements OnInit {
     requestedAmount: 0,
     financeIOF: false,
     gracePeriodDays: 0,
-    frequencyDays: 0
+    frequencyDays: 30,
+    includeInsurance: false,
+    insuranceRate: 2.50,
+    tacAmount: 0,
+    financeTac: true
   };
 
   result: SimulationResult | null = null;
@@ -132,23 +142,39 @@ export class SimulationDetailsComponent implements OnInit {
       })
     ).subscribe((simulation: Simulation | null) => {
       if (simulation) {
-        this.input.product = simulation.product;
-        this.input.rateTable = simulation.rateTable;
-        this.input.rate = simulation.rate;
-        this.input.term = simulation.term;
-        this.input.financeIOF = simulation.iofFinanced;
-        this.input.gracePeriodDays = simulation.gracePeriodDays;
 
-        const released = Number(simulation.releasedAmount);
-        const iof = Number((simulation as any).totalIOF || (simulation as any).TotalIOF || 0);
+        const released = simulation.releasedAmount ? Number(simulation.releasedAmount) : 0;
+        const iof = simulation.totalIOF ? Number(simulation.totalIOF) : 0;
+        const tac = simulation.tacAmount ? Number(simulation.tacAmount) : 0;
 
-        if (simulation.iofFinanced) {
-          this.input.requestedAmount = released;
-        } else {
-          this.input.requestedAmount = released + iof;
+        let originalRequested = released;
+
+        if (!simulation.iofFinanced) {
+          originalRequested += iof;
         }
 
-        this.input.requestedAmount = Math.round(this.input.requestedAmount * 100) / 100;
+        if (!simulation.tacFinanced) {
+          originalRequested += tac;
+        }
+
+        originalRequested = Math.round(originalRequested * 100) / 100;
+
+        this.input = {
+          product: simulation.product,
+          rateTable: simulation.rateTable,
+          rate: simulation.rate,
+          term: simulation.term,
+          financeIOF: simulation.iofFinanced,
+          gracePeriodDays: simulation.gracePeriodDays,
+          frequencyDays: 30,
+
+          includeInsurance: simulation.includeInsurance,
+          insuranceRate: simulation.insuranceRate || 2.50,
+          tacAmount: tac || 50.00,
+          financeTac: simulation.tacFinanced,
+
+          requestedAmount: originalRequested
+        };
 
         this.selectedTable = this.allTables.find(t => t.name === simulation.rateTable) || null;
 
@@ -156,7 +182,7 @@ export class SimulationDetailsComponent implements OnInit {
           this.updateTableOptionsOnly();
         }
 
-        this.result = simulation;
+        this.result = simulation as unknown as SimulationResult;
 
         this._changeDetectorRef.markForCheck();
       }
@@ -257,7 +283,11 @@ export class SimulationDetailsComponent implements OnInit {
 
       requestedAmount: this.input.requestedAmount,
       financeIOF: this.input.financeIOF,
-      gracePeriodDays: this.input.gracePeriodDays
+      gracePeriodDays: this.input.gracePeriodDays,
+      includeInsurance: this.input.includeInsurance,
+      insuranceRate: this.input.insuranceRate,
+      tacAmount: this.input.tacAmount,
+      financeTac: this.input.financeTac
     };
 
     if (this.isEditMode) {
@@ -333,11 +363,11 @@ export class SimulationDetailsComponent implements OnInit {
 
   openPaymentDialog(installment: Installment): void {
     const dialogRef = this._dialog.open(PaymentDialogComponent, {
-      panelClass: 'custom-dialog-container', // Opcional, para estilos globais se tiver
-      autoFocus: false, // Evita que o input foque e abra o teclado mobile direto
-      data: { 
-        installmentNumber: installment.installmentNumber, 
-        originalAmount: installment.originalAmount 
+      panelClass: 'custom-dialog-container',
+      autoFocus: false,
+      data: {
+        installmentNumber: installment.installmentNumber,
+        originalAmount: installment.originalAmount
       }
     });
 
@@ -356,7 +386,7 @@ export class SimulationDetailsComponent implements OnInit {
       .subscribe({
         next: () => {
           this._snackBar.open('Pagamento registrado com sucesso!', 'OK', { duration: 3000 });
-          this.loadInstallments(); 
+          this.loadInstallments();
         },
         error: (err) => {
           this._snackBar.open('Erro ao registrar pagamento: ' + err.message, 'Fechar', { duration: 5000 });
@@ -371,5 +401,12 @@ export class SimulationDetailsComponent implements OnInit {
       maximumFractionDigits: 2
     });
     return `${this.result.term}x de R$ ${valorFormatado}`;
+  }
+
+  get ValorSeguroEstimado(): number {
+    if (!this.input.includeInsurance || !this.input.requestedAmount) return 0;
+    let base = this.input.requestedAmount;
+    if (!this.input.financeIOF) base += (this.input.tacAmount || 0);
+    return base * ((this.input.insuranceRate || 0) / 100);
   }
 }
