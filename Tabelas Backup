@@ -1,0 +1,298 @@
+BANCO DE DADOS BACKUP
+
+Adresses:
+USE [DB_CLIENTE_API]
+GO
+
+/****** Object:  Table [dbo].[Addresses]    Script Date: 23/12/2025 13:33:03 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Addresses](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[CEP] [varchar](10) NULL,
+	[Street] [varchar](255) NULL,
+	[Number] [varchar](20) NULL,
+	[Complement] [varchar](100) NULL,
+	[Neighborhood] [varchar](100) NULL,
+	[City] [varchar](100) NULL,
+	[State] [char](2) NULL,
+ CONSTRAINT [PK_Enderecos] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Addresses]  WITH CHECK ADD  CONSTRAINT [FK_Enderecos_Clientes] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[Addresses] CHECK CONSTRAINT [FK_Enderecos_Clientes]
+GO
+
+
+Installments: 
+USE [DB_CLIENTE_API]
+GO
+
+/****** Object:  Table [dbo].[Installments]    Script Date: 23/12/2025 13:33:29 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Installments](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[SimulationId] [int] NOT NULL,
+	[InstallmentNumber] [int] NOT NULL,
+	[OriginalAmount] [decimal](18, 2) NOT NULL,
+	[Status] [nvarchar](50) NOT NULL,
+	[PaidAmount] [decimal](18, 2) NULL,
+	[DueDate] [date] NOT NULL,
+	[PaymentDate] [date] NULL,
+	[OpeningBalance] [decimal](18, 2) NULL,
+	[Interest] [decimal](18, 2) NULL,
+	[Amortization] [decimal](18, 2) NULL,
+	[Balance] [decimal](18, 2) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UK_Simulation_Installment] UNIQUE NONCLUSTERED 
+(
+	[SimulationId] ASC,
+	[InstallmentNumber] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Installments] ADD  DEFAULT ('Pendente') FOR [Status]
+GO
+
+ALTER TABLE [dbo].[Installments] ADD  DEFAULT ((0)) FOR [OpeningBalance]
+GO
+
+ALTER TABLE [dbo].[Installments] ADD  DEFAULT ((0)) FOR [Interest]
+GO
+
+ALTER TABLE [dbo].[Installments] ADD  DEFAULT ((0)) FOR [Amortization]
+GO
+
+ALTER TABLE [dbo].[Installments] ADD  DEFAULT ((0)) FOR [Balance]
+GO
+
+ALTER TABLE [dbo].[Installments]  WITH NOCHECK ADD  CONSTRAINT [FK_Installments_Simulations] FOREIGN KEY([SimulationId])
+REFERENCES [dbo].[SimulationsBackup] ([Id])
+GO
+
+ALTER TABLE [dbo].[Installments] CHECK CONSTRAINT [FK_Installments_Simulations]
+GO
+
+
+
+RateTables:
+USE [DB_CLIENTE_API]
+GO
+
+/****** Object:  Table [dbo].[RateTables]    Script Date: 23/12/2025 13:33:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[RateTables](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NOT NULL,
+	[MinInstallmentAmount] [decimal](18, 2) NOT NULL,
+	[MaxInstallmentAmount] [decimal](18, 2) NOT NULL,
+	[AvailableRates] [nvarchar](max) NOT NULL,
+	[AvailableTerms] [nvarchar](max) NOT NULL,
+	[IsActive] [bit] NOT NULL,
+	[CreatedAt] [datetime] NULL,
+	[CreatedBy] [nvarchar](255) NULL,
+	[UpdatedAt] [datetime] NULL,
+	[UpdatedBy] [nvarchar](255) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[RateTables] ADD  DEFAULT ((1)) FOR [IsActive]
+GO
+
+ALTER TABLE [dbo].[RateTables] ADD  DEFAULT (getdate()) FOR [CreatedAt]
+GO
+
+
+Simulations:
+USE [DB_CLIENTE_API]
+GO
+
+/****** Object:  Table [dbo].[Simulations]    Script Date: 23/12/2025 13:33:59 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Simulations](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Product] [nvarchar](100) NOT NULL,
+	[RateTable] [nvarchar](100) NOT NULL,
+	[Rate] [decimal](5, 2) NOT NULL,
+	[Term] [int] NOT NULL,
+	[InstallmentAmount] [decimal](18, 2) NOT NULL,
+	[ReleasedAmount] [decimal](18, 2) NOT NULL,
+	[ContractValue] [decimal](18, 2) NOT NULL,
+	[TotalFinancedAmount] [decimal](18, 2) NOT NULL,
+	[TacAmount] [decimal](15, 2) NOT NULL,
+	[TacFinanced] [bit] NOT NULL,
+	[IncludeInsurance] [bit] NOT NULL,
+	[InsuranceAmount] [decimal](15, 2) NOT NULL,
+	[InsuranceRate] [decimal](10, 4) NOT NULL,
+	[RefinancedFromId] [int] NULL,
+	[PayoffAmount] [decimal](15, 2) NOT NULL,
+	[IOFFinanced] [bit] NOT NULL,
+	[TotalIOF] [decimal](18, 2) NOT NULL,
+	[HasGracePeriod] [bit] NOT NULL,
+	[GracePeriodDays] [int] NOT NULL,
+	[FrequencyDays] [int] NOT NULL,
+	[SimulationDate] [datetime2](7) NOT NULL,
+	[CreatedAt] [datetime2](7) NOT NULL,
+	[CreatedBy] [nvarchar](255) NULL,
+ CONSTRAINT [PK_Simulations] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_TotalFinancedAmount]  DEFAULT ((0)) FOR [TotalFinancedAmount]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_TacAmount]  DEFAULT ((0)) FOR [TacAmount]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_TacFinanced]  DEFAULT ((0)) FOR [TacFinanced]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_IncludeInsurance]  DEFAULT ((0)) FOR [IncludeInsurance]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_InsuranceAmount]  DEFAULT ((0)) FOR [InsuranceAmount]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_InsuranceRate]  DEFAULT ((0)) FOR [InsuranceRate]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_PayoffAmount]  DEFAULT ((0)) FOR [PayoffAmount]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_IOFFinanced]  DEFAULT ((1)) FOR [IOFFinanced]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_TotalIOF]  DEFAULT ((0)) FOR [TotalIOF]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_HasGracePeriod]  DEFAULT ((0)) FOR [HasGracePeriod]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_GracePeriodDays]  DEFAULT ((0)) FOR [GracePeriodDays]
+GO
+
+ALTER TABLE [dbo].[Simulations] ADD  CONSTRAINT [DF_Simulations_FrequencyDays]  DEFAULT ((30)) FOR [FrequencyDays]
+GO
+
+ALTER TABLE [dbo].[Simulations]  WITH CHECK ADD  CONSTRAINT [FK_Simulations_Refinance] FOREIGN KEY([RefinancedFromId])
+REFERENCES [dbo].[Simulations] ([Id])
+GO
+
+ALTER TABLE [dbo].[Simulations] CHECK CONSTRAINT [FK_Simulations_Refinance]
+GO
+
+
+UserLogs:
+USE [DB_CLIENTE_API]
+GO
+
+/****** Object:  Table [dbo].[UserLogs]    Script Date: 23/12/2025 13:34:27 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[UserLogs](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[UserId] [int] NOT NULL,
+	[ChangedAt] [datetime] NOT NULL,
+	[ChangedBy] [varchar](255) NOT NULL,
+	[Action] [varchar](255) NOT NULL,
+	[OldValues] [nvarchar](max) NULL,
+	[NewValues] [nvarchar](max) NULL,
+ CONSTRAINT [PK_ClienteLogs] PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[UserLogs]  WITH CHECK ADD  CONSTRAINT [FK_ClienteLogs_Clientes] FOREIGN KEY([UserId])
+REFERENCES [dbo].[Users] ([Id])
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[UserLogs] CHECK CONSTRAINT [FK_ClienteLogs_Clientes]
+GO
+
+
+Users:
+USE [DB_CLIENTE_API]
+GO
+
+/****** Object:  Table [dbo].[Users]    Script Date: 23/12/2025 13:34:39 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Users](
+	[Id] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [nvarchar](100) NULL,
+	[Cpf] [nvarchar](14) NULL,
+	[Email] [nvarchar](100) NULL,
+	[PhoneNumber] [nvarchar](20) NULL,
+	[Password] [nvarchar](100) NULL,
+	[RecordStatus] [bit] NOT NULL,
+	[Role] [nvarchar](20) NOT NULL,
+	[CreatedAt] [datetime] NULL,
+	[CreatedBy] [varchar](255) NULL,
+	[UpdatedAt] [datetime] NULL,
+	[UpdatedBy] [varchar](255) NULL,
+	[InactivatedAt] [datetime] NULL,
+	[InactivatedBy] [varchar](255) NULL,
+	[BirthDate] [date] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[Users] ADD  DEFAULT ((1)) FOR [RecordStatus]
+GO
+
+ALTER TABLE [dbo].[Users] ADD  DEFAULT ('user') FOR [Role]
+GO
+
