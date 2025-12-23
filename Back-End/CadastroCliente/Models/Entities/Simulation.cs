@@ -25,6 +25,8 @@
         public decimal TacAmount { get; set; }
         public bool TacFinanced { get; set; }
         public int ? RefinancedFromId { get; set; }
+        public decimal PayoffAmount { get; set; }
+        public int ? RefinancedToId { get; set; }
 
         public DateTime SimulationDate { get; set; }
         public DateTime CreatedAt { get; set; }

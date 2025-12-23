@@ -1,0 +1,105 @@
+<div class="flex flex-col max-h-screen bg-gray-50 dark:bg-gray-900">
+
+    <!-- Header Elegante -->
+    <div class="flex items-center justify-between p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div class="flex items-center gap-3">
+            <div class="flex items-center justify-center w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-800 text-blue-600 dark:text-blue-300">
+                <mat-icon [svgIcon]="'heroicons_outline:scale'"></mat-icon>
+            </div>
+            <div class="flex flex-col">
+                <h2 class="text-lg font-bold text-gray-800 dark:text-white leading-none">Extrato de Refinanciamento</h2>
+                <span class="text-sm text-gray-500 mt-1">Detalhamento da Operação #{{ data.simulation.id }}</span>
+            </div>
+        </div>
+        <button mat-icon-button (click)="dialogRef.close()" class="text-gray-500">
+            <mat-icon [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <div class="p-6 overflow-y-auto">
+        
+        <!-- CARD PRINCIPAL: ENCONTRO DE CONTAS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Lado Esquerdo: O Novo Empréstimo -->
+            <div class="flex flex-col gap-4">
+                <div class="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">Origem dos Recursos</div>
+                
+                <div class="flex justify-between items-center p-3 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+                    <div class="flex flex-col">
+                        <span class="text-xs text-gray-500 uppercase font-medium">Novo Contrato</span>
+                        <span class="text-sm font-medium text-gray-800 dark:text-white">Valor Bruto Financiado</span>
+                    </div>
+                    <span class="text-lg font-bold text-green-600">+ {{ data.simulation.totalFinancedAmount | currency:'BRL' }}</span>
+                </div>
+            </div>
+
+            <!-- Lado Direito: Destinação -->
+            <div class="flex flex-col gap-4">
+                <div class="font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">Destinação / Descontos</div>
+
+                <!-- 1. Quitação (O mais importante) -->
+                <div *ngIf="hasPayoff" class="flex justify-between items-center p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg border border-amber-100 dark:border-amber-800">
+                    <div class="flex flex-col">
+                        <span class="text-xs text-amber-600 uppercase font-bold flex items-center gap-1">
+                            <mat-icon class="icon-size-3" [svgIcon]="'heroicons_solid:check-circle'"></mat-icon> 
+                            Quitação Contrato #{{ data.simulation.refinancedFromId }}
+                        </span>
+                        <span class="text-xs text-gray-500">Saldo Devedor Liquidado</span>
+                    </div>
+                    <span class="text-lg font-bold text-red-500">- {{ data.simulation.payoffAmount | currency:'BRL' }}</span>
+                </div>
+
+                <!-- 2. Taxas e Impostos -->
+                <div class="space-y-2">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-500">IOF (Governo)</span>
+                        <span class="text-red-400 font-medium">- {{ data.simulation.totalIOF | currency:'BRL' }}</span>
+                    </div>
+                    <div *ngIf="data.simulation.tacAmount > 0" class="flex justify-between text-sm">
+                        <span class="text-gray-500">Taxa de Cadastro (TAC)</span>
+                        <span class="text-red-400 font-medium">- {{ data.simulation.tacAmount | currency:'BRL' }}</span>
+                    </div>
+                    <div *ngIf="data.simulation.insuranceAmount > 0" class="flex justify-between text-sm">
+                        <span class="text-gray-500">Seguro Prestamista</span>
+                        <span class="text-red-400 font-medium">- {{ data.simulation.insuranceAmount | currency:'BRL' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-divider class="my-6"></mat-divider>
+
+        <!-- RESULTADO FINAL (TROCO) -->
+        <div class="flex flex-col items-center justify-center p-6 bg-green-50 dark:bg-green-900/20 rounded-xl border-2 border-dashed border-green-200 dark:border-green-800">
+            <span class="text-sm font-bold text-gray-600 dark:text-gray-200 uppercase tracking-widest mb-1">Resultado Líquido (Troco)</span>
+            <div class="text-4xl font-extrabold text-green-600 dark:text-green-400">
+                {{ data.simulation.releasedAmount | currency:'BRL' }}
+            </div>
+            <span class="text-xs text-green-500 mt-2">Valor disponível para depósito na conta do cliente</span>
+        </div>
+
+        <!-- Dados Bancários (Mockup Visual) -->
+        <div class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
+            <div class="flex items-center gap-2 text-gray-400 text-sm mb-2">
+                <mat-icon class="icon-size-4" [svgIcon]="'heroicons_outline:credit-card'"></mat-icon>
+                <span>Dados para Depósito</span>
+            </div>
+            <div class="flex gap-4 text-sm text-gray-600 dark:text-gray-300">
+                <span><strong>Banco:</strong> 001 - Banco do Brasil</span>
+                <span><strong>Ag:</strong> 1234-5</span>
+                <span><strong>CC:</strong> 998877-X</span>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="p-4 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+        <button mat-stroked-button (click)="dialogRef.close()">Fechar</button>
+        <button mat-flat-button color="primary" class="bg-blue-600 text-white gap-2" onclick="window.print()">
+            <mat-icon class="mr-2" [svgIcon]="'heroicons_outline:printer'"></mat-icon>
+            Imprimir Extrato
+        </button>
+    </div>
+</div>

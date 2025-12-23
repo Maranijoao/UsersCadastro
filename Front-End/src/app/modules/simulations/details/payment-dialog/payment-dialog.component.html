@@ -60,7 +60,7 @@
                 </mat-form-field>
 
                 <div *ngIf="paymentForm.get('amount')?.value > data.originalAmount"
-                    class="absolute -bottom-6 left-0 right-0 flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400 animate-pulse">
+                    class="absolute -bottom-6 left-0 right-0 flex items-center text-xs font-medium text-emerald-600 dark:text-emerald-400">
                     <mat-icon class="icon-size-3 mr-1" [svgIcon]="'heroicons_mini:arrow-down'"></mat-icon>
                     Você está amortizando {{ (paymentForm.get('amount')?.value - data.originalAmount) | currency:'BRL'
                     }} do seu saldo devedor!

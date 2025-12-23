@@ -10,6 +10,37 @@ export interface RateTable {
   isActive: boolean;
 }
 
+export interface Simulation {
+    id: number;
+    product: string;
+    rateTable: string;
+    rate: number;
+    term: number;
+    installmentAmount: number;
+    releasedAmount: number;
+    contractValue: number;
+    totalFinancedAmount: number;
+    iofFinanced: boolean;
+    hasGracePeriod: boolean;
+    gracePeriodDays: number;
+    frequencyDays: number;
+    totalIOF: number;
+    
+    includeInsurance: boolean;
+    insuranceRate: number;
+    insuranceAmount: number;
+    tacAmount: number;
+    tacFinanced: boolean;
+
+    refinancedFromId?: number;
+    refinancedToId?: number;
+    payoffAmount?: number;
+
+    simulationDate: string;
+    createdAt: string;
+    createdBy: string;
+}
+
 export interface SimulationInput {
   product: string;
   rateTable: string;
@@ -24,6 +55,8 @@ export interface SimulationInput {
   insuranceRate?: number;
   tacAmount?: number;
   financeTac?: boolean;
+
+  refinancedFromId?: number;
 }
 
 export interface SimulationResult {
@@ -47,6 +80,9 @@ export interface SimulationResult {
   insuranceRate: number;
   tacAmount: number;
   tacFinanced: boolean;
+
+  refinancedFromId?: number;
+  payoffAmount?: number;
 
   installments: any[];
 }

@@ -42,20 +42,28 @@ public class SimulationService : ISimulationService
         var validTerms = tableRules.GetTermsList();
         if (!validTerms.Contains(input.Term)) throw new ArgumentException($"Prazo {input.Term} meses não permitido.");
 
-        decimal valorQuitacaoAntiga = 0;
+        decimal valorQuitacaoAntiga = 0; 
 
         if (input.RefinancedFromId.HasValue && input.RefinancedFromId.Value > 0)
         {
-            var parcelasAntigas = await _installmentRepository.GetBySimulationIdAsync(input.RefinancedFromId.Value, 1, 999);
+            var parcelasAntigas = await _installmentRepository.GetBySimulationIdAsync(input.RefinancedFromId.Value, 1, 9999);
 
-            valorQuitacaoAntiga = parcelasAntigas.Items
-                .Where(x => x.Status != "Paid")
-                .Sum(x => x.Balance);
+            var primeiraParcelaPendente = parcelasAntigas.Items
+                .OrderBy(x => x.InstallmentNumber)
+                .FirstOrDefault(x => x.Status != "Paid");
 
-            if (valorQuitacaoAntiga <= 0)
+            if (primeiraParcelaPendente != null)
             {
-                _logger.LogWarning($"Tentativa de refinanciar contrato {input.RefinancedFromId} sem saldo devedor.");
+                valorQuitacaoAntiga = primeiraParcelaPendente.OpeningBalance;
+            }
+            else
+            {
                 valorQuitacaoAntiga = 0;
+                if (valorQuitacaoAntiga <= 0 && parcelasAntigas.TotalCount > 0 && parcelasAntigas.Items.Any(x => x.Status == "Paid"))
+                {
+                    // Log de aviso apenas, não bloqueante, pois pode ser um refinanciamento de contrato já liquidado (novo empréstimo)
+                    _logger.LogWarning($"Simulação de refinanciamento no contrato {input.RefinancedFromId} que parece estar quitado.");
+                }
             }
         }
 
@@ -104,10 +112,10 @@ public class SimulationService : ISimulationService
             totalIOF = baseParaFinanciar * fatorIOF;
             valorBaseDivida = baseParaFinanciar;
 
-            releasedAmount = valorSolicitado;
+            releasedAmount = valorSolicitado - totalIOF;
         }
 
-        if (input.FinanceTac)
+        if (!input.FinanceTac)
         {
             releasedAmount -= valorTac;
         }
@@ -116,7 +124,7 @@ public class SimulationService : ISimulationService
         
         if (releasedAmount < 0)
         {
-            throw new ArgumentException($"O valor solicitado é insuficiente. Saldo devedor antigo ({valorQuitacaoAntiga:C2}) + Taxas é maior que o valor novo.");
+            throw new ArgumentException($"Valor solicitado insuficiente. Saldo antigo ({valorQuitacaoAntiga:C2}) + Taxas é maior que o Novo Valor ({input.RequestedAmount:C2}). Faltam {Math.Abs(releasedAmount):C2}.");
         }
 
         // Tratamento de Carência (Juros sobre dias excedentes)
@@ -227,7 +235,6 @@ public class SimulationService : ISimulationService
             Amortization = i.Amortization,
             Balance = i.Balance,
             OpeningBalance = i.Balance + i.Amortization,
-
         }).ToList();
 
         if (installments.Any())
@@ -237,21 +244,22 @@ public class SimulationService : ISimulationService
 
         if (resultDto.RefinancedFromId.HasValue && resultDto.RefinancedFromId.Value > 0)
         {
-            var parcelasAntigas = await _installmentRepository.GetBySimulationIdAsync(resultDto.RefinancedFromId.Value, 1, 999);
-            var parcelasPendentes = parcelasAntigas.Items.Where(x => x.Status != "Paid").ToList();
+            var parcelasAntigas = await _installmentRepository.GetBySimulationIdAsync(resultDto.RefinancedFromId.Value, 1, 9999);
 
-            foreach (var pDto in parcelasPendentes)
+            var parcelasPendentesDtos = parcelasAntigas.Items.Where(x => x.Status != "Paid").ToList();
+
+            foreach (var pDto in parcelasPendentesDtos)
             {
-                var installmentEntity = await _installmentRepository.GetByIdAsync(pDto.Id);
+                var pEntity = await _installmentRepository.GetByIdAsync(pDto.Id);
                 
-                if (installmentEntity != null)
+                if (pEntity != null)
                 {
-                    installmentEntity.Status = "Paid";
-                    installmentEntity.PaymentDate = DateTime.UtcNow;
-                    installmentEntity.PaidAmount = installmentEntity.Balance;
-                    installmentEntity.Balance = 0;
+                    pEntity.Status = "Paid";
+                    pEntity.PaymentDate = DateTime.UtcNow.AddDays(1);
+                    pEntity.PaidAmount = pEntity.Balance;
+                    pEntity.Balance = 0;
 
-                    await _installmentRepository.UpdateAsync(installmentEntity);
+                    await _installmentRepository.UpdateAsync(pEntity);
                 }
             }
 

@@ -1,0 +1,26 @@
+<mat-card
+    class="flex flex-col w-full bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+
+    <div
+        class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
+        <h3 class="text-xl font-bold text-gray-800 dark:text-white">
+            Desempenho por Produto
+        </h3>
+    </div>
+
+    <!-- Área do Gráfico -->
+    <div class="p-6 flex flex-col flex-auto">
+
+        <!-- Loading State -->
+        <div *ngIf="isLoading" class="flex items-center justify-center h-80">
+            <mat-progress-spinner mode="indeterminate" diameter="40"></mat-progress-spinner>
+        </div>
+
+        <apx-chart *ngIf="!isLoading && chartOptions" class="flex-auto w-full" [series]="chartOptions.series"
+            [chart]="chartOptions.chart" [dataLabels]="chartOptions.dataLabels" [plotOptions]="chartOptions.plotOptions"
+            [yaxis]="chartOptions.yaxis" [xaxis]="chartOptions.xaxis" [legend]="chartOptions.legend"
+            [colors]="chartOptions.colors" [stroke]="chartOptions.stroke" [tooltip]="chartOptions.tooltip"
+            [grid]="chartOptions.grid">
+        </apx-chart>
+    </div>
+</mat-card>

@@ -1,5 +1,6 @@
 <div class="flex flex-col flex-auto p-6 sm:p-8 bg-gray-50/50 dark:bg-gray-900">
 
+    <!-- Header -->
     <div class="flex items-center justify-between mb-6">
         <div class="flex flex-col">
             <h2 class="text-2xl font-bold text-gray-800 dark:text-white flex items-center gap-2">
@@ -8,9 +9,53 @@
             </h2>
             <span class="text-secondary ml-8">Visualize os dados e gerencie pagamentos</span>
         </div>
-        <button mat-stroked-button [routerLink]="'../'">
-            <mat-icon [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
-            <span class="ml-2">Voltar</span>
+
+        <div class="flex items-center gap-3">
+            <!-- BOTÃO DE REFINANCIAMENTO -->
+            <button mat-flat-button class="bg-blue-600 text-white hover:bg-blue-700 gap-2" (click)="onRefinance()" *ngIf="!refinancedToId">
+                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:calculator'"></mat-icon>
+                Refinanciar Contrato
+            </button>
+
+            <button mat-stroked-button [routerLink]="'../'">
+                <mat-icon [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
+                <span class="ml-2">Voltar</span>
+            </button>
+        </div>
+    </div>
+
+    <div *ngIf="refinancedToId"
+        class="mb-6 p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg flex items-center justify-between text-emerald-800 dark:text-emerald-200 shadow-sm">
+        <div class="flex items-center gap-3">
+            <div class="p-2 bg-emerald-100 dark:bg-emerald-800 rounded-full">
+                <mat-icon class="text-emerald-600 dark:text-emerald-300" [svgIcon]="'heroicons_solid:check'"></mat-icon>
+            </div>
+            <div class="flex flex-col">
+                <span class="font-bold text-lg">Este contrato foi refinanciado e quitado.</span>
+                <span class="text-sm opacity-90">A dívida foi transferida para um novo contrato.</span>
+            </div>
+        </div>
+
+        <button mat-flat-button class="bg-emerald-600 text-white hover:bg-emerald-700" (click)="goToNewContract()">
+            <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_outline:arrow-right'"></mat-icon>
+            Acessar Novo Contrato #{{ refinancedToId }}
+        </button>
+    </div>
+
+    <div *ngIf="input.refinancedFromId"
+        class="mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg flex items-center justify-between text-blue-800 dark:text-blue-200">
+        <div class="flex items-center">
+            <mat-icon class="mr-3 text-blue-600" [svgIcon]="'heroicons_outline:information-circle'"></mat-icon>
+            <div>
+                <span class="font-bold">Este contrato é um refinanciamento.</span>
+                <span> Ele quitou o saldo devedor do contrato original #{{ input.refinancedFromId }}.</span>
+            </div>
+        </div>
+
+        <button mat-stroked-button class="bg-white border-blue-200 text-blue-700 hover:bg-blue-50 gap-2"
+            (click)="openRefinanceDetails()">
+            <mat-icon class="icon-size-4 mr-2" [svgIcon]="'heroicons_outline:document'"></mat-icon>
+            Ver Extrato
         </button>
     </div>
 
@@ -29,8 +74,9 @@
             </mat-form-field>
 
             <mat-form-field class="w-full pointer-events-none">
-                <mat-label>Valor Contratado</mat-label>
+                <mat-label>Valor Contratado Total</mat-label>
                 <input matInput [value]="input.requestedAmount | currency:'BRL'" readonly>
+                <mat-hint>Valor Total da Operação</mat-hint>
             </mat-form-field>
 
             <mat-form-field class="w-full pointer-events-none">
@@ -41,64 +87,90 @@
             </mat-form-field>
         </div>
 
+        <!-- Linha de Opções Extras -->
         <div class="flex flex-wrap gap-6 mt-2 items-center text-sm text-gray-500 dark:text-gray-400">
 
-            <div class="flex items-center">
-                <mat-checkbox [checked]="input.financeIOF" disabled color="primary">
-                    <span class="text-gray-300">IOF Financiado</span>
-                </mat-checkbox>
+            <div class="flex items-center gap-2">
+                <mat-checkbox [checked]="input.financeIOF" disabled color="primary"></mat-checkbox>
+                <span>IOF Financiado</span>
             </div>
 
-            <div class="flex items-center">
+            <div class="flex items-center gap-2">
                 <mat-checkbox [checked]="input.includeInsurance" disabled color="primary"></mat-checkbox>
-                <span class="text-gray-300 text-sm">Seguro ({{ input.insuranceRate }}%)</span>
+                <span>Seguro ({{ input.insuranceRate }}%)</span>
             </div>
 
-            <div class="flex items-center">
+            <div class="flex items-center gap-2">
                 <mat-checkbox [checked]="input.financeTac" disabled color="primary"></mat-checkbox>
-                <span class="text-gray-300 text-sm">TAC Financiada ({{ input.tacAmount | currency:'BRL' }})</span>
+                <span>TAC Financiada ({{ input.tacAmount | currency:'BRL' }})</span>
             </div>
 
-            <span class="text-gray-300 text-sm" *ngIf="input.gracePeriodDays > 0">Carência: {{input.gracePeriodDays}}
-                dias</span>
+            <span *ngIf="input.gracePeriodDays > 0"
+                class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-xs font-medium">
+                Carência: {{input.gracePeriodDays}} dias
+            </span>
         </div>
     </div>
 
+    <!-- Cards de Resumo Financeiro -->
     <div *ngIf="result" class="grid grid-cols-1 sm:grid-cols-4 gap-6 mt-6">
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
-            <div class="text-sm font-medium text-gray-400">Valor Liberado</div>
-            <div class="text-2xl font-bold text-gray-300 dark:text-white mt-1">
+        <!-- Card 1: Valor Liberado / Troco -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-600">
+            <div class="text-sm font-medium text-gray-400">
+                {{ input.refinancedFromId ? 'Troco / Valor Liberado' : 'Valor Liberado' }}
+            </div>
+            <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
                 {{ result.releasedAmount | currency:'BRL' }}
             </div>
-            <div class="text-xs text-gray-400 mt-1">Valor Liberado ao Cliente</div>
+            <div class="text-xs text-gray-400 mt-1">Valor recebido pelo cliente</div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
-            <div class="text-sm font-medium text-gray-400">Saldo Devedor Atual</div>
-            <div class="text-2xl font-bold text-gray-300 dark:text-white mt-1">
+        <!-- Card 2: Saldo Devedor -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-600">
+            <div class="text-sm font-medium text-gray-400">Saldo Devedor Original</div>
+            <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
                 {{ result.totalFinancedAmount | currency:'BRL' }}
             </div>
-            <div class="text-xs text-gray-400 mt-1">Valor Original Financiado</div>
+            <div class="text-xs text-gray-400 mt-1">Base de Cálculo Juros</div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
-            <div class="text-sm font-medium text-gray-400">Total IOF</div>
+        <!-- Card 3: Saldo Quitado (Se for Refin) OU Encargos -->
+        <div *ngIf="result.payoffAmount > 0; else encargosCard"
+            class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-600">
+            <div class="text-sm font-medium text-gray-400">Saldo Quitado (Antigo)</div>
             <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
-                {{ result.totalIOF | currency:'BRL' }}
+                {{ result.payoffAmount | currency:'BRL' }}
             </div>
+            <div class="text-xs text-gray-400 mt-1">Dívida anterior abatida</div>
         </div>
 
-        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-500">
+        <!-- Template alternativo para Encargos -->
+        <ng-template #encargosCard>
+            <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-600">
+                <div class="text-sm font-medium text-gray-400">Encargos (IOF + Seguro)</div>
+                <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
+                    {{ (result.totalIOF + (result.insuranceAmount || 0)) | currency:'BRL' }}
+                </div>
+                <div class="text-xs text-gray-400 mt-1">Taxas governamentais e serviços</div>
+            </div>
+        </ng-template>
+
+        <!-- Card 4: Total do Contrato -->
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border-l-4 border-blue-600">
             <div class="text-sm font-medium text-gray-400">Total Contrato</div>
             <div class="text-2xl font-bold text-gray-800 dark:text-white mt-1">
                 {{ result.contractValue | currency:'BRL' }}
             </div>
+            <div class="text-xs text-gray-400 mt-1">Soma das Parcelas</div>
         </div>
     </div>
 
+    <!-- Tabela de Parcelas -->
     <div
         class="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+
+        <!-- Header da Tabela -->
         <div
             class="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gray-50 dark:bg-gray-900/50">
             <h3 class="text-3xl font-bold text-gray-800 dark:text-white">Gestão de Parcelas</h3>
@@ -115,6 +187,7 @@
             </div>
         </div>
 
+        <!-- Conteúdo da Tabela -->
         <div class="relative overflow-auto">
             <div *ngIf="isLoadingInstallments"
                 class="absolute inset-0 z-10 bg-white/50 dark:bg-gray-900/50 flex items-center justify-center">
@@ -122,13 +195,16 @@
             </div>
 
             <table mat-table [dataSource]="dataSource" class="w-full">
+                <!-- Numero -->
                 <ng-container matColumnDef="installmentNumber">
                     <th mat-header-cell *matHeaderCellDef
-                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase">#</th>
+                        class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase">#
+                    </th>
                     <td mat-cell *matCellDef="let el" class="px-4 py-3 text-center font-bold text-gray-300">
                         {{el.installmentNumber}} </td>
                 </ng-container>
 
+                <!-- Vencimento -->
                 <ng-container matColumnDef="dueDate">
                     <th mat-header-cell *matHeaderCellDef
                         class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase">
@@ -137,14 +213,17 @@
                         date:'dd/MM/yyyy'}} </td>
                 </ng-container>
 
+                <!-- Saldo Inicial -->
                 <ng-container matColumnDef="openingBalance">
                     <th mat-header-cell *matHeaderCellDef
                         class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
                         Saldo Inicial</th>
-                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right text-gray-300"> {{el.openingBalance |
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right text-gray-300">
+                        {{el.openingBalance |
                         currency:'BRL'}} </td>
                 </ng-container>
 
+                <!-- Juros -->
                 <ng-container matColumnDef="interest">
                     <th mat-header-cell *matHeaderCellDef
                         class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
@@ -153,14 +232,17 @@
                         currency:'BRL'}} </td>
                 </ng-container>
 
+                <!-- Amortização -->
                 <ng-container matColumnDef="amortization">
                     <th mat-header-cell *matHeaderCellDef
                         class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
                         Amortização</th>
-                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right text-gray-300"> {{el.amortization |
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right text-gray-300"> {{el.amortization
+                        |
                         currency:'BRL'}} </td>
                 </ng-container>
 
+                <!-- Prestação -->
                 <ng-container matColumnDef="originalAmount">
                     <th mat-header-cell *matHeaderCellDef
                         class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
@@ -169,14 +251,17 @@
                         {{el.originalAmount | currency:'BRL'}} </td>
                 </ng-container>
 
+                <!-- Saldo Final -->
                 <ng-container matColumnDef="finalBalance">
                     <th mat-header-cell *matHeaderCellDef
                         class="px-4 py-3 bg-gray-50 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-right">
                         Saldo Final</th>
-                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right font-bold text-gray-300"> {{el.balance
+                    <td mat-cell *matCellDef="let el" class="px-4 py-3 text-right font-bold text-gray-300">
+                        {{el.balance
                         | currency:'BRL'}} </td>
                 </ng-container>
 
+                <!-- Ações -->
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef
                         class="px-4 py-3 bg-gray-500 dark:bg-gray-800 font-bold text-gray-300 text-xs uppercase text-center sticky right-0 bg-white shadow-l border-l">

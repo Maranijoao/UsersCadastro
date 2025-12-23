@@ -56,6 +56,8 @@ import { finalize, switchMap, take, of, Observable, tap } from 'rxjs';
 })
 export class SimulationDetailsComponent implements OnInit {
 
+  tacRate = 3.0;
+
   input: SimulationInput = {
     product: 'INSS - Novo',
     rateTable: '',
@@ -68,15 +70,18 @@ export class SimulationDetailsComponent implements OnInit {
     includeInsurance: false,
     insuranceRate: 2.50,
     tacAmount: 0,
-    financeTac: true
+    financeTac: true,
+    refinancedFromId: undefined
   };
 
   result: SimulationResult | null = null;
   isCalculating = false;
   isConfirming = false;
   errorMessage: string | null = null;
+  refinanceId: number | null = null;
 
   isEditMode = false;
+  isRefinancing = false;
   simulationId: number | null = null;
 
   allTables: RateTable[] = [];
@@ -124,6 +129,18 @@ export class SimulationDetailsComponent implements OnInit {
     });
   }
 
+  get valorTacCalculado(): number {
+    if (!this.input.requestedAmount) return 0;
+    return this.input.requestedAmount * (this.tacRate / 100);
+  }
+
+  get ValorSeguroEstimado(): number {
+    if (!this.input.includeInsurance || !this.input.requestedAmount) return 0;
+    let base = this.input.requestedAmount;
+    if (!this.input.financeIOF) base += (this.input.tacAmount || 0);
+    return base * ((this.input.insuranceRate || 0) / 100);
+  }
+
   loadSimulationDataFromRoute(): void {
     this._route.paramMap.pipe(
       switchMap(params => {
@@ -133,6 +150,20 @@ export class SimulationDetailsComponent implements OnInit {
           this.isEditMode = false;
           this.simulationId = null;
           this.setupDefaultTable();
+
+          const paramsId = this._route.snapshot.queryParamMap.get('refinance');
+          if (paramsId) {
+            this.refinanceId = Number(paramsId);
+            this.isRefinancing = true;
+            this.input.refinancedFromId = this.refinanceId;
+            this.input.product = 'Refinanciamento';
+            this._snackBar.open(`Refinanciando contrato ${paramsId}`, 'OK', { duration: 3000 });
+          } else {
+            this.isRefinancing = false;
+            this.input.refinancedFromId = undefined;
+          }
+          this.setupDefaultTable();
+
           return of(null);
         }
 
@@ -159,6 +190,10 @@ export class SimulationDetailsComponent implements OnInit {
 
         originalRequested = Math.round(originalRequested * 100) / 100;
 
+        if (originalRequested > 0 && tac > 0) {
+          this.tacRate = (tac / originalRequested) * 100;
+        }
+
         this.input = {
           product: simulation.product,
           rateTable: simulation.rateTable,
@@ -170,7 +205,7 @@ export class SimulationDetailsComponent implements OnInit {
 
           includeInsurance: simulation.includeInsurance,
           insuranceRate: simulation.insuranceRate || 2.50,
-          tacAmount: tac || 50.00,
+          tacAmount: tac,
           financeTac: simulation.tacFinanced,
 
           requestedAmount: originalRequested
@@ -187,6 +222,55 @@ export class SimulationDetailsComponent implements OnInit {
         this._changeDetectorRef.markForCheck();
       }
     });
+  }
+
+  populateForm(simulation: Simulation): void {
+    this.input.product = simulation.product;
+    this.input.rateTable = simulation.rateTable;
+    this.input.rate = simulation.rate;
+    this.input.term = simulation.term;
+    this.input.financeIOF = simulation.iofFinanced;
+    this.input.gracePeriodDays = simulation.gracePeriodDays;
+
+    this.input.includeInsurance = simulation.includeInsurance;
+    this.input.insuranceRate = simulation.insuranceRate;
+    this.input.tacAmount = simulation.tacAmount;
+    this.input.financeTac = simulation.tacFinanced;
+
+    this.input.refinancedFromId = simulation.refinancedFromId;
+    if (this.input.refinancedFromId) {
+      this.isRefinancing = true;
+    }
+
+    const released = Number(simulation.releasedAmount);
+    const iof = Number((simulation as any).totalIOF || (simulation as any).iof || 0);
+    const payoff = Number(simulation.payoffAmount || 0);
+
+    let originalRequested = released;
+
+    if (!simulation.iofFinanced) {
+      originalRequested += payoff;
+    }
+
+    if (!simulation.iofFinanced) {
+      originalRequested += iof;
+    }
+
+    if (!simulation.tacFinanced) {
+      originalRequested += (simulation.tacAmount || 0);
+    }
+
+    this.input.requestedAmount = Math.round(originalRequested * 100) / 100;
+
+    this.selectedTable = this.allTables.find(t => t.name === simulation.rateTable) || null;
+
+    if (this.selectedTable) {
+      this.updateTableOptionsOnly();
+    }
+
+    this.result = simulation as unknown as SimulationResult;
+
+    this._changeDetectorRef.markForCheck();
   }
 
   setupDefaultTable(): void {
@@ -214,13 +298,18 @@ export class SimulationDetailsComponent implements OnInit {
 
     const selectedTable = this.selectedTable;
     if (selectedTable) {
-      this.input.product = 'INSS - Novo';
       this.input.rate = selectedTable.availableRates[0];
       this.input.term = selectedTable.availableTerms[0];
 
-      this.input.requestedAmount = 10000;
-      this.input.financeIOF = false;
-      this.input.gracePeriodDays = 0;
+      if (!this.isEditMode && !this.input.requestedAmount) {
+        this.input.requestedAmount = 10000;
+      }
+    }
+
+    if (this.isRefinancing) {
+      this.input.product = 'Refinanciamento';
+    } else if (!this.isEditMode) {
+      this.input.product = 'INSS - Novo';
     }
 
     this.result = null;
@@ -228,26 +317,19 @@ export class SimulationDetailsComponent implements OnInit {
     this._changeDetectorRef.markForCheck();
   }
 
-
   onSimular(): void {
-
-    if (!this.input.product || this.input.product.trim() === '') {
-      this.errorMessage = 'O campo Produto é obrigatório.';
-      this.result = null;
-      return;
+    if (!this.input.product) {
+      this.errorMessage = 'O campo Produto é obrigatório.'; return;
     }
-
-    if (!this.selectedTable || !this.input.rateTable) {
-      this.errorMessage = 'Você deve selecionar uma Tabela de Taxas.';
-      this.result = null;
-      return;
-    }
-
     if (this.input.requestedAmount <= 0) {
-      this.errorMessage = 'O valor solicitado deve ser maior que zero.';
-      this.result = null;
-      return;
+      this.errorMessage = 'O valor solicitado deve ser maior que zero.'; return;
     }
+
+    this.input.tacAmount = this.valorTacCalculado;
+
+    this.isCalculating = true;
+    this.errorMessage = null;
+    this.result = null;
 
     this.isCalculating = true;
     this.errorMessage = null;
@@ -273,6 +355,7 @@ export class SimulationDetailsComponent implements OnInit {
       this.errorMessage = 'Você precisa calcular a simulação antes de confirmar.';
       return;
     }
+
     this.isConfirming = true;
     this.errorMessage = null;
 
@@ -287,8 +370,11 @@ export class SimulationDetailsComponent implements OnInit {
       includeInsurance: this.input.includeInsurance,
       insuranceRate: this.input.insuranceRate,
       tacAmount: this.input.tacAmount,
-      financeTac: this.input.financeTac
+      financeTac: this.input.financeTac,
+      refinancedFromId: this.refinanceId
     };
+
+    console.log('Dados da simulação a salvar:', this.id);
 
     if (this.isEditMode) {
 
@@ -302,7 +388,7 @@ export class SimulationDetailsComponent implements OnInit {
       saveObservable = this._simulationService.updateSimulation(this.simulationId, simulationToUpdate);
 
     } else {
-      saveObservable = this._simulationService.confirm(this.result);
+      saveObservable = this._simulationService.confirm(simulationData);
     }
 
     saveObservable.pipe(
@@ -401,12 +487,5 @@ export class SimulationDetailsComponent implements OnInit {
       maximumFractionDigits: 2
     });
     return `${this.result.term}x de R$ ${valorFormatado}`;
-  }
-
-  get ValorSeguroEstimado(): number {
-    if (!this.input.includeInsurance || !this.input.requestedAmount) return 0;
-    let base = this.input.requestedAmount;
-    if (!this.input.financeIOF) base += (this.input.tacAmount || 0);
-    return base * ((this.input.insuranceRate || 0) / 100);
   }
 }

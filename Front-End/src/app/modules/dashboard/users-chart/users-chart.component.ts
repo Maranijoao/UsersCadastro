@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Subject, takeUntil } from 'rxjs';
 import { UserService, ChartDataPoint } from 'app/core/user/user.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatCardModule } from '@angular/material/card';
 import { FuseConfig, FuseConfigService } from '@fuse/services/config';
 
 import {
@@ -34,7 +35,8 @@ export type ChartOptions = {
 @Component({
     selector: 'app-users-chart',
     standalone: true,
-    imports: [CommonModule, NgApexchartsModule, MatProgressSpinnerModule],
+   
+    imports: [CommonModule, NgApexchartsModule, MatProgressSpinnerModule, MatCardModule],
     templateUrl: './users-chart.component.html',
 })
 export class UsersChartComponent implements OnInit, OnDestroy {
@@ -48,7 +50,7 @@ export class UsersChartComponent implements OnInit, OnDestroy {
 
     constructor(
         private _userService: UserService,
-        private _fuseConfigService: FuseConfigService, 
+        private _fuseConfigService: FuseConfigService,
         private _cdr: ChangeDetectorRef
     ) { }
 
@@ -78,7 +80,7 @@ export class UsersChartComponent implements OnInit, OnDestroy {
         this.loading = true;
         this._userService.getUserRegistrationsByDay().subscribe(data => {
             this.chartData = data;
-            this.configureChartOptions(); 
+            this.configureChartOptions();
             this.loading = false;
             this._cdr.markForCheck();
         });
@@ -88,7 +90,7 @@ export class UsersChartComponent implements OnInit, OnDestroy {
         if (!this.config) {
             return;
         }
- 
+
         const isDark = this.config.scheme === 'dark';
 
         this.chartOptions = {
@@ -100,13 +102,16 @@ export class UsersChartComponent implements OnInit, OnDestroy {
                 height: 350,
                 type: 'area',
                 background: 'transparent',
-                toolbar: { show: true, tools: { download: false } }
+                toolbar: { show: true, tools: { download: false } },
+                fontFamily: 'inherit'
             },
             dataLabels: { enabled: false },
             stroke: { curve: 'smooth', width: 2 },
             grid: {
-                borderColor: isDark ? '#374151' : '#e7e7e7',
-                strokeDashArray: 5,
+                borderColor: isDark ? '#374151' : '#e2e8f0',
+                strokeDashArray: 4,
+                xaxis: { lines: { show: true } },   
+                yaxis: { lines: { show: true } },
             },
             title: {
                 text: 'Registros de Usuários por Dia',
@@ -114,19 +119,21 @@ export class UsersChartComponent implements OnInit, OnDestroy {
                 style: {
                     fontSize: '16px',
                     fontWeight: '600',
-                    color: isDark ? '#E2E8F0' : '#374151'
+                    color: isDark ? '#E2E8F0' : '#1e293b' 
                 }
             },
             xaxis: {
                 type: 'datetime',
                 labels: {
                     datetimeUTC: false,
-                    style: { colors: isDark ? '#9CA3AF' : '#6B7280' }
-                }
+                    style: { colors: isDark ? '#9CA3AF' : '#64748b' }
+                },
+                axisBorder: { show: false },
+                axisTicks: { show: false } 
             },
             yaxis: {
                 labels: {
-                    style: { colors: isDark ? '#9CA3AF' : '#6B7280' }
+                    style: { colors: isDark ? '#9CA3AF' : '#64748b' }
                 }
             },
             tooltip: {

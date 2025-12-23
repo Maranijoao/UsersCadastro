@@ -1264,6 +1264,15 @@
             "format": "int32",
             "nullable": true
           },
+          "payoffAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "refinancedToId": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
           "simulationDate": {
             "type": "string",
             "format": "date-time"

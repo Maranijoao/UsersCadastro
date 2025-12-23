@@ -29,11 +29,17 @@ namespace CadastroCliente.Services
             var installment = await _repo.GetByIdAsync(installmentId);
             if (installment == null) throw new Exception("Parcela não encontrada");
 
+            if (paidAmount < installment.OriginalAmount)
+            {
+                throw new ArgumentException($"Pagamento não autorizado: O valor informado (R$ {paidAmount:N2}) é menor que o valor da parcela (R$ {installment.OriginalAmount:N2}). O pagamento deve ser igual ou superior para amortização.");
+            }
+
             installment.PaidAmount = paidAmount;
             installment.PaymentDate = paymentDate;
             installment.Status = "Paid";
 
             decimal amortizacaoExtra = 0;
+
             if (paidAmount > installment.OriginalAmount)
             {
                 amortizacaoExtra = paidAmount - installment.OriginalAmount;

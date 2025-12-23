@@ -21,6 +21,7 @@ import { InstallmentService } from 'app/core/installment/installment.service';
 import { finalize, switchMap, take, of, tap } from 'rxjs';
 import { ExcelService } from 'app/modules/excel/excel.service';
 import { PaymentDialogComponent } from 'app/modules/simulations/details/payment-dialog/payment-dialog.component';
+import { RefinanceDialogComponent } from '../refinance/refinance-dialog.component';
 import { items } from 'app/mock-api/apps/file-manager/data';
 
 @Component({
@@ -60,11 +61,15 @@ export class LoanDetailsComponent implements OnInit {
     includeInsurance: false,
     insuranceRate: 0,
     tacAmount: 0,
-    financeTac: false
+    financeTac: false,
+    refinancedFromId: null
   };
 
   result: SimulationResult | null = null;
   simulationId: number | null = null;
+
+  refinancedToId: number | null = null;
+
   isLoading = false;
 
   showInstallments = true;
@@ -84,6 +89,7 @@ export class LoanDetailsComponent implements OnInit {
     private _snackBar: MatSnackBar,
     private _changeDetectorRef: ChangeDetectorRef,
     private _route: ActivatedRoute,
+    private _router: Router,
     private _dialog: MatDialog
   ) { }
 
@@ -101,7 +107,7 @@ export class LoanDetailsComponent implements OnInit {
     }
   }
 
-  loadLoanData(): void {
+ loadLoanData(): void {
     this._route.paramMap.pipe(
       switchMap(params => {
         const idStr = params.get('id');
@@ -117,6 +123,15 @@ export class LoanDetailsComponent implements OnInit {
       })
     ).subscribe((simulation: Simulation | null) => {
       if (simulation) {
+        
+        console.log('Simulação carregada:', simulation);
+
+        const simAny = simulation as any;
+        this.refinancedToId = simAny.refinancedToId || simAny.RefinancedToId || null;
+
+        console.log('ID do novo contrato (refinancedToId):', this.refinancedToId);
+
+        const refinId = simulation.refinancedFromId || simAny.RefinancedFromId || undefined;
 
         this.input = {
           product: simulation.product,
@@ -131,23 +146,38 @@ export class LoanDetailsComponent implements OnInit {
           includeInsurance: simulation.includeInsurance,
           insuranceRate: simulation.insuranceRate,
           tacAmount: simulation.tacAmount,
-          financeTac: simulation.tacFinanced
+          financeTac: simulation.tacFinanced,
+
+          refinancedFromId: refinId
         };
 
         const released = Number(simulation.releasedAmount);
         const iof = Number((simulation as any).totalIOF || (simulation as any).TotalIOF || 0);
+        const payoff = Number(simulation.payoffAmount || (simulation as any).PayoffAmount || 0);
 
-        if (simulation.iofFinanced) {
-          this.input.requestedAmount = released;
-        } else {
-          this.input.requestedAmount = released + iof;
+        let originalRequested = released;
+
+        if (refinId) {
+          originalRequested += payoff;
+        }
+
+        if (!simulation.iofFinanced) {
+          originalRequested += iof;
         }
 
         if (!simulation.tacFinanced) {
-          this.input.requestedAmount += (simulation.tacAmount || 0);
+          originalRequested += Number(simulation.tacAmount || 0);
         }
 
+        this.input.requestedAmount = originalRequested;
+
         this.result = simulation as unknown as SimulationResult;
+        
+        if (this.result) {
+            this.result.payoffAmount = payoff;
+        }
+        
+        this._changeDetectorRef.detectChanges();
 
         this.loadInstallments();
       }
@@ -199,7 +229,15 @@ export class LoanDetailsComponent implements OnInit {
           this.loadInstallments();
         },
         error: (err) => {
-          this._snackBar.open('Erro: ' + err.message, 'Fechar', { duration: 5000 });
+          console.error('Erro no pagamento:', err);
+
+          const backendMessage = err.error?.message || (typeof err.error === 'string' ? err.error : null);
+          const errorMessage = backendMessage || err.message || 'Erro ao registrar pagamento.';
+
+          this._snackBar.open(errorMessage, 'Fechar', {
+            duration: 8000,
+            panelClass: ['warning-snackbar'] 
+          });
         }
       });
   }
@@ -250,5 +288,35 @@ export class LoanDetailsComponent implements OnInit {
       maximumFractionDigits: 2
     });
     return `${this.result.term}x de R$ ${valorFormatado}`;
+  }
+
+  onRefinance(): void {
+    if (!this.simulationId) return;
+
+    this._router.navigate(['/simulations/new'], {
+      queryParams: { refinance: this.simulationId }
+    });
+  }
+
+  openRefinanceDetails(): void {
+    if (!this.result) return;
+
+    this._dialog.open(RefinanceDialogComponent, {
+      width: '800px',
+      maxWidth: '95vw',
+      autoFocus: false,
+      data: {
+        simulation: this.result
+      }
+    });
+  }
+
+  goToNewContract(): void {
+    if (this.refinancedToId) {
+      console.log('Navegando para o contrato refinanciado com ID:', this.refinancedToId);
+      this._router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+        this._router.navigate(['/loans', this.refinancedToId]);
+      });
+    }
   }
 }

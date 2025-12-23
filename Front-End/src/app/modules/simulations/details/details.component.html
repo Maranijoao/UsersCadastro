@@ -2,14 +2,22 @@
 
     <!-- CABEÇALHO -->
     <div class="flex items-center justify-between">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Simulação Financeira</h2>
+        <div class="flex flex-col">
+            <h2 class="text-xl font-semibold text-gray-800 dark:text-white">Simulação Financeira</h2>
+
+            <div *ngIf="isRefinancing"
+                class="flex items-center mt-1 text-white bg-blue-100 dark:bg-blue-900/30 px-2 py-0.5 rounded w-fit">
+                <mat-icon class="icon-size-4 mr-1" [svgIcon]="'heroicons_solid:refresh'"></mat-icon>
+                <span class="text-xs font-bold uppercase">Refinanciamento do Contrato #{{ input.refinancedFromId
+                    }}</span>
+            </div>
+        </div>
         <button mat-stroked-button [routerLink]="'../'">
             <mat-icon [svgIcon]="'heroicons_outline:arrow-left'"></mat-icon>
             <span class="ml-2">Voltar</span>
         </button>
     </div>
 
-    <!-- ÁREA DE SCROLL DO FORMULÁRIO -->
     <div class="flex flex-col mt-8">
 
         <!-- SEÇÃO DE CONFIGURAÇÃO (PRODUTO E TABELA) -->
@@ -39,7 +47,6 @@
             Parâmetros da Simulação
         </h3>
 
-        <!-- GRID DE INPUTS PRINCIPAIS -->
         <div class="grid sm:grid-cols-4 gap-6 items-start">
 
             <!-- VALOR SOLICITADO -->
@@ -79,128 +86,154 @@
             </mat-form-field>
         </div>
 
-        <div class="mt-6">
-            
-                <div class="p-4 grid md:grid-cols-2 gap-8">
+        <div class="mt-6 flex md:flex-row flex-col w-full gap-4">
+            <div class="flex flex-col w-full">
 
+                <div class="p-4 grid gap-8">
+
+                    <h3 class="text-lg font-medium text-gray-600 dark:text-gray-200 border-b pb-2 mb-4">
+                        Serviços Adicionais
+                    </h3>
                     <!-- SEÇÃO SEGURO -->
-                    <div class="flex flex-col gap-3">
-                        <div class="flex items-center justify-between">
-                            <mat-slide-toggle [(ngModel)]="input.includeInsurance" color="primary"
-                                [disabled]="isCalculating || isConfirming">
-                                <span class="font-medium text-gray-700 dark:text-gray-300">Incluir Seguro
-                                    Prestamista</span>
-                            </mat-slide-toggle>
-                            <span *ngIf="input.includeInsurance"
-                                class="text-sm font-bold text-green-600 bg-green-100 px-2 py-1 rounded">
-                                + {{ valorSeguroEstimado | currency:'BRL' }} (Est.)
-                            </span>
-                        </div>
+                    <div class="mt-2 w-full">
 
-                        <div *ngIf="input.includeInsurance" class="pl-2 animate-fade-in">
-                            <mat-form-field class="w-full sm:w-1/2 dense-form-field" subscriptSizing="dynamic">
-                                <mat-label>Taxa Seguro (%)</mat-label>
-                                <input matInput type="number" [(ngModel)]="input.insuranceRate"
-                                    [disabled]="isCalculating || isConfirming">
-                            </mat-form-field>
+                        <div class="grid sm:grid-cols-2 gap-8">
+
+                            <!-- SEÇÃO SEGURO -->
+                            <div class="flex flex-col gap-4">
+                                <div class="flex items-center justify-between">
+                                    <mat-slide-toggle [(ngModel)]="input.includeInsurance" color="primary"
+                                        [disabled]="isCalculating || isConfirming">
+                                        <span class="font-medium text-gray-700 dark:text-gray-300">Seguro
+                                            Prestamista</span>
+                                    </mat-slide-toggle>
+
+                                    <span *ngIf="input.includeInsurance" class="text-sm font-bold text-green-400">
+                                        + {{ ValorSeguroEstimado | currency:'BRL' }}
+                                    </span>
+                                </div>
+
+                                <div *ngIf="input.includeInsurance" class="animate-fade-in">
+                                    <mat-form-field class="w-full dense-form-field" subscriptSizing="dynamic">
+                                        <mat-label>Taxa Seguro (%)</mat-label>
+                                        <input matInput type="number" [(ngModel)]="input.insuranceRate"
+                                            [disabled]="isCalculating || isConfirming">
+                                    </mat-form-field>
+                                </div>
+                            </div>
+
+                            <!-- SEÇÃO TAC -->
+                            <div class="flex flex-col gap-4">
+                                <div class="flex items-center justify-between h-6">
+                                    <!-- Alinhamento visual com o toggle -->
+                                    <span class="font-medium text-gray-700 dark:text-gray-300">Taxa de Cadastro
+                                        (TAC)</span>
+                                    <span class="font-bold text-gray-800 dark:text-white">{{ valorTacCalculado |
+                                        currency:'BRL' }}</span>
+                                </div>
+
+                                <div class="flex gap-4 items-center">
+                                    <mat-form-field class="w-1/2 dense-form-field" subscriptSizing="dynamic">
+                                        <mat-label>Taxa (%)</mat-label>
+                                        <input matInput type="number" [(ngModel)]="tacRate"
+                                            [disabled]="isCalculating || isConfirming">
+                                    </mat-form-field>
+
+                                    <mat-checkbox [(ngModel)]="input.financeTac" color="primary"
+                                        [disabled]="isCalculating || isConfirming"
+                                        class="text-sm text-gray-600 dark:text-gray-400">
+                                        Financiar
+                                    </mat-checkbox>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-
-                    <!-- SEÇÃO TAC -->
-                    <div class="flex flex-col gap-3 border-l pl-0 md:pl-8 border-gray-200 dark:border-gray-700">
-                        <div class="flex items-center justify-between">
-                            <span class="font-medium text-gray-700 dark:text-gray-300">Taxa de Cadastro (TAC)</span>
-                            <span class="font-bold text-gray-800 dark:text-white">{{ input.tacAmount | currency:'BRL'
-                                }}</span>
-                        </div>
-                        <mat-checkbox [(ngModel)]="input.financeTac" color="primary"
-                            [disabled]="isCalculating || isConfirming">
-                            Financiar TAC (Somar ao contrato)
-                        </mat-checkbox>
-                        <div class="text-sm text-gray-500">
-                            {{ input.financeTac ? 'O cliente paga parcelado com juros.' : 'Descontado do valor liberado.' }}
-                        </div>
-                    </div>
-
                 </div>
-        </div>
 
-        <div class="mt-4 mb-6">
-            <mat-checkbox [(ngModel)]="input.financeIOF" [disabled]="isCalculating || isConfirming" color="primary">
-                Financiar IOF (Somar ao contrato)
-            </mat-checkbox>
-        </div>
-
-        <div *ngIf="errorMessage"
-            class="mb-6 p-4 bg-red-100 dark:bg-red-800/20 text-red-700 dark:text-red-400 rounded-lg flex items-center">
-            <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:exclamation-circle'"></mat-icon>
-            <span class="font-medium">{{ errorMessage }}</span>
-        </div>
-
-        <div *ngIf="result && !isCalculating"
-            class="mb-8 bg-gray-50 dark:bg-gray-700 rounded-2xl border border-gray-200 dark:border-gray-600 overflow-hidden shadow-sm w-full">
-
-            <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600">
-                <div class="flex flex-wrap justify-between items-center gap-4">
-                    <div>
-                        <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">Valor
-                            Liberado ao Cliente</div>
-                        <div class="text-4xl font-bold text-green-600 dark:text-green-400 mt-1">
-                            {{ result.releasedAmount | currency:'BRL':'R$':'1.2-2' }}
-                        </div>
-                    </div>
-                    <div class="text-right">
-                        <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-                            Prestação Mensal</div>
-                        <div class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">
-                            {{ valorParcelaTexto }}
-                        </div>
-                    </div>
+                <div class="mt-4 mb-6">
+                    <mat-checkbox [(ngModel)]="input.financeIOF" [disabled]="isCalculating || isConfirming"
+                        color="primary">
+                        Financiar IOF (Somar ao contrato)
+                    </mat-checkbox>
                 </div>
             </div>
 
-            <!-- DETALHAMENTO FINANCEIRO (GRID) -->
-            <div class="p-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-sm">
+            <div *ngIf="errorMessage"
+                class="mb-6 p-4 bg-red-100 dark:bg-red-800/20 text-red-700 dark:text-red-400 rounded-lg flex items-center">
+                <mat-icon class="icon-size-5 mr-2" [svgIcon]="'heroicons_solid:exclamation-circle'"></mat-icon>
+                <span class="font-medium">{{ errorMessage }}</span>
+            </div>
 
-                <!-- COLUNA 1: IOF -->
-                <div class="flex flex-col">
-                    <span class="text-gray-500 dark:text-gray-400">Total IOF</span>
-                    <span class="font-semibold text-lg">{{ result.totalIOF | currency:'BRL' }}</span>
-                    <span class="text-xs text-gray-400" *ngIf="result.iofFinanced">(Financiado)</span>
-                    <span class="text-xs text-gray-400" *ngIf="!result.iofFinanced">(Descontado)</span>
+            <div *ngIf="result && !isCalculating"
+                class="mb-8 bg-gray-50 dark:bg-gray-700 rounded-2xl border border-gray-200 dark:border-gray-600 overflow-hidden shadow-sm w-full">
+
+                <div class="p-6 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-600">
+                    <div class="flex flex-wrap justify-between items-center gap-4">
+                        <div>
+                            <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                Valor
+                                Liberado ao Cliente</div>
+                            <div class="text-4xl font-bold text-green-600 dark:text-green-400 mt-1">
+                                {{ result.releasedAmount | currency:'BRL':'R$':'1.2-2' }}
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+                                Prestação Mensal</div>
+                            <div class="text-3xl font-bold text-green-600 dark:text-green-400 mt-1">
+                                {{ valorParcelaTexto }}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- COLUNA 2: CARÊNCIA -->
-                <div class="flex flex-col">
-                    <span class="text-gray-500 dark:text-gray-400">Juros de Carência</span>
-                    <span class="font-semibold text-lg">{{ result.gracePeriodInterest | currency:'BRL' }}</span>
-                    <span class="text-xs text-gray-400" *ngIf="result.gracePeriodDays > 0">{{ result.gracePeriodDays }}
-                        dias</span>
-                </div>
+                <!-- DETALHAMENTO FINANCEIRO (GRID) -->
+                <div class="p-6 grid grid-cols-2 sm:grid-cols-4 gap-6 text-sm">
 
-                <div class="flex flex-col">
-                    <span class="text-gray-500 dark:text-gray-400">Seguro Prestamista</span>
-                    <span class="font-semibold text-lg">{{ result.insuranceAmount | currency:'BRL' }}</span>
-                    <span class="text-xs text-gray-400" *ngIf="result.includeInsurance">Incluso ({{ result.insuranceRate }}%)</span>
-                    <span class="text-xs text-gray-400" *ngIf="!result.includeInsurance">Não contratado</span>
-                </div>
+                    <!-- COLUNA 1: IOF -->
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 dark:text-gray-400">Total IOF</span>
+                        <span class="font-semibold text-lg">{{ result.totalIOF | currency:'BRL' }}</span>
+                        <span class="text-xs text-gray-400" *ngIf="result.iofFinanced">(Financiado)</span>
+                        <span class="text-xs text-gray-400" *ngIf="!result.iofFinanced">(Descontado)</span>
+                    </div>
 
-                <!-- COLUNA 3: TOTAL FINANCIADO -->
-                <div class="flex flex-col">
-                    <span class="text-gray-500 dark:text-gray-400">Valor Total Financiado</span>
-                    <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">
-                        {{ result.totalFinancedAmount | currency:'BRL' }}
-                    </span>
-                    <span class="text-xs text-gray-400">Base de Cálculo</span>
-                </div>
+                    <!-- COLUNA 2: CARÊNCIA -->
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 dark:text-gray-400">Juros de Carência</span>
+                        <span class="font-semibold text-lg">{{ result.gracePeriodInterest | currency:'BRL' }}</span>
+                        <span class="text-xs text-gray-400" *ngIf="result.gracePeriodDays > 0">{{ result.gracePeriodDays
+                            }}
+                            dias</span>
+                    </div>
 
-                <!-- COLUNA 4: VALOR CONTRATO -->
-                <div class="flex flex-col">
-                    <span class="text-gray-500 dark:text-gray-400">Valor Total do Contrato</span>
-                    <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">
-                        {{ result.contractValue | currency:'BRL' }}
-                    </span>
-                    <span class="text-xs text-gray-400">Soma das Parcelas</span>
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 dark:text-gray-400">Seguro Prestamista</span>
+                        <span class="font-semibold text-lg">{{ result.insuranceAmount | currency:'BRL' }}</span>
+                        <span class="text-xs text-gray-400" *ngIf="result.includeInsurance">Incluso ({{
+                            result.insuranceRate
+                            }}%)</span>
+                        <span class="text-xs text-gray-400" *ngIf="!result.includeInsurance">Não contratado</span>
+                    </div>
+
+                    <!-- COLUNA 3: TOTAL FINANCIADO -->
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 dark:text-gray-400">Valor Total Financiado</span>
+                        <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">
+                            {{ result.totalFinancedAmount | currency:'BRL' }}
+                        </span>
+                        <span class="text-xs text-gray-400">Base de Cálculo</span>
+                    </div>
+
+                    <!-- COLUNA 4: VALOR CONTRATO -->
+                    <div class="flex flex-col">
+                        <span class="text-gray-500 dark:text-gray-400">Valor Total do Contrato</span>
+                        <span class="font-semibold text-lg text-gray-800 dark:text-gray-200">
+                            {{ result.contractValue | currency:'BRL' }}
+                        </span>
+                        <span class="text-xs text-gray-400">Soma das Parcelas</span>
+                    </div>
                 </div>
             </div>
         </div>

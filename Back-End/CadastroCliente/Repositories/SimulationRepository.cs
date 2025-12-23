@@ -2,9 +2,9 @@
 using CadastroCliente.Models.Entities;
 using CadastroCliente.Repositories.Data;
 using Microsoft.Data.SqlClient;
-using System.Linq.Expressions;
-using System.Security.Claims;
-using System.Transactions;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace CadastroCliente.Repositories
 {
@@ -34,19 +34,30 @@ namespace CadastroCliente.Repositories
                     INSERT INTO Simulations (
                         Product, RateTable, Rate, Term, InstallmentAmount, ReleasedAmount, ContractValue, 
                         TotalFinancedAmount, IOFFinanced, HasGracePeriod, GracePeriodDays, FrequencyDays, TotalIOF,
+                        
+                        -- Campos de Negócio (Seguro e TAC)
                         IncludeInsurance, InsuranceRate, InsuranceAmount, TacAmount, TacFinanced,
+                        
+                        -- Campos de Refinanciamento
+                        RefinancedFromId, PayoffAmount,
+
                         SimulationDate, CreatedAt, CreatedBy
                     ) 
                     VALUES (
                         @Product, @RateTable, @Rate, @Term, @InstallmentAmount, @ReleasedAmount, @ContractValue, 
                         @TotalFinancedAmount, @IOFFinanced, @HasGracePeriod, @GracePeriodDays, @FrequencyDays, @TotalIOF,
+                        
                         @IncludeInsurance, @InsuranceRate, @InsuranceAmount, @TacAmount, @TacFinanced,
+                        
+                        @RefinancedFromId, @PayoffAmount,
+
                         GETUTCDATE(), @CreatedAt, @CreatedBy
                     );
                     SELECT CAST(SCOPE_IDENTITY() as int);";
 
                 var command = new SqlCommand(sql, connection, transaction);
 
+                // Dados Básicos
                 command.Parameters.AddWithValue("@Product", simulation.Product);
                 command.Parameters.AddWithValue("@RateTable", simulation.RateTable);
                 command.Parameters.AddWithValue("@Rate", simulation.Rate);
@@ -60,11 +71,18 @@ namespace CadastroCliente.Repositories
                 command.Parameters.AddWithValue("@GracePeriodDays", simulation.GracePeriodDays);
                 command.Parameters.AddWithValue("@FrequencyDays", simulation.FrequencyDays);
                 command.Parameters.AddWithValue("@TotalIOF", simulation.TotalIOF);
+
+                // Serviços
                 command.Parameters.AddWithValue("@IncludeInsurance", simulation.IncludeInsurance);
                 command.Parameters.AddWithValue("@InsuranceRate", simulation.InsuranceRate);
                 command.Parameters.AddWithValue("@InsuranceAmount", simulation.InsuranceAmount);
                 command.Parameters.AddWithValue("@TacAmount", simulation.TacAmount);
                 command.Parameters.AddWithValue("@TacFinanced", simulation.TacFinanced);
+
+                command.Parameters.AddWithValue("@RefinancedFromId", (object)simulation.RefinancedFromId ?? DBNull.Value);
+                command.Parameters.AddWithValue("@PayoffAmount", simulation.PayoffAmount);
+
+                // Auditoria
                 command.Parameters.AddWithValue("@CreatedAt", simulation.CreatedAt);
                 command.Parameters.AddWithValue("@CreatedBy", simulation.CreatedBy);
 
@@ -126,7 +144,11 @@ namespace CadastroCliente.Repositories
                       TacAmount = @TacAmount,
                       TacFinanced = @TacFinanced,
 
-                      SimulationDate = GETUTCDATE() -- Atualiza data da simulação
+                      -- Atualiza Refinanciamento também se mudar
+                      RefinancedFromId = @RefinancedFromId,
+                      PayoffAmount = @PayoffAmount,
+
+                      SimulationDate = GETUTCDATE()
                   WHERE Id = @Id",
                 connection);
 
@@ -144,11 +166,15 @@ namespace CadastroCliente.Repositories
             command.Parameters.AddWithValue("@GracePeriodDays", simulation.GracePeriodDays);
             command.Parameters.AddWithValue("@FrequencyDays", simulation.FrequencyDays);
             command.Parameters.AddWithValue("@TotalIOF", simulation.TotalIOF);
+
             command.Parameters.AddWithValue("@IncludeInsurance", simulation.IncludeInsurance);
             command.Parameters.AddWithValue("@InsuranceRate", simulation.InsuranceRate);
             command.Parameters.AddWithValue("@InsuranceAmount", simulation.InsuranceAmount);
             command.Parameters.AddWithValue("@TacAmount", simulation.TacAmount);
             command.Parameters.AddWithValue("@TacFinanced", simulation.TacFinanced);
+
+            command.Parameters.AddWithValue("@RefinancedFromId", (object)simulation.RefinancedFromId ?? DBNull.Value);
+            command.Parameters.AddWithValue("@PayoffAmount", simulation.PayoffAmount);
 
             await command.ExecuteNonQueryAsync();
             return simulation;
@@ -156,11 +182,17 @@ namespace CadastroCliente.Repositories
 
         public async Task<Simulation?> GetByIdAsync(int id)
         {
-            Simulation simulation = null;
+            Simulation? simulation = null;
             using var connection = _connectionProvider.GetConnection();
             await connection.OpenAsync();
 
-            var command = new SqlCommand("SELECT * FROM Simulations WHERE Id = @Id", connection);
+            var sql = @"
+                SELECT s.*,
+                       (SELECT TOP 1 Id FROM Simulations child WHERE child.RefinancedFromId = s.Id) as RefinancedToId
+                FROM Simulations s 
+                WHERE s.Id = @Id";
+
+            var command = new SqlCommand(sql, connection);
             command.Parameters.AddWithValue("@Id", id);
 
             using var reader = await command.ExecuteReaderAsync();
@@ -183,18 +215,26 @@ namespace CadastroCliente.Repositories
                     SimulationDate = (DateTime)reader["SimulationDate"],
                     CreatedAt = (DateTime)reader["CreatedAt"],
                     CreatedBy = reader["CreatedBy"] as string,
-                    TotalFinancedAmount = reader["TotalFinancedAmount"] != DBNull.Value ? (decimal)reader["TotalFinancedAmount"] : 0,
+                    TotalFinancedAmount = totalFinanced,
                     IOFFinanced = reader["IOFFinanced"] != DBNull.Value && (bool)reader["IOFFinanced"],
                     HasGracePeriod = reader["HasGracePeriod"] != DBNull.Value && (bool)reader["HasGracePeriod"],
                     GracePeriodDays = reader["GracePeriodDays"] != DBNull.Value ? (int)reader["GracePeriodDays"] : 0,
                     FrequencyDays = reader["FrequencyDays"] != DBNull.Value ? (int)reader["FrequencyDays"] : 30,
-                    TotalIOF = reader["TotalIOF"] != DBNull.Value ? (decimal)reader["TotalIOF"] : 0,
+                    TotalIOF = totalIOF,
                     GracePeriodInterest = totalFinanced - releasedAmount - totalIOF,
+
                     IncludeInsurance = reader["IncludeInsurance"] != DBNull.Value && (bool)reader["IncludeInsurance"],
                     InsuranceRate = reader["InsuranceRate"] != DBNull.Value ? (decimal)reader["InsuranceRate"] : 0,
                     InsuranceAmount = reader["InsuranceAmount"] != DBNull.Value ? (decimal)reader["InsuranceAmount"] : 0,
                     TacAmount = reader["TacAmount"] != DBNull.Value ? (decimal)reader["TacAmount"] : 0,
-                    TacFinanced = reader["TacFinanced"] != DBNull.Value && (bool)reader["TacFinanced"]
+                    TacFinanced = reader["TacFinanced"] != DBNull.Value && (bool)reader["TacFinanced"],
+
+                    // Mapeamento Refinanciamento
+                    RefinancedFromId = reader["RefinancedFromId"] != DBNull.Value ? (int)reader["RefinancedFromId"] : null,
+                    PayoffAmount = reader["PayoffAmount"] != DBNull.Value ? (decimal)reader["PayoffAmount"] : 0,
+
+                    // Mapeia o resultado da subquery
+                    RefinancedToId = reader["RefinancedToId"] != DBNull.Value ? Convert.ToInt32(reader["RefinancedToId"]) : null
                 };
             }
             return simulation;
@@ -283,7 +323,7 @@ namespace CadastroCliente.Repositories
                     totals.TotalContractValue = (decimal)reader["TotalContract"];
                 }
             }
-                return totals;
+            return totals;
         }
     }
 }

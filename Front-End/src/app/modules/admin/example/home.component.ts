@@ -8,13 +8,14 @@ import { SimulationService } from 'app/core/simulation/simulation.service';
 import { DashboardTotals } from 'app/core/simulation/simulation.types';
 import { Subject, takeUntil } from 'rxjs';
 import { UsersChartComponent } from 'app/modules/dashboard/users-chart/users-chart.component';
+import { SimulationsBarChartComponent } from 'app/modules/dashboard/simulations-chart/simulations-bar-chart.component';
 
 @Component({
     selector: 'home',
     templateUrl: './home.component.html',
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, UsersChartComponent],
+    imports: [CommonModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, UsersChartComponent, SimulationsBarChartComponent],
 })
 export class HomeComponent implements OnInit, OnDestroy {
     totalClientes = 0;
