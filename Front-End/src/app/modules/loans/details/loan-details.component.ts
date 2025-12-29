@@ -70,6 +70,8 @@ export class LoanDetailsComponent implements OnInit {
 
   refinancedToId: number | null = null;
 
+  possuiPagamento: boolean = false;
+
   isLoading = false;
 
   showInstallments = true;
@@ -107,7 +109,7 @@ export class LoanDetailsComponent implements OnInit {
     }
   }
 
- loadLoanData(): void {
+  loadLoanData(): void {
     this._route.paramMap.pipe(
       switchMap(params => {
         const idStr = params.get('id');
@@ -123,7 +125,7 @@ export class LoanDetailsComponent implements OnInit {
       })
     ).subscribe((simulation: Simulation | null) => {
       if (simulation) {
-        
+
         console.log('Simulação carregada:', simulation);
 
         const simAny = simulation as any;
@@ -172,11 +174,12 @@ export class LoanDetailsComponent implements OnInit {
         this.input.requestedAmount = originalRequested;
 
         this.result = simulation as unknown as SimulationResult;
-        
+
         if (this.result) {
-            this.result.payoffAmount = payoff;
+          this.result.payoffAmount = payoff;
         }
-        
+
+
         this._changeDetectorRef.detectChanges();
 
         this.loadInstallments();
@@ -198,8 +201,14 @@ export class LoanDetailsComponent implements OnInit {
           this.dataSource.data = response.items;
           this.totalInstallments = response.totalCount;
           this._changeDetectorRef.markForCheck();
+
+          this.possuiPagamento = response.items.some(x => x.paidAmount && x.paidAmount > 0);
         }
       });
+  }
+
+  dis() {
+    console.log(this.possuiPagamento)
   }
 
   openPaymentDialog(installment: Installment): void {
@@ -236,7 +245,7 @@ export class LoanDetailsComponent implements OnInit {
 
           this._snackBar.open(errorMessage, 'Fechar', {
             duration: 8000,
-            panelClass: ['warning-snackbar'] 
+            panelClass: ['warning-snackbar']
           });
         }
       });
@@ -293,6 +302,13 @@ export class LoanDetailsComponent implements OnInit {
   onRefinance(): void {
     if (!this.simulationId) return;
 
+    if (!this.possuiPagamento) {
+      this._snackBar.open('O refinanciamento só pode ser realizado após o pagamento de ao menos uma parcela.', 'Fechar', {
+        duration: 4000,
+      })
+      return;
+    }
+
     this._router.navigate(['/simulations/new'], {
       queryParams: { refinance: this.simulationId }
     });
@@ -314,7 +330,7 @@ export class LoanDetailsComponent implements OnInit {
   goToNewContract(): void {
     if (this.refinancedToId) {
       console.log('Navegando para o contrato refinanciado com ID:', this.refinancedToId);
-      this._router.navigateByUrl('/', {skipLocationChange: true}).then(() => {
+      this._router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
         this._router.navigate(['/loans', this.refinancedToId]);
       });
     }
